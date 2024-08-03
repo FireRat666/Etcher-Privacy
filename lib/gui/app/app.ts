@@ -64,6 +64,9 @@ store.dispatch({
 	data: uuidV4(),
 });
 
+const applicationSessionUuid = store.getState().toJS().applicationSessionUuid;
+const flashingWorkflowUuid = store.getState().toJS().flashingWorkflowUuid;
+const electronVersion = process.versions.electron;
 console.log(outdent`
 	${outdent}
 	 _____ _       _
@@ -72,11 +75,13 @@ console.log(outdent`
 	|  __|| __/ __| '_ \\ / _ \\ '__|
 	| |___| || (__| | | |  __/ |
 	\\____/ \\__\\___|_| |_|\\___|_|
-
-	Interested in joining the Etcher team?
-	Drop us a line at join+etcher@balena.io
-
-	Version = ${packageJSON.version}, Type = ${packageJSON.packageType}
+	
+	
+	App Version = ${packageJSON.version}, Type = ${packageJSON.packageType}
+	
+	Electron Version = ${electronVersion}
+	
+	
 `);
 
 const debouncedLog = debounce(console.log, 1000, { maxWait: 1000 });
@@ -157,8 +162,6 @@ spawnChildAndConnect({
 	});
 
 let popupExists = false;
-
-analytics.initAnalytics();
 
 window.addEventListener('beforeunload', async (event) => {
 	if (!flashState.isFlashing() || popupExists) {

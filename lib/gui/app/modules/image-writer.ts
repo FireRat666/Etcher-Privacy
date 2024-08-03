@@ -43,7 +43,7 @@ async function performWrite(
 	drives: DrivelistDrive[],
 	onProgress: sdk.multiWrite.OnProgressFunction,
 ): Promise<{ cancelled?: boolean }> {
-	const { autoBlockmapping, decompressFirst } = await settings.getAll();
+	const { verify, autoBlockmapping, decompressFirst } = await settings.getAll();
 
 	// Spawn the child process with privileges and wait for the connection to be made
 	const { emit, registerHandler } = await spawnChildAndConnect({
@@ -56,7 +56,7 @@ async function performWrite(
 		const flashResults: FlashResults = {};
 
 		const onFail = ({ device, error }: { device: any; error: any }) => {
-			console.log('fail event');
+			console.log('Fail Event:');
 			console.log(device);
 			console.log(error);
 			if (device.devicePath) {
@@ -66,7 +66,7 @@ async function performWrite(
 		};
 
 		const onDone = (payload: any) => {
-			console.log('CHILD: flash done', payload);
+			console.log('Child Process: Flash Done!', payload);
 			payload.results.errors = payload.results.errors.map(
 				(data: Dictionary<any> & { message: string }) => {
 					return errors.fromJSON(data);
@@ -77,19 +77,19 @@ async function performWrite(
 		};
 
 		const onAbort = () => {
-			console.log('CHILD: flash aborted');
+			console.log('Child Process: Flash Aborted');
 			flashResults.cancelled = true;
 			finish();
 		};
 
 		const onSkip = () => {
-			console.log('CHILD: validation skipped');
+			console.log('Child Process: Validation Skipped');
 			flashResults.skip = true;
 			finish();
 		};
 
 		const finish = () => {
-			console.log('Flash results', flashResults);
+			console.log('Flash Results:', flashResults);
 
 			// The flash wasn't cancelled and we didn't get a 'done' event
 			// Catch unexpected situation
@@ -103,7 +103,7 @@ async function performWrite(
 					errors.createUserError({
 						title: 'The writer process ended unexpectedly',
 						description:
-							'Please try again, and contact the Etcher team if the problem persists',
+							'Please try again, and contact the Etcher-ng team if the problem persists',
 					}),
 				);
 			}
@@ -124,10 +124,11 @@ async function performWrite(
 			image,
 			destinations: drives,
 			SourceType: image.SourceType,
+			verify,
 			autoBlockmapping,
 			decompressFirst,
 		};
-		console.log('params', parameters);
+		console.log('Params:', parameters);
 		emit('write', parameters);
 	});
 
@@ -156,9 +157,9 @@ export async function flash(
 	// start api and call the flasher
 	try {
 		const result = await write(image, drives, flashState.setProgressState);
-		console.log('got results', result);
+		console.log('Got Results:', result);
 		await flashState.unsetFlashingFlag(result);
-		console.log('removed flashing flag');
+		console.log('Removed flashing flag');
 	} catch (error: any) {
 		await flashState.unsetFlashingFlag({
 			cancelled: false,

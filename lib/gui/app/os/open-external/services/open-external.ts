@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 balena.io
+ * Copyright 2024 balena.io and Alex313031
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -15,6 +15,7 @@
  */
 
 import * as electron from 'electron';
+import * as electronLog from 'electron-log';
 import * as settings from '../../../models/settings';
 
 /**
@@ -27,6 +28,7 @@ export async function open(url: string) {
 	}
 
 	if (url) {
+		electronLog.info('Opening external browser to', url);
 		electron.shell.openExternal(url);
 	}
 }

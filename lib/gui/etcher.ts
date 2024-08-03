@@ -1,5 +1,5 @@
 /*
- * Copyright 2016 balena.io
+ * Copyright 2024 balena.io and Alex313031
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,62 +22,43 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 import * as electron from 'electron';
 import * as remoteMain from '@electron/remote/main';
-import { autoUpdater } from 'electron-updater';
+import * as electronLog from 'electron-log';
+import * as Store from 'electron-store';
+import * as contextMenu from 'electron-context-menu';
 import { promises as fs } from 'fs';
 import { platform } from 'os';
 import * as path from 'path';
-import * as semver from 'semver';
-import { once } from 'lodash';
 
 import './app/i18n';
 
-import { packageType, version } from '../../package.json';
 import * as EXIT_CODES from '../shared/exit-codes';
 import * as settings from './app/models/settings';
 import { buildWindowMenu } from './menu';
 import * as i18n from 'i18next';
-import * as SentryMain from '@sentry/electron/main';
-import { anonymizeSentryData } from './app/modules/analytics';
-
-import { delay } from '../shared/utils';
 
 const customProtocol = 'etcher';
 const scheme = `${customProtocol}://`;
-const updatablePackageTypes = ['appimage', 'nsis', 'dmg'];
-const packageUpdatable = updatablePackageTypes.includes(packageType);
-let packageUpdated = false;
 let mainWindow: any = null;
 
 remoteMain.initialize();
 
-async function checkForUpdates(interval: number) {
-	// We use a while loop instead of a setInterval to preserve
-	// async execution time between each function call
-	while (!packageUpdated) {
-		if (await settings.get('updatesEnabled')) {
-			try {
-				const release = await autoUpdater.checkForUpdates();
-				const isOutdated =
-					semver.compare(release!.updateInfo.version, version) > 0;
-				const shouldUpdate = release!.updateInfo.stagingPercentage !== 0; // undefined (default) means 100%
-				if (shouldUpdate && isOutdated) {
-					await autoUpdater.downloadUpdate();
-					packageUpdated = true;
-				}
-			} catch (err) {
-				logMainProcessException(err);
-			}
-		}
-		await delay(interval);
-	}
+// Restrict main.log size to 100Kb
+electronLog.initialize();
+electronLog.transports.file.maxSize = 1024 * 100;
+
+const store = new Store();
+
+// Globally export what OS we are on
+const isLinux = process.platform === 'linux';
+const isWin = process.platform === 'win32';
+const isMac = process.platform === 'darwin';
+
+async function checkForUpdates() {
+	electronLog.info('Auto-Updates disabled for this build');
 }
 
 function logMainProcessException(error: any) {
-	const shouldReportErrors = settings.getSync('errorReporting');
 	console.error(error);
-	if (shouldReportErrors) {
-		SentryMain.captureException(error);
-	}
 }
 
 async function isFile(filePath: string): Promise<boolean> {
@@ -114,17 +95,6 @@ async function getCommandLineURL(argv: string[]): Promise<string | undefined> {
 	}
 }
 
-const initSentryMain = once(() => {
-	const dsn =
-		settings.getSync('analyticsSentryToken') || process.env.SENTRY_TOKEN;
-
-	SentryMain.init({
-		dsn,
-		beforeSend: anonymizeSentryData,
-		debug: process.env.ETCHER_SENTRY_DEBUG === 'true',
-	});
-});
-
 const sourceSelectorReady = new Promise((resolve) => {
 	electron.ipcMain.on('source-selector-ready', resolve);
 });
@@ -152,6 +122,9 @@ async function createMainWindow() {
 	const fullscreen = Boolean(await settings.get('fullscreen'));
 	const defaultWidth = settings.DEFAULT_WIDTH;
 	const defaultHeight = settings.DEFAULT_HEIGHT;
+	const iconPath = isWin
+		? path.join(__dirname, 'media', 'icon.ico')
+		: path.join(__dirname, 'media', 'icon64.png');
 	let width = defaultWidth;
 	let height = defaultHeight;
 	if (fullscreen) {
@@ -160,22 +133,26 @@ async function createMainWindow() {
 	mainWindow = new electron.BrowserWindow({
 		width,
 		height,
+		minWidth: 632,
+		minHeight: 400,
 		frame: !fullscreen,
 		useContentSize: true,
 		show: false,
-		resizable: false,
-		maximizable: false,
+		resizable: true,
+		maximizable: true,
 		fullscreen,
 		fullscreenable: fullscreen,
 		kiosk: fullscreen,
-		autoHideMenuBar: true,
+		autoHideMenuBar: false,
 		titleBarStyle: 'hiddenInset',
-		icon: path.join(__dirname, 'media', 'icon.png'),
+		icon: iconPath,
 		darkTheme: true,
 		webPreferences: {
 			backgroundThrottling: false,
 			nodeIntegration: true,
 			contextIsolation: false,
+			devTools: true,
+			experimentalFeatures: true,
 			webviewTag: true,
 			zoomFactor: width / defaultWidth,
 			preload: MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY,
@@ -183,6 +160,8 @@ async function createMainWindow() {
 	});
 
 	electron.app.setAsDefaultProtocolClient(customProtocol);
+
+	electron.nativeTheme.themeSource = 'dark';
 
 	// mainWindow.setFullScreen(true);
 
@@ -208,24 +187,64 @@ async function createMainWindow() {
 	remoteMain.enable(page);
 
 	page.once('did-frame-finish-load', async () => {
-		console.log('packageUpdatable', packageUpdatable);
-		autoUpdater.on('error', (err) => {
-			logMainProcessException(err);
-		});
-		if (packageUpdatable) {
-			try {
-				const checkForUpdatesTimer = 300000;
-				checkForUpdates(checkForUpdatesTimer);
-			} catch (err) {
-				logMainProcessException(err);
-			}
+		checkForUpdates();
+	});
+
+	mainWindow.on('close', () => {
+		if (mainWindow) {
+			store.set('windowDetails', {
+				position: mainWindow.getPosition(),
+			});
+			electronLog.info('Saved windowDetails');
+		} else {
+			electronLog.error(
+				'Error: mainWindow was not defined while trying to save windowDetails.',
+			);
 		}
 	});
+
+	const windowDetails = store.get('windowDetails');
+
+	if (windowDetails) {
+		mainWindow.setPosition(
+			windowDetails.position[0],
+			windowDetails.position[1],
+		);
+	} else {
+		electronLog.warn('No windowDetails');
+	}
 
 	return mainWindow;
 }
 
-electron.app.on('window-all-closed', electron.app.quit);
+electron.app.on('edit-config-file', () => {
+	if (isLinux) {
+		electronLog.info(
+			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
+		);
+		electronLog.warn(
+			'On Linux, a default text editor for handling JSON files must also be present and configured correctly.',
+		);
+		store.openInEditor();
+		return;
+	} else {
+		electronLog.info(
+			'Note that JSON must be a recognized file type \n for the OS to open the config.json file.',
+		);
+		store.openInEditor();
+	}
+});
+
+electron.app.on('window-all-closed', () => {
+	if (!isMac) {
+		electronLog.warn('mainWindow.close()');
+		electron.app.quit();
+	} else {
+		electronLog.info('Not keeping dock alive even though this is MacOS');
+		electronLog.warn('mainWindow.close()');
+		electron.app.quit();
+	}
+});
 
 // Sending a `SIGINT` (e.g: Ctrl-C) to an Electron app that registers
 // a `beforeunload` window event handler results in a disconnected white
@@ -234,8 +253,23 @@ electron.app.on('window-all-closed', electron.app.quit);
 // make use of it to ensure the browser window is completely destroyed.
 // See https://github.com/electron/electron/issues/5273
 electron.app.on('before-quit', () => {
+	electronLog.info('Etcher-ng is quitting now');
 	electron.app.releaseSingleInstanceLock();
 	process.exit(EXIT_CODES.SUCCESS);
+});
+
+electron.app.on('relaunch', () => {
+	electronLog.warn('Restarting App...');
+	if (mainWindow) {
+		store.set('windowDetails', {
+			position: mainWindow.getPosition(),
+		});
+		electronLog.info('Saved windowDetails');
+	} else {
+		electronLog.error(
+			'Error: mainWindow was not defined while trying to save windowDetails.',
+		);
+	}
 });
 
 // this is replaced at build-time with the path to helper binary,
@@ -252,12 +286,119 @@ electron.ipcMain.handle('get-util-path', () => {
 	return path.resolve(process.resourcesPath, ETCHER_UTIL_BIN_PATH);
 });
 
+contextMenu({
+	// Chromium context menu defaults
+	showSelectAll: true,
+	showCopyImage: true,
+	showCopyImageAddress: true,
+	showSaveImageAs: true,
+	showCopyVideoAddress: true,
+	showSaveVideoAs: true,
+	showCopyLink: true,
+	showSaveLinkAs: true,
+	showInspectElement: true,
+	showLookUpSelection: true,
+	showSearchWithGoogle: false,
+	prepend: (defaultActions, parameters) => [
+		{
+			label: 'Open Link in New Window',
+			// Only show it when right-clicking a link
+			visible: parameters.linkURL.trim().length > 0,
+			click: () => {
+				const toURL = parameters.linkURL;
+				const linkWin = new electron.BrowserWindow({
+					title: 'New Window',
+					width: 1024,
+					height: 700,
+					useContentSize: true,
+					darkTheme: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						experimentalFeatures: true,
+						devTools: true,
+					},
+				});
+				linkWin.loadURL(toURL);
+				electronLog.info('Opened Link in New Window');
+			},
+		},
+		{
+			label: 'Search with Google',
+			// Only show it when right-clicking text
+			visible: parameters.selectionText.trim().length > 0,
+			click: () => {
+				const queryURL = `${encodeURIComponent(parameters.selectionText)}`;
+				const searchURL = `https://google.com/search?q=${encodeURIComponent(parameters.selectionText)}`;
+				const searchWin = new electron.BrowserWindow({
+					width: 1024,
+					height: 700,
+					useContentSize: true,
+					darkTheme: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						experimentalFeatures: true,
+						devTools: true,
+					},
+				});
+				searchWin.loadURL(searchURL);
+				electronLog.info('Searched for "' + queryURL + '" on Google');
+			},
+		},
+		{
+			label: 'Open Image in New Window',
+			// Only show it when right-clicking an image
+			visible: parameters.mediaType === 'image',
+			click: () => {
+				const imgURL = parameters.srcURL;
+				const imgTitle = imgURL.substring(imgURL.lastIndexOf('/') + 1);
+				const imgWin = new electron.BrowserWindow({
+					title: imgTitle,
+					useContentSize: true,
+					darkTheme: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						experimentalFeatures: true,
+						devTools: true,
+					},
+				});
+				imgWin.loadURL(imgURL);
+				electronLog.info('Opened Image in New Window');
+			},
+		},
+		{
+			label: 'Open Video in New Window',
+			// Only show it when right-clicking a video
+			visible: parameters.mediaType === 'video',
+			click: () => {
+				const vidURL = parameters.srcURL;
+				const vidTitle = vidURL.substring(vidURL.lastIndexOf('/') + 1);
+				const vidWin = new electron.BrowserWindow({
+					title: vidTitle,
+					useContentSize: true,
+					darkTheme: true,
+					webPreferences: {
+						nodeIntegration: false,
+						nodeIntegrationInWorker: false,
+						experimentalFeatures: true,
+						devTools: true,
+					},
+				});
+				vidWin.loadURL(vidURL);
+				electronLog.info('Popped out Video');
+			},
+		},
+	],
+});
+
 async function main(): Promise<void> {
 	if (!electron.app.requestSingleInstanceLock()) {
 		electron.app.quit();
 	} else {
-		initSentryMain();
 		await electron.app.whenReady();
+		electron.app.commandLine.appendSwitch('ignore-gpu-blocklist');
 		const window = await createMainWindow();
 		electron.app.on('second-instance', async (_event, argv) => {
 			if (window.isMinimized()) {

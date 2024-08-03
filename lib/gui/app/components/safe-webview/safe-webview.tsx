@@ -20,7 +20,6 @@ import * as _ from 'lodash';
 import * as React from 'react';
 
 import * as packageJSON from '../../../../../package.json';
-import * as settings from '../../models/settings';
 
 /**
  * @summary Electron session identifier
@@ -36,11 +35,6 @@ const ETCHER_VERSION_PARAM = 'etcher-version';
  * @summary API version search-parameter key
  */
 const API_VERSION_PARAM = 'api-version';
-
-/**
- * @summary Opt-out analytics search-parameter key
- */
-const OPT_OUT_ANALYTICS_PARAM = 'optOutAnalytics';
 
 /**
  * @summary Webview API version
@@ -88,10 +82,6 @@ export class SafeWebview extends React.PureComponent<
 		// We set the version GET parameters here.
 		url.searchParams.set(ETCHER_VERSION_PARAM, packageJSON.version);
 		url.searchParams.set(API_VERSION_PARAM, API_VERSION);
-		url.searchParams.set(
-			OPT_OUT_ANALYTICS_PARAM,
-			(!settings.getSync('errorReporting')).toString(),
-		);
 		this.entryHref = url.href;
 		// Events steal 'this'
 		this.handleDomReady = _.bind(this.handleDomReady, this);
