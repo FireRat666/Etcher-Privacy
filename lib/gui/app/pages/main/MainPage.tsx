@@ -155,7 +155,7 @@ export class MainPage extends React.Component<
 	private async getFeaturedProjectURL() {
 		const url = new URL(
 			(await settings.get('featuredProjectEndpoint')) ||
-				'https://thorium.rocks/etcher-ng',
+				'https://github.com/FireRat666/Etcher-Privacy#readme',
 		);
 		url.searchParams.append('borderRight', 'false');
 		url.searchParams.append('darkBackground', 'true');
@@ -352,7 +352,7 @@ export class MainPage extends React.Component<
 						width="100%"
 						alignItems="center"
 						justifyContent="center"
-						title="Etcher-ng Website"
+						title="Etcher Privacy Website"
 					>
 						<EtcherSvg
 							width="123px"
@@ -363,7 +363,9 @@ export class MainPage extends React.Component<
 								WebkitAppRegion: 'no-drag',
 							}}
 							onClick={() =>
-								openInternalRemote('https://github.com/Alex313031/etcher-ng#readme')
+								openInternalRemote(
+									'https://github.com/FireRat666/Etcher-Privacy#readme',
+								)
 							}
 							tabIndex={100}
 						/>
@@ -388,7 +390,7 @@ export class MainPage extends React.Component<
 								onClick={() =>
 									openInternalRemote(
 										selectionState.getImage()?.supportUrl ||
-											'https://github.com/Alex313031/etcher-ng/blob/master/docs/SUPPORT.md',
+											'https://github.com/FireRat666/Etcher-Privacy/blob/master/docs/SUPPORT.md',
 									)
 								}
 								tabIndex={6}

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 balena.io and Alex313031
+ * Copyright 2024 balena.io and FireRat666
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -147,9 +147,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.issue'),
 					click() {
-						openExternal(
-							'https://github.com/FireRat666/Etcher-Privacy/issues',
-						);
+						openExternal('https://github.com/FireRat666/Etcher-Privacy/issues');
 					},
 				},
 				{ type: 'separator' },

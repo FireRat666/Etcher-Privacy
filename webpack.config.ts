@@ -16,7 +16,7 @@
 
 import type { Configuration, ModuleOptions } from 'webpack';
 import { resolve } from 'path';
-import * as CopyPlugin from 'copy-webpack-plugin';
+import CopyPlugin = require('copy-webpack-plugin');
 import { BannerPlugin, IgnorePlugin, DefinePlugin } from 'webpack';
 
 const rules: Required<ModuleOptions>['rules'] = [

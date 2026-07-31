@@ -1,9 +1,9 @@
 {
-  "electronVersion": "28.3.3",
+  "electronVersion": "37.2.4",
   "asar": true,
-  "productName": "Etcher-ng",
-  "appId": "com.alex313031.etcher-ng",
-  "copyright": "Copyright © 2024 Alex313031",
+  "productName": "Etcher Privacy",
+  "appId": "com.firerat666.etcher-privacy",
+  "copyright": "Copyright © 2026 FireRat666",
   "generateUpdatesFilesForAllChannels": false,
   "directories": {
     "app": "./.webpack/x64",
@@ -37,17 +37,17 @@
       "appimage"
     ],
     "icon": "assets/iconset",
-    "maintainer": "Alex313031",
-    "vendor": "Alex313031",
-    "synopsis": "Etcher-ng is a powerful OS image flasher built with web technologies to ensure flashing an SDCard or USB drive is a pleasant and safe experience. It protects you from accidentally writing to your hard-drives, ensures every byte of data was written correctly and much more.",
+    "maintainer": "FireRat666",
+    "vendor": "FireRat666",
+    "synopsis": "Etcher Privacy is a powerful OS image flasher built with web technologies to ensure flashing an SDCard or USB drive is a pleasant and safe experience. It protects you from accidentally writing to your hard-drives, ensures every byte of data was written correctly and much more.",
     "category": "Utility;",
-    "executableName": "etcher-ng",
-    "artifactName": "etcher-ng_${version}_${arch}.${ext}",
+    "executableName": "etcher-privacy",
+    "artifactName": "etcher-privacy_${version}_${arch}.${ext}",
     "desktop": {
-      "Name": "Etcher-ng",
-      "StartupWMClass": "etcher-ng",
+      "Name": "Etcher Privacy",
+      "StartupWMClass": "etcher-privacy",
       "Keywords": "etcher;flash;utils;",
-      "Icon": "etcher-ng"
+      "Icon": "etcher-privacy"
     }
   },
   "deb": {
@@ -107,20 +107,20 @@
       "portable",
       "nsis"
     ],
-    "publisherName": "Alex313031",
-    "executableName": "etcher_ng",
-    "artifactName": "etcher-ng_${version}_${arch}.${ext}"
+    "publisherName": "FireRat666",
+    "executableName": "etcher_privacy",
+    "artifactName": "etcher-privacy_${version}_${arch}.${ext}"
   },
   "nsis": {
-    "shortcutName": "Etcher-ng",
-    "artifactName": "etcher-ng_setup_${version}_${arch}.${ext}",
-    "uninstallDisplayName": "Etcher-ng ${version}",
+    "shortcutName": "Etcher Privacy",
+    "artifactName": "etcher-privacy_setup_${version}_${arch}.${ext}",
+    "uninstallDisplayName": "Etcher Privacy ${version}",
     "deleteAppDataOnUninstall": true,
     "oneClick": true,
     "license": "LICENSE.md"
   },
   "portable": {
-    "artifactName": "etcher-ng_portable_${version}_${arch}.${ext}"
+    "artifactName": "etcher-privacy_portable_${version}_${arch}.${ext}"
   },
   "mac": {
     "category": "public.app-category.developer-tools",
@@ -129,7 +129,7 @@
     "icon": "assets/icon.icns",
     "darkModeSupport": true,
     "minimumSystemVersion": "10.15",
-    "artifactName": "etcher-ng_macos_${version}_${arch}.${ext}",
+    "artifactName": "etcher-privacy_macos_${version}_${arch}.${ext}",
     "target": [
       "dmg",
       "zip"
@@ -151,7 +151,7 @@
         "path": "/Applications"
       }
     ],
-    "artifactName": "etcher-ng_macos_${version}_${arch}.${ext}",
+    "artifactName": "etcher-privacy_macos_${version}_${arch}.${ext}",
   },
   "protocols": {
     "name": "etcher",

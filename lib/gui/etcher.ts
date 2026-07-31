@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 balena.io and Alex313031
+ * Copyright 2024 balena.io and FireRat666
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,6 +60,9 @@ async function checkForUpdates() {
 function logMainProcessException(error: any) {
 	console.error(error);
 }
+
+// Log uncaught main process exceptions locally; no remote error reporting
+process.on('uncaughtException', logMainProcessException);
 
 async function isFile(filePath: string): Promise<boolean> {
 	try {
@@ -253,7 +256,7 @@ electron.app.on('window-all-closed', () => {
 // make use of it to ensure the browser window is completely destroyed.
 // See https://github.com/electron/electron/issues/5273
 electron.app.on('before-quit', () => {
-	electronLog.info('Etcher-ng is quitting now');
+	electronLog.info('Etcher Privacy is quitting now');
 	electron.app.releaseSingleInstanceLock();
 	process.exit(EXIT_CODES.SUCCESS);
 });

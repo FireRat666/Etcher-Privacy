@@ -4,7 +4,7 @@ import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
 import { MakerDMG } from '@electron-forge/maker-dmg';
-// import { MakerAppImage } from '@reforged/maker-appimage';
+import { MakerAppImage } from '@reforged/maker-appimage';
 import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-natives';
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { exec } from 'child_process';
@@ -26,7 +26,7 @@ if (process.env.NODE_ENV === 'production') {
 	};
 
 	winSigningConfig = {
-		signWithParams: `-sha1 ${process.env.SM_CODE_SIGNING_CERT_SHA1_HASH} -tr ${process.env.TIMESTAMP_SERVER} -td sha256 -fd sha256 -d balena-etcher`,
+		signWithParams: `-sha1 ${process.env.SM_CODE_SIGNING_CERT_SHA1_HASH} -tr ${process.env.TIMESTAMP_SERVER} -td sha256 -fd sha256 -d etcher-privacy`,
 	};
 }
 
@@ -34,10 +34,11 @@ const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
 		icon: './assets/icon',
-		executableName: process.platform === 'linux' ? 'etcher-ng' : 'Etcher-ng',
-		appBundleId: 'io.alex313031.etcher',
+		executableName:
+			process.platform === 'linux' ? 'etcher-privacy' : 'Etcher Privacy',
+		appBundleId: 'io.firerat666.etcher-privacy',
 		appCategoryType: 'public.app-category.developer-tools',
-		appCopyright: 'Copyright 2016-2024 Balena Ltd. and Alex313031',
+		appCopyright: 'Copyright 2016-2026 Balena Ltd. and FireRat666',
 		darwinDarkModeSupport: true,
 		protocols: [{ name: 'etcher', schemes: ['etcher'] }],
 		extraResource: [
@@ -141,7 +142,7 @@ const config: ForgeConfig = {
 				// symlink the etcher binary from balena-etcher to balenaEtcher to ensure compatibility with the wdio suite and the old name
 				await new Promise<void>((resolve, reject) => {
 					exec(
-						`ln -s "${options.outputPaths}/etcher-ng" "${options.outputPaths}/balenaEtcher"`,
+						`ln -s "${options.outputPaths}/etcher-privacy" "${options.outputPaths}/balenaEtcher"`,
 						(err) => {
 							if (err) {
 								reject(err);

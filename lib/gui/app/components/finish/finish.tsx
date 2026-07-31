@@ -42,7 +42,7 @@ function restart(goToMain: () => void) {
 async function getSuccessBannerURL() {
 	return (
 		(await settings.get('successBannerURL')) ??
-		'https://thorium.rocks/etcher-ng'
+		'https://github.com/FireRat666/Etcher-Privacy'
 	);
 }
 

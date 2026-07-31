@@ -1,19 +1,19 @@
 {
-  "name": "etcher-ng",
+  "name": "etcher-privacy",
   "private": true,
-  "appName": "Etcher-ng",
-  "productName": "Etcher-ng",
-  "displayName": "Etcher NG",
-  "version": "1.19.22",
+  "appName": "Etcher Privacy",
+  "productName": "Etcher Privacy",
+  "displayName": "Etcher Privacy",
+  "version": "2.1.6",
   "packageType": "local",
   "main": "./main/index.js",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
-  "productDescription": "Etcher-ng is a powerful OS image flasher built with web technologies to ensure flashing an SDCard or USB drive is a pleasant and safe experience. It protects you from accidentally writing to your hard-drives, ensures every byte of data was written correctly and much more.",
-  "author": "Alex313031 <alex313031@gmail.com>",
+  "productDescription": "Etcher Privacy is a powerful OS image flasher built with web technologies to ensure flashing an SDCard or USB drive is a pleasant and safe experience. It protects you from accidentally writing to your hard-drives, ensures every byte of data was written correctly and much more.",
+  "author": "FireRat666 <27763388+FireRat666@users.noreply.github.com>",
   "license": "Apache-2.0",
-  "copyright": "Copyright © 2024 Alex313031",
-  "homepage": "https://github.com/Alex313031/etcher-ng#readme",
+  "copyright": "Copyright © 2026 FireRat666",
+  "homepage": "https://github.com/FireRat666/Etcher-Privacy#readme",
   "repository": {
-    "url": "https://github.com/Alex313031/etcher-ng.git"
+    "url": "https://github.com/FireRat666/Etcher-Privacy.git"
   }
 }

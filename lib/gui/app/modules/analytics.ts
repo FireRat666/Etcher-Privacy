@@ -25,7 +25,9 @@ type AnalyticsPayload = _.Dictionary<any>;
  * for privacy. This stub exists only so callers keep compiling.
  */
 export async function logEvent(message: string, data: AnalyticsPayload = {}) {
-	return;
+	// Intentionally unused; kept only for callers to compile
+	void message;
+	void data;
 }
 
 /**

@@ -103,7 +103,7 @@ async function performWrite(
 					errors.createUserError({
 						title: 'The writer process ended unexpectedly',
 						description:
-							'Please try again, and contact the Etcher-ng team if the problem persists',
+							'Please try again, and contact the Etcher Privacy team if the problem persists',
 					}),
 				);
 			}

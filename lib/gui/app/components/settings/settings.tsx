@@ -17,12 +17,11 @@
 import GithubSvg from '@fortawesome/fontawesome-free/svgs/brands/github.svg';
 import * as _ from 'lodash';
 import * as React from 'react';
-import { Box, Checkbox, Divider, Flex, Txt } from 'rendition';
+import { Checkbox, Divider, Flex, Txt } from 'rendition';
 
-import { version, packageType } from '../../../../../package.json';
+import { version } from '../../../../../package.json';
 import * as settings from '../../models/settings';
 import { open as openInternalRemote } from '../../os/open-internal-remote/services/open-internal-remote';
-import { open as openExternal } from '../../os/open-external/services/open-external';
 import { Modal } from '../../styled-components';
 import * as i18next from 'i18next';
 
@@ -89,17 +88,13 @@ export function SettingsModal({ toggleModal }: SettingsModalProps) {
 		<Modal
 			titleElement={
 				<Txt fontSize={24} mb={24}>
-					<u>
-						{i18next.t('settings.settings')}
-					</u>
+					<u>{i18next.t('settings.settings')}</u>
 				</Txt>
 			}
 			done={() => toggleModal(false)}
 		>
 			<Txt fontSize={24} mb={14}>
-				<u>
-					{i18next.t('settings.settings')}
-				</u>
+				<u>{i18next.t('settings.settings')}</u>
 			</Txt>
 			<Flex flexDirection="column">
 				{settingsList.map((setting: Setting, i: number) => {
@@ -129,7 +124,7 @@ export function SettingsModal({ toggleModal }: SettingsModalProps) {
 					}}
 					onClick={() =>
 						openInternalRemote(
-							'https://github.com/Alex313031/etcher-ng/blob/master/CHANGELOG.md',
+							'https://github.com/FireRat666/Etcher-Privacy/blob/master/CHANGELOG.md',
 						)
 					}
 				>

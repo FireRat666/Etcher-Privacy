@@ -64,8 +64,6 @@ store.dispatch({
 	data: uuidV4(),
 });
 
-const applicationSessionUuid = store.getState().toJS().applicationSessionUuid;
-const flashingWorkflowUuid = store.getState().toJS().flashingWorkflowUuid;
 const electronVersion = process.versions.electron;
 console.log(outdent`
 	${outdent}

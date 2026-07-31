@@ -3,6 +3,15 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# Etcher Privacy 2.1.6
+## (2026-07-31)
+
+* Rebase onto balena Etcher v2.1.6 (Electron 37) [FireRat666]
+* Remove Sentry error reporting and the analytics-client tracking module [FireRat666]
+* Remove the auto-updater and EtcherPro promotions [FireRat666]
+* Rebrand to Etcher Privacy (product, executables, artifacts, app IDs, links) [FireRat666]
+* Keep the etcher-ng UI customizations (resizable window, dark theme, context menus) [FireRat666]
+
 # v2.1.6
 ## (2026-05-13)
 

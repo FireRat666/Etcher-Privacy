@@ -1,94 +1,70 @@
-# Etcher-ng <img src="icon.png" width="46">
-
+# Etcher Privacy <img src="icon.png" width="46">
 
 > Flash OS images to SD cards & USB drives, safely and easily.
 
-Note: This is a fork with UI and privacy improvements. I also make a Windows 7/8/8.1 compatible fork [Here](https://github.com/Alex313031/etcher-ng-win7).
+Etcher Privacy is a privacy-focused fork of [balena Etcher](https://github.com/balena-io/etcher),
+based on [Alex313031's etcher-ng](https://github.com/Alex313031/etcher-ng) UI customizations
+and synced with upstream **v2.1.6**.
 
-Etcher-ng is a powerful OS image flasher built with web technologies to ensure
+It is a powerful OS image flasher built with web technologies to ensure
 flashing an SDCard or USB drive is a pleasant and safe experience. It protects
 you from accidentally writing to your hard-drives, ensures every byte of data
 was written correctly, and much more. It can also directly flash Raspberry Pi devices that support [USB device boot mode](https://www.raspberrypi.com/documentation/computers/raspberry-pi.html#usb-device-boot-mode).
 
-[![Current Release](https://img.shields.io/github/release/balena-io/etcher.svg?style=flat-square)](https://balena.io/etcher)
+## What makes it "Privacy"?
+
+Everything that phones home has been removed:
+
+- **No Sentry** error reporting (crash/error telemetry removed)
+- **No analytics** (the `analytics-client` tracking module removed)
+- **No auto-updater** (no background update checks or phone-home)
+- **No EtcherPro** promotions
+- All links point to this repository instead of external tracking pages
+
+There are no analytics, no tracking, and no calls home. What you flash is your business.
+
 [![License](https://img.shields.io/github/license/balena-io/etcher.svg?style=flat-square)](https://github.com/balena-io/etcher/blob/master/LICENSE)
-[![Balena.io Forums](https://img.shields.io/discourse/https/forums.balena.io/topics.svg?style=flat-square&label=balena.io%20forums)](https://forums.balena.io/c/etcher)
 
 ---
 
-[**Download**][etcher] | [**Support**][support] | [**Documentation**][user-documentation] | [**Contributing**][contributing] | [**Roadmap**][milestones]
+[**Download**][releases] | [**Support**][support] | [**Contributing**][contributing] | [**Documentation**][user-documentation]
 
 ## Supported Operating Systems
 
 - Linux; most distros; Intel 64-bit.
-- Windows 7 and later; Intel 64-bit.
-- macOS 10.12 (High Sierra) and later; both Intel and Apple Silicon.
+- Windows 10 and later; Intel 64-bit.
+- macOS 10.15 (Catalina) and later; both Intel and Apple Silicon.
 
 ## Installers
 
-Refer to the [downloads page][etcher] for the latest pre-made
+Refer to the [releases page][releases] for the latest pre-made
 installers for all supported operating systems.
 
-## Packages
+## Building from source
 
-#### Debian and Ubuntu based Package Repository (GNU/Linux x86/x64)
-
-Package for Debian and Ubuntu can be downloaded from the [Github release page](https://github.com/balena-io/etcher/releases/)
-
-##### Install .deb file using apt
-
-   ```sh
-      sudo apt install ./balena-etcher_******_amd64.deb
-   ```
-
-##### Uninstall
-
-   ```sh
-      sudo apt remove balena-etcher
-   ```
-
-#### Redhat (RHEL) and Fedora-based Package Repository (GNU/Linux x86/x64)
-
-##### Yum
-
-Package for Fedora-based and Redhat can be downloaded from the [Github release page](https://github.com/balena-io/etcher/releases/)
-
-1. Install using yum
+Requires Node.js 20 and Python 3:
 
 ```sh
-   sudo yum localinstall balena-etcher-***.x86_64.rpm
-```
-
-#### Arch/Manjaro Linux (GNU/Linux x64)
-
-Etcher is offered through the Arch User Repository and can be installed on both Manjaro and Arch systems. You can compile it from the source code in this repository using [`balena-etcher`](https://aur.archlinux.org/packages/balena-etcher/). The following example uses a common AUR helper to install the latest release:
-
-```sh
-yay -S balena-etcher
-```
-
-##### Uninstall
-
-```sh
-yay -R balena-etcher
+npm install
+npm run package
 ```
 
 ## Support
 
-If you're having any problem, please [raise an issue][newissue] on GitHub, and
-the balena.io team will be happy to help.
+If you're having any problem, please [raise an issue][newissue] on GitHub.
 
 ## License
 
-Etcher is free software and may be redistributed under the terms specified in
-the [license].
+Etcher Privacy is free software and may be redistributed under the terms
+specified in the [license][license]. Copyright of the original Etcher code
+belongs to Balena Ltd. and its contributors; upstream Etcher is available at
+https://github.com/balena-io/etcher.
 
-[etcher]: https://balena.io/etcher
+[releases]: https://github.com/FireRat666/Etcher-Privacy/releases
 [electron]: https://electronjs.org/
 [electron-supported-platforms]: https://electronjs.org/docs/tutorial/support#supported-platforms
-[support]: https://github.com/balena-io/etcher/blob/master/docs/SUPPORT.md
-[contributing]: https://github.com/balena-io/etcher/blob/master/docs/CONTRIBUTING.md
-[user-documentation]: https://github.com/balena-io/etcher/blob/master/docs/USER-DOCUMENTATION.md
-[milestones]: https://github.com/balena-io/etcher/milestones
-[newissue]: https://github.com/balena-io/etcher/issues/new
-[license]: https://github.com/balena-io/etcher/blob/master/LICENSE
+[support]: https://github.com/FireRat666/Etcher-Privacy/blob/master/docs/SUPPORT.md
+[contributing]: https://github.com/FireRat666/Etcher-Privacy/blob/master/docs/CONTRIBUTING.md
+[user-documentation]: https://github.com/FireRat666/Etcher-Privacy/blob/master/docs/USER-DOCUMENTATION.md
+[newissue]: https://github.com/FireRat666/Etcher-Privacy/issues/new
+[license]: https://github.com/FireRat666/Etcher-Privacy/blob/master/LICENSE

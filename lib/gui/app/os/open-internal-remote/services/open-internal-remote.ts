@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 balena.io and Alex313031
+ * Copyright 2024 balena.io and FireRat666
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -27,7 +27,7 @@ export async function open(url: string) {
 
 	if (url) {
 		electronLog.info(`Opening remote internal window to ` + `'` + url + `'`);
-		let remoteWin = new remote.BrowserWindow({
+		const remoteWin = new remote.BrowserWindow({
 			width: 1024,
 			height: 768,
 			useContentSize: true,
