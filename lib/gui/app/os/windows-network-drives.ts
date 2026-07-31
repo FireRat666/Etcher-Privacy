@@ -18,7 +18,6 @@ import { exec } from 'child_process';
 import { withTmpFile } from 'etcher-sdk/build/tmp';
 import { readFile } from 'fs';
 import { chain, trim } from 'lodash';
-import { platform } from 'os';
 import { join } from 'path';
 import { env } from 'process';
 import { promisify } from 'util';
@@ -100,7 +99,7 @@ export async function replaceWindowsNetworkDriveLetter(
 	getWmicOutput = getWmicNetworkDrivesOutput,
 ): Promise<string> {
 	let result = filePath;
-	if (platform() === 'win32') {
+	if (process.platform === 'win32') {
 		const matches = /^([A-Z]+:)\\(.*)$/.exec(filePath);
 		if (matches !== null) {
 			const [, drive, relativePath] = matches;

@@ -16,9 +16,6 @@
 
 import { expect } from 'chai';
 import { promises as fs } from 'fs';
-import * as os from 'os';
-import type { SinonStub } from 'sinon';
-import { stub } from 'sinon';
 
 import * as wnd from '../../../lib/gui/app/os/windows-network-drives';
 
@@ -29,11 +26,15 @@ function mockGetWmicOutput() {
 }
 
 describe('Network drives on Windows', () => {
-	let osPlatformStub: SinonStub;
+	let originalPlatform: PropertyDescriptor | undefined;
 
 	before(async () => {
-		osPlatformStub = stub(os, 'platform');
-		osPlatformStub.returns('win32');
+		originalPlatform = Object.getOwnPropertyDescriptor(process, 'platform');
+		Object.defineProperty(process, 'platform', {
+			value: 'win32',
+			configurable: true,
+			writable: true,
+		});
 	});
 
 	it('should parse network drive mapping on Windows', async () => {
@@ -46,6 +47,8 @@ describe('Network drives on Windows', () => {
 	});
 
 	after(() => {
-		osPlatformStub.restore();
+		if (originalPlatform) {
+			Object.defineProperty(process, 'platform', originalPlatform);
+		}
 	});
 });

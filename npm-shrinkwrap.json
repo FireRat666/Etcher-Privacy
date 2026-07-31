@@ -1,12 +1,12 @@
 {
   "name": "etcher-privacy",
-  "version": "2.1.6",
+  "version": "2.1.6-P",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "etcher-privacy",
-      "version": "2.1.6",
+      "version": "2.1.6-P",
       "license": "Apache-2.0",
       "dependencies": {
         "@electron/remote": "^2.1.2",
@@ -34,7 +34,6 @@
         "styled-components": "5.3.11",
         "sys-class-rgb-led": "3.0.1",
         "uuid": "9.0.1",
-        "winusb-driver-generator": "2.1.10",
         "ws": "8.18.0"
       },
       "devDependencies": {
@@ -47,7 +46,7 @@
         "@electron-forge/maker-zip": "7.8.1",
         "@electron-forge/plugin-auto-unpack-natives": "7.8.1",
         "@electron-forge/plugin-webpack": "7.8.1",
-        "@reforged/maker-appimage": "3.3.2",
+        "@reforged/maker-appimage": "^5.2.0",
         "@svgr/webpack": "8.1.0",
         "@types/chai": "4.3.17",
         "@types/copy-webpack-plugin": "10.1.0",
@@ -3929,49 +3928,34 @@
       "license": "MIT"
     },
     "node_modules/@reforged/maker-appimage": {
-      "version": "3.3.2",
-      "resolved": "https://registry.npmjs.org/@reforged/maker-appimage/-/maker-appimage-3.3.2.tgz",
-      "integrity": "sha512-TFuDzNTZfUe9ugwHNYY/xed2S/ec3Az4js8qWXZ9bx3fKa82vq1h+y0uKjkatWnCUotX5pwg/APdqzcm+10Yvg==",
-      "deprecated": "No longer supported – please use 4.1.1 or later.",
+      "version": "5.2.0",
+      "resolved": "https://registry.npmjs.org/@reforged/maker-appimage/-/maker-appimage-5.2.0.tgz",
+      "integrity": "sha512-5u7spsDMyMfwqAnTRsSipVgTIy+DW+wlfhceaRghCuTvyY8Sti8/tFhVKj4vb+dYTqPvS7m30Gl0InGv22J8RQ==",
       "dev": true,
       "license": "ISC",
       "dependencies": {
         "@electron-forge/maker-base": "^6.0.0 || ^7.0.0",
+        "@reforged/maker-types": "^2.1.0",
         "@spacingbat3/lss": "^1.0.0",
-        "node-fetch": "^3.2.5",
         "semver": "^7.3.8"
       },
       "engines": {
-        "node": ">=19.0.0 || ^18.11.0 || ^16.1.0"
-      }
-    },
-    "node_modules/@reforged/maker-appimage/node_modules/data-uri-to-buffer": {
-      "version": "4.0.1",
-      "resolved": "https://registry.npmjs.org/data-uri-to-buffer/-/data-uri-to-buffer-4.0.1.tgz",
-      "integrity": "sha512-0R9ikRb668HB7QDxT1vkpuUBtqc53YyAwMwGeUFKRojY/NWKvdZ+9UYtRfGmhqNbRkTSVpMbmyhXipFFv2cb/A==",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">= 12"
-      }
-    },
-    "node_modules/@reforged/maker-appimage/node_modules/node-fetch": {
-      "version": "3.3.2",
-      "resolved": "https://registry.npmjs.org/node-fetch/-/node-fetch-3.3.2.tgz",
-      "integrity": "sha512-dRB78srN/l6gqWulah9SrxeYnxeddIG30+GOqK/9OlLVyLg3HPnr6SqOWTWOXKRwC2eGYCkZ59NNuSgvSrpgOA==",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "data-uri-to-buffer": "^4.0.0",
-        "fetch-blob": "^3.1.4",
-        "formdata-polyfill": "^4.0.10"
-      },
-      "engines": {
-        "node": "^12.20.0 || ^14.13.1 || >=16.0.0"
+        "node": ">=19.0.0 || ^18.11.0"
       },
       "funding": {
-        "type": "opencollective",
-        "url": "https://opencollective.com/node-fetch"
+        "type": "github",
+        "url": "https://github.com/SpacingBat3/ReForged?sponsor=1"
+      }
+    },
+    "node_modules/@reforged/maker-types": {
+      "version": "2.1.0",
+      "resolved": "https://registry.npmjs.org/@reforged/maker-types/-/maker-types-2.1.0.tgz",
+      "integrity": "sha512-gNMAFO6mxqGwuUov0CzXGTHUMfAawlM6v/uYrqVnKeMwmceaLBt3HtfPcuNapDSH4br6D4EZ14WuWbgefmDfOQ==",
+      "dev": true,
+      "license": "ISC",
+      "funding": {
+        "type": "github",
+        "url": "https://github.com/SpacingBat3/ReForged?sponsor=1"
       }
     },
     "node_modules/@rjsf/core": {

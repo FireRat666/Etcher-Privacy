@@ -18,8 +18,8 @@ jobs:
           "os": [
             ["ubuntu-22.04"],
             ["windows-2022"],
-            ["macos-14-large"],
-            ["macos-latest-xlarge"]
+            ["macos-14"],
+            ["macos-latest"]
           ]
         }
       custom_publish_matrix: >
@@ -27,8 +27,8 @@ jobs:
           "os": [
             ["ubuntu-22.04"],
             ["windows-2022"],
-            ["macos-14-large"],
-            ["macos-latest-xlarge"]
+            ["macos-14"],
+            ["macos-latest"]
           ]
         }
       github_prerelease: true
