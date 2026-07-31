@@ -33,6 +33,7 @@ import './app/i18n';
 import * as EXIT_CODES from '../shared/exit-codes';
 import * as settings from './app/models/settings';
 import { buildWindowMenu } from './menu';
+import { onCustomAppEvent } from './custom-app-events';
 import * as i18n from 'i18next';
 
 const customProtocol = 'etcher';
@@ -228,18 +229,6 @@ async function createMainWindow() {
 	}
 
 	return mainWindow;
-}
-
-type CustomAppEvents = {
-	'edit-config-file': () => void;
-	relaunch: () => void;
-};
-
-function onCustomAppEvent<K extends keyof CustomAppEvents>(
-	event: K,
-	listener: CustomAppEvents[K],
-): void {
-	electron.app.on(event as any, listener);
 }
 
 onCustomAppEvent('edit-config-file', () => {

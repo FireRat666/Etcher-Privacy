@@ -19,6 +19,7 @@ import * as electron from 'electron';
 
 import { open as openInternal } from './app/os/open-internal/services/open-internal';
 import { open as openExternal } from './app/os/open-external/services/open-external';
+import { emitCustomAppEvent } from './custom-app-events';
 
 import * as i18next from 'i18next';
 
@@ -121,7 +122,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.config'),
 					click() {
 						console.info('Editing Config File');
-						electron.app.emit('edit-config-file');
+						emitCustomAppEvent('edit-config-file');
 					},
 				},
 				{
