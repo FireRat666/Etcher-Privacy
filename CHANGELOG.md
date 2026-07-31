@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# Etcher Privacy 2.1.6
+# v2.1.6
 ## (2026-07-31)
 
 * Rebase onto balena Etcher v2.1.6 (Electron 37) [FireRat666]
