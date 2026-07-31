@@ -390,8 +390,7 @@ function storeReducer(
 			}
 
 			const image = state.getIn(['selection', 'image']) as
-				| Immutable.Map<string, any>
-				| undefined;
+				Immutable.Map<string, any> | undefined;
 			if (
 				image &&
 				!constraints.isDriveLargeEnough(
