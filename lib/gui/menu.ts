@@ -37,7 +37,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 	const isLinux = process.platform === 'linux';
 	const isWin = process.platform === 'win32';
 	const isMac = process.platform === 'darwin';
-	let currentOS;
+	let currentOS: string;
 	if (isLinux) {
 		currentOS = 'Linux';
 	} else if (isWin) {
@@ -206,9 +206,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
-					click(item, focusedWindow) {
+					click(_item, focusedWindow) {
 						if (focusedWindow) {
-							focusedWindow.webContents.goBack();
+							(focusedWindow as electron.BrowserWindow).webContents.goBack();
 						}
 						console.info('Navigated back');
 					},
@@ -216,9 +216,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
-					click(item, focusedWindow) {
+					click(_item, focusedWindow) {
 						if (focusedWindow) {
-							focusedWindow.webContents.goForward();
+							(focusedWindow as electron.BrowserWindow).webContents.goForward();
 						}
 						console.info('Navigated forward');
 					},
@@ -237,9 +237,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
-					click(item, focusedWindow) {
+					click(_item, focusedWindow) {
 						if (focusedWindow) {
-							focusedWindow.webContents.goBack();
+							(focusedWindow as electron.BrowserWindow).webContents.goBack();
 						}
 						console.info('Navigated back');
 					},
@@ -247,9 +247,9 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
-					click(item, focusedWindow) {
+					click(_item, focusedWindow) {
 						if (focusedWindow) {
-							focusedWindow.webContents.goForward();
+							(focusedWindow as electron.BrowserWindow).webContents.goForward();
 						}
 						console.info('Navigated forward');
 					},

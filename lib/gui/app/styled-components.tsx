@@ -240,7 +240,7 @@ export const Alert = styled((props) => (
 	}
 `;
 
-export interface GenericTableProps<T> extends BaseTableProps<T> {
+export interface GenericTableProps<T extends object> extends BaseTableProps<T> {
 	refFn: (t: BaseTable<T>) => void;
 	data: T[];
 	checkedRowsNumber?: number;
@@ -248,7 +248,7 @@ export interface GenericTableProps<T> extends BaseTableProps<T> {
 	showWarnings?: boolean;
 }
 
-function GenericTable<T>(
+function GenericTable<T extends object>(
 	props: GenericTableProps<T>,
 ): React.ReactElement<GenericTableProps<T>> {
 	return (
@@ -258,7 +258,7 @@ function GenericTable<T>(
 	);
 }
 
-function StyledTable<T>() {
+function StyledTable<T extends object>() {
 	return styled((props: GenericTableProps<T>) => (
 		<GenericTable<T> {...props} />
 	))`

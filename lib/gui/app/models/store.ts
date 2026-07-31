@@ -23,6 +23,7 @@ import { v4 as uuidV4 } from 'uuid';
 import * as constraints from '../../../shared/drive-constraints';
 import * as errors from '../../../shared/errors';
 import * as utils from '../../../shared/utils';
+import type { SourceMetadata } from '../../../shared/typings/source-selector';
 import * as settings from './settings';
 
 /**
@@ -54,7 +55,7 @@ const selectImageNoNilFields = ['path', 'extension'];
 /**
  * @summary Application default state
  */
-export const DEFAULT_STATE = Immutable.fromJS({
+export const DEFAULT_STATE: Immutable.Map<string, any> = Immutable.fromJS({
 	applicationSessionUuid: '',
 	flashingWorkflowUuid: '',
 	availableDrives: [],
@@ -73,7 +74,7 @@ export const DEFAULT_STATE = Immutable.fromJS({
 		averageSpeed: null,
 	},
 	lastAverageFlashingSpeed: null,
-});
+}) as Immutable.Map<string, any>;
 
 /**
  * @summary Application supported action messages
@@ -149,7 +150,9 @@ function storeReducer(
 			]);
 
 			const newState = state.set('availableDrives', Immutable.fromJS(drives));
-			const selectedDevices = newState.getIn(['selection', 'devices']).toJS();
+			const selectedDevices = (
+				newState.getIn(['selection', 'devices']) as Immutable.OrderedSet<string>
+			).toJS();
 
 			// Remove selected drives that are stale, i.e. missing from availableDrives
 			const nonStaleNewState = _.reduce(
@@ -178,9 +181,12 @@ function storeReducer(
 				settings.getSync('autoSelectAllDrives'),
 			);
 			const AUTOSELECT_DRIVE_COUNT = 1;
-			const nonStaleSelectedDevices = nonStaleNewState
-				.getIn(['selection', 'devices'])
-				.toJS();
+			const nonStaleSelectedDevices = (
+				nonStaleNewState.getIn([
+					'selection',
+					'devices',
+				]) as Immutable.OrderedSet<string>
+			).toJS();
 			const hasSelectedDevices =
 				nonStaleSelectedDevices.length >= AUTOSELECT_DRIVE_COUNT;
 			const shouldAutoselectOne =
@@ -189,9 +195,12 @@ function storeReducer(
 			if (shouldAutoselectOne || shouldAutoselectAll) {
 				// Even if there's no image selected, we need to call several
 				// drive/image related checks, and `{}` works fine with them
-				const image = state
-					.getIn(['selection', 'image'], Immutable.fromJS({}))
-					.toJS();
+				const image = (
+					state.getIn(
+						['selection', 'image'],
+						Immutable.fromJS({}),
+					) as Immutable.Map<string, any>
+				).toJS() as SourceMetadata;
 
 				return _.reduce(
 					drives,
@@ -380,17 +389,25 @@ function storeReducer(
 				});
 			}
 
-			const image = state.getIn(['selection', 'image']);
+			const image = state.getIn(['selection', 'image']) as
+				| Immutable.Map<string, any>
+				| undefined;
 			if (
 				image &&
-				!constraints.isDriveLargeEnough(selectedDrive, image.toJS())
+				!constraints.isDriveLargeEnough(
+					selectedDrive,
+					image.toJS() as SourceMetadata,
+				)
 			) {
 				throw errors.createError({
 					title: 'The drive is not large enough',
 				});
 			}
 
-			const selectedDevices = state.getIn(['selection', 'devices']);
+			const selectedDevices = state.getIn([
+				'selection',
+				'devices',
+			]) as Immutable.OrderedSet<string>;
 
 			return state.setIn(['selection', 'devices'], selectedDevices.add(device));
 		}
@@ -454,7 +471,10 @@ function storeReducer(
 				});
 			}
 
-			const selectedDevices = state.getIn(['selection', 'devices']);
+			const selectedDevices = state.getIn([
+				'selection',
+				'devices',
+			]) as Immutable.OrderedSet<string>;
 
 			// Remove image-incompatible drives from selection with `constraints.isDriveValid`
 			return _.reduce(
@@ -492,7 +512,10 @@ function storeReducer(
 				});
 			}
 
-			const selectedDevices = state.getIn(['selection', 'devices']);
+			const selectedDevices = state.getIn([
+				'selection',
+				'devices',
+			]) as Immutable.OrderedSet<string>;
 
 			// Remove drive from set in state
 			return state.setIn(

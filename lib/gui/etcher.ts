@@ -104,6 +104,7 @@ async function getCommandLineURL(argv: string[]): Promise<string | undefined> {
 		}
 		return value;
 	}
+	return undefined;
 }
 
 const sourceSelectorReady = new Promise((resolve) => {
@@ -214,7 +215,8 @@ async function createMainWindow() {
 		}
 	});
 
-	const windowDetails = store.get('windowDetails');
+	const windowDetails = store.get('windowDetails') as
+		{ position: [number, number] } | undefined;
 
 	if (windowDetails) {
 		mainWindow.setPosition(
@@ -228,7 +230,7 @@ async function createMainWindow() {
 	return mainWindow;
 }
 
-electron.app.on('edit-config-file', () => {
+electron.app.on('edit-config-file' as any, () => {
 	if (isLinux) {
 		console.info(
 			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
@@ -269,7 +271,7 @@ electron.app.on('before-quit', () => {
 	process.exit(EXIT_CODES.SUCCESS);
 });
 
-electron.app.on('relaunch', () => {
+electron.app.on('relaunch' as any, () => {
 	console.warn('Restarting App...');
 	if (mainWindow) {
 		store.set('windowDetails', {
@@ -310,7 +312,7 @@ contextMenu({
 	showInspectElement: true,
 	showLookUpSelection: true,
 	showSearchWithGoogle: false,
-	prepend: (defaultActions, parameters) => [
+	prepend: (_defaultActions, parameters) => [
 		{
 			label: 'Open Link in New Window',
 			// Only show it when right-clicking a link
@@ -420,7 +422,7 @@ async function main(): Promise<void> {
 		});
 		await selectImageURL(await getCommandLineURL(process.argv));
 
-		electron.ipcMain.on('change-lng', function (event, args) {
+		electron.ipcMain.on('change-lng', function (_event, args) {
 			i18n.changeLanguage(args, () => {
 				console.log('Language changed to: ' + args);
 			});

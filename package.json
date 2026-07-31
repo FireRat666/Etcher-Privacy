@@ -4,7 +4,7 @@
   "displayName": "Etcher Privacy",
   "productName": "Etcher Privacy",
   "appName": "Etcher Privacy",
-  "version": "2.1.7",
+  "version": "2.1.6-P",
   "packageType": "local",
   "main": ".webpack/main",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
@@ -18,7 +18,7 @@
     "url": "https://github.com/FireRat666/Etcher-Privacy.git"
   },
   "scripts": {
-    "prettify": "prettier --write lib/**/*.css && balena-lint --fix --typescript typings lib tests forge.config.ts forge.sidecar.ts webpack.config.ts",
+    "prettify": "prettier --write lib/**/*.css && balena-lint --fix --typescript typings lib tests forge.config.mts forge.sidecar.ts webpack.config.ts",
     "lint": "npm run prettify && catch-uncommitted",
     "test": "echo 'Only use custom tests; if you want to test locally, use `npm run wdio`' && exit 0",
     "package": "electron-forge package",
