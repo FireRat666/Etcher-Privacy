@@ -14,17 +14,24 @@ import * as sidecar from './forge.sidecar';
 
 import { hostDependencies, productDescription } from './package.json';
 
+const osxSigningEnabled =
+	process.env.NODE_ENV === 'production' && !!process.env.XCODE_APP_LOADER_EMAIL;
+const winSigningEnabled =
+	process.env.NODE_ENV === 'production' && !!process.env.SM_CLIENT_CERT_FILE;
+
 const osxSigningConfig: any = {};
 let winSigningConfig: any = {};
 
-if (process.env.NODE_ENV === 'production') {
+if (osxSigningEnabled) {
 	osxSigningConfig.osxNotarize = {
 		tool: 'notarytool',
 		appleId: process.env.XCODE_APP_LOADER_EMAIL,
 		appleIdPassword: process.env.XCODE_APP_LOADER_PASSWORD,
 		teamId: process.env.XCODE_APP_LOADER_TEAM_ID,
 	};
+}
 
+if (winSigningEnabled) {
 	winSigningConfig = {
 		signWithParams: `-sha1 ${process.env.SM_CODE_SIGNING_CERT_SHA1_HASH} -tr ${process.env.TIMESTAMP_SERVER} -td sha256 -fd sha256 -d etcher-privacy`,
 	};
@@ -46,12 +53,14 @@ const config: ForgeConfig = {
 			'lib/shared/sudo/sudo-askpass.osascript-en.js',
 			'lib/gui/assets',
 		],
-		osxSign: {
-			optionsForFile: () => ({
-				entitlements: './assets/entitlements.mac.plist',
-				hardenedRuntime: true,
-			}),
-		},
+		osxSign: osxSigningEnabled
+			? {
+					optionsForFile: () => ({
+						entitlements: './assets/entitlements.mac.plist',
+						hardenedRuntime: true,
+					}),
+				}
+			: false,
 		...osxSigningConfig,
 	},
 	rebuildConfig: {
