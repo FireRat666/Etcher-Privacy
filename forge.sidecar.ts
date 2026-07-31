@@ -74,6 +74,8 @@ function build(
 		// FIXME: rebuilding mountutils shouldn't be necessary, but it is.
 		// It's coming from etcher-sdk, a fix has been upstreamed but to use
 		// the latest etcher-sdk we need to upgrade axios at the same time.
+		// mountutils is a non-NAPI native addon, so it must be rebuilt against
+		// the same Node version that pkg embeds (see the pkg `--target` below).
 		commands.push(['npm', ['rebuild', 'mountutils', `--arch=${arch}`]]);
 
 		commands.push([
@@ -90,7 +92,7 @@ function build(
 				// always build for host platform and node version
 				// https://github.com/vercel/pkg-fetch/releases
 				'--target',
-				`node18-${arch}`,
+				`node20-${arch}`,
 				'--output',
 				binPath,
 			],

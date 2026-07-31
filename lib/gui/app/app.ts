@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import './console-forwarder';
+
 import * as electron from 'electron';
 import * as remote from '@electron/remote';
 import type { Dictionary } from 'lodash';

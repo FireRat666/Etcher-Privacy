@@ -41,6 +41,19 @@ let mainWindow: any = null;
 
 remoteMain.initialize();
 
+// Write renderer console output to the terminal when launched from a command line
+electron.ipcMain.on(
+	'renderer-console',
+	(_event, level: string, text: string) => {
+		const line = `[renderer] ${text}\n`;
+		if (level === 'error' || level === 'warn') {
+			process.stderr.write(line);
+		} else {
+			process.stdout.write(line);
+		}
+	},
+);
+
 const store = new Store();
 
 // Globally export what OS we are on
