@@ -35,7 +35,8 @@
     "clean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack && rimraf node_modules",
     "distclean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack",
     "burn": "rimraf package-lock.json && rimraf npm-shrinkwrap.json && rimraf node_modules",
-    "shrink": "npm shrinkwrap"
+    "shrink": "npm shrinkwrap",
+    "postinstall": "node ./scripts/fix-node-gyp-bin.js"
   },
   "husky": {
     "hooks": {
@@ -165,7 +166,10 @@
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
-    "utf-8-validate": "6.0.4",
+    "utf-8-validate": "^5.0.2",
     "winusb-driver-generator": "^2.1.10"
+  },
+  "overrides": {
+    "@electron/node-gyp": "npm:node-gyp@^11.1.0"
   }
 }
