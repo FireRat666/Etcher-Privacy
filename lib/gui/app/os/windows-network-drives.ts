@@ -16,6 +16,7 @@
 
 import { exec } from 'child_process';
 import { withTmpFile } from 'etcher-sdk/build/tmp';
+import { readFile } from 'fs';
 import { chain, trim } from 'lodash';
 import { join } from 'path';
 import { env } from 'process';
