@@ -59,6 +59,7 @@ runs:
         # the shrinkwrap pins winusb-driver-generator, so npm ci already installs
         # it; verify it is present instead of reinstalling it
         if [[ "$RUNNER_OS" == "Windows" ]]; then
+          npm install --no-save --package-lock=false --force winusb-driver-generator@2.1.10
           npm ls winusb-driver-generator
 
           # need to modifies @yao-pkg/pkg-fetch
