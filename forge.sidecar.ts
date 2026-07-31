@@ -76,7 +76,11 @@ function build(
 		// the latest etcher-sdk we need to upgrade axios at the same time.
 		// mountutils is a non-NAPI native addon, so it must be rebuilt against
 		// the same Node version that pkg embeds (see the pkg `--target` below).
-		commands.push(['npm', ['rebuild', 'mountutils', `--arch=${arch}`]]);
+		commands.push([
+			'npm',
+			['rebuild', 'mountutils'],
+			{ env: { ...process.env, npm_config_arch: arch } },
+		]);
 
 		commands.push([
 			'pkg',

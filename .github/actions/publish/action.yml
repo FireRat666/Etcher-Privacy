@@ -15,7 +15,7 @@ inputs:
     # Beware that native modules will be built for this version,
     # which might not be compatible with the one used by pkg (see forge.sidecar.ts)
     # https://github.com/vercel/pkg-fetch/releases
-    default: '20.19'
+    default: '24'
   VERBOSE:
     type: string
     default: 'true'
@@ -43,7 +43,7 @@ runs:
       run: C:\"Program Files"\Git\usr\bin\tar.exe --force-local -xf ${{ runner.temp }}\custom.tgz
 
     - name: Setup Node.js
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: ${{ inputs.NODE_VERSION }}
         cache: npm
