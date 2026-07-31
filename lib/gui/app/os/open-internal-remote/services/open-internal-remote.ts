@@ -15,26 +15,12 @@
  */
 
 import * as remote from '@electron/remote';
-import * as electronLog from 'electron-log/renderer';
-import { logEvent } from '../../../modules/analytics';
+import { createInternalWindow } from '../../open-internal/lib/internal-window';
 
 /**
  * @summary Open an external resource in a new BrowserWindow
  * using the remote module.
  */
-export async function open(url: string) {
-	logEvent('Open internal link', { url });
-
-	if (url) {
-		electronLog.info(`Opening remote internal window to ` + `'` + url + `'`);
-		const remoteWin = new remote.BrowserWindow({
-			width: 1024,
-			height: 768,
-			useContentSize: true,
-		});
-		remoteWin.loadURL(url);
-		remoteWin.on('close', () => {
-			electronLog.info('Closed a remote internal window');
-		});
-	}
+export function open(url: string) {
+	createInternalWindow(remote.BrowserWindow, url);
 }

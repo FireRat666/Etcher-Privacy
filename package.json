@@ -50,7 +50,6 @@
     "debug": "4.3.4",
     "drivelist": "^12.0.2",
     "electron-context-menu": "3.6.1",
-    "electron-log": "5.1.7",
     "electron-squirrel-startup": "^1.0.0",
     "electron-store": "8.2.0",
     "etcher-sdk": "10.0.0",

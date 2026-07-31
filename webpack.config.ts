@@ -17,7 +17,7 @@
 import type { Configuration, ModuleOptions } from 'webpack';
 import { resolve } from 'path';
 import CopyPlugin = require('copy-webpack-plugin');
-import { BannerPlugin, IgnorePlugin, DefinePlugin } from 'webpack';
+import { BannerPlugin, IgnorePlugin } from 'webpack';
 
 const rules: Required<ModuleOptions>['rules'] = [
 	// Add support for native node modules
@@ -61,10 +61,6 @@ const rules: Required<ModuleOptions>['rules'] = [
 	},
 ];
 
-const injectAnalyticsToken = new DefinePlugin({
-	'process.env.SENTRY_TOKEN': JSON.stringify(process.env.SENTRY_TOKEN || ''),
-});
-
 export const rendererConfig: Configuration = {
 	module: {
 		rules,
@@ -91,7 +87,6 @@ export const rendererConfig: Configuration = {
 				},
 			],
 		}),
-		injectAnalyticsToken,
 	],
 
 	resolve: {
@@ -121,6 +116,5 @@ export const mainConfig: Configuration = {
 				{ from: 'package-builder.json', to: '../package.json' },
 			],
 		}),
-		injectAnalyticsToken,
 	],
 };

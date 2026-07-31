@@ -15,25 +15,11 @@
  */
 
 import * as electron from 'electron';
-import * as electronLog from 'electron-log';
-import { logEvent } from '../../../modules/analytics';
+import { createInternalWindow } from '../lib/internal-window';
 
 /**
  * @summary Open an external resource in a new BrowserWindow
  */
-export async function open(url: string) {
-	logEvent('Open internal link', { url });
-
-	if (url) {
-		electronLog.info(`Opening internal window to ` + `'` + url + `'`);
-		const newWin = new electron.BrowserWindow({
-			width: 1024,
-			height: 768,
-			useContentSize: true,
-		});
-		newWin.loadURL(url);
-		newWin.on('close', () => {
-			electronLog.info('Closed an internal window');
-		});
-	}
+export function open(url: string) {
+	createInternalWindow(electron.BrowserWindow, url);
 }

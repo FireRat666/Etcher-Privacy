@@ -22,7 +22,6 @@ declare const MAIN_WINDOW_PRELOAD_WEBPACK_ENTRY: string;
 
 import * as electron from 'electron';
 import * as remoteMain from '@electron/remote/main';
-import * as electronLog from 'electron-log';
 import Store from 'electron-store';
 import contextMenu from 'electron-context-menu';
 import { promises as fs } from 'fs';
@@ -42,10 +41,6 @@ let mainWindow: any = null;
 
 remoteMain.initialize();
 
-// Restrict main.log size to 100Kb
-electronLog.initialize();
-electronLog.transports.file.maxSize = 1024 * 100;
-
 const store = new Store();
 
 // Globally export what OS we are on
@@ -54,7 +49,7 @@ const isWin = process.platform === 'win32';
 const isMac = process.platform === 'darwin';
 
 async function checkForUpdates() {
-	electronLog.info('Auto-Updates disabled for this build');
+	console.info('Auto-Updates disabled for this build');
 }
 
 function logMainProcessException(error: any) {
@@ -198,9 +193,9 @@ async function createMainWindow() {
 			store.set('windowDetails', {
 				position: mainWindow.getPosition(),
 			});
-			electronLog.info('Saved windowDetails');
+			console.info('Saved windowDetails');
 		} else {
-			electronLog.error(
+			console.error(
 				'Error: mainWindow was not defined while trying to save windowDetails.',
 			);
 		}
@@ -214,7 +209,7 @@ async function createMainWindow() {
 			windowDetails.position[1],
 		);
 	} else {
-		electronLog.warn('No windowDetails');
+		console.warn('No windowDetails');
 	}
 
 	return mainWindow;
@@ -222,16 +217,16 @@ async function createMainWindow() {
 
 electron.app.on('edit-config-file', () => {
 	if (isLinux) {
-		electronLog.info(
+		console.info(
 			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
 		);
-		electronLog.warn(
+		console.warn(
 			'On Linux, a default text editor for handling JSON files must also be present and configured correctly.',
 		);
 		store.openInEditor();
 		return;
 	} else {
-		electronLog.info(
+		console.info(
 			'Note that JSON must be a recognized file type \n for the OS to open the config.json file.',
 		);
 		store.openInEditor();
@@ -240,11 +235,11 @@ electron.app.on('edit-config-file', () => {
 
 electron.app.on('window-all-closed', () => {
 	if (!isMac) {
-		electronLog.warn('mainWindow.close()');
+		console.warn('mainWindow.close()');
 		electron.app.quit();
 	} else {
-		electronLog.info('Not keeping dock alive even though this is MacOS');
-		electronLog.warn('mainWindow.close()');
+		console.info('Not keeping dock alive even though this is MacOS');
+		console.warn('mainWindow.close()');
 		electron.app.quit();
 	}
 });
@@ -256,20 +251,20 @@ electron.app.on('window-all-closed', () => {
 // make use of it to ensure the browser window is completely destroyed.
 // See https://github.com/electron/electron/issues/5273
 electron.app.on('before-quit', () => {
-	electronLog.info('Etcher Privacy is quitting now');
+	console.info('Etcher Privacy is quitting now');
 	electron.app.releaseSingleInstanceLock();
 	process.exit(EXIT_CODES.SUCCESS);
 });
 
 electron.app.on('relaunch', () => {
-	electronLog.warn('Restarting App...');
+	console.warn('Restarting App...');
 	if (mainWindow) {
 		store.set('windowDetails', {
 			position: mainWindow.getPosition(),
 		});
-		electronLog.info('Saved windowDetails');
+		console.info('Saved windowDetails');
 	} else {
-		electronLog.error(
+		console.error(
 			'Error: mainWindow was not defined while trying to save windowDetails.',
 		);
 	}
@@ -323,7 +318,7 @@ contextMenu({
 					},
 				});
 				linkWin.loadURL(toURL);
-				electronLog.info('Opened Link in New Window');
+				console.info('Opened Link in New Window');
 			},
 		},
 		{
@@ -346,7 +341,7 @@ contextMenu({
 					},
 				});
 				searchWin.loadURL(searchURL);
-				electronLog.info('Searched for "' + queryURL + '" on Google');
+				console.info('Searched for "' + queryURL + '" on Google');
 			},
 		},
 		{
@@ -368,7 +363,7 @@ contextMenu({
 					},
 				});
 				imgWin.loadURL(imgURL);
-				electronLog.info('Opened Image in New Window');
+				console.info('Opened Image in New Window');
 			},
 		},
 		{
@@ -390,7 +385,7 @@ contextMenu({
 					},
 				});
 				vidWin.loadURL(vidURL);
-				electronLog.info('Popped out Video');
+				console.info('Popped out Video');
 			},
 		},
 	],

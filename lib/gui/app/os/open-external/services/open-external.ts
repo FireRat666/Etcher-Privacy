@@ -15,7 +15,6 @@
  */
 
 import * as electron from 'electron';
-import * as electronLog from 'electron-log';
 import * as settings from '../../../models/settings';
 
 /**
@@ -28,7 +27,7 @@ export async function open(url: string) {
 	}
 
 	if (url) {
-		electronLog.info('Opening external browser to', url);
+		console.info('Opening external browser to', url);
 		electron.shell.openExternal(url);
 	}
 }

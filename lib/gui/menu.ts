@@ -16,7 +16,7 @@
 
 import * as Os from 'os';
 import * as electron from 'electron';
-import * as electronLog from 'electron-log';
+
 import { open as openInternal } from './app/os/open-internal/services/open-internal';
 import { open as openExternal } from './app/os/open-external/services/open-external';
 
@@ -58,10 +58,10 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 		// NOTE: We can't use `webContents.toggleDevTools()` here,
 		// as we need to force detached mode
 		if (window.webContents.isDevToolsOpened()) {
-			electronLog.info('Closing Electron DevTools');
+			console.info('Closing Electron DevTools');
 			window.webContents.closeDevTools();
 		} else {
-			electronLog.info('Opening Electron DevTools on mainWindow');
+			console.info('Opening Electron DevTools on mainWindow');
 			window.webContents.openDevTools({
 				mode: 'detach',
 			});
@@ -96,7 +96,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.gpu'),
 					accelerator: 'CmdorCtrl+Alt+G',
 					click() {
-						electronLog.info('Opening chrome://gpu');
+						console.info('Opening chrome://gpu');
 						openInternal('chrome://gpu');
 					},
 				},
@@ -104,7 +104,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.procinternals'),
 					accelerator: 'CmdorCtrl+Alt+P',
 					click() {
-						electronLog.info('Opening chrome://process-internals');
+						console.info('Opening chrome://process-internals');
 						openInternal('chrome://process-internals');
 					},
 				},
@@ -112,7 +112,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.testwindow'),
 					accelerator: 'CmdorCtrl+N',
 					click() {
-						electronLog.info('Opening Test Window');
+						console.info('Opening Test Window');
 						openInternal('https://www.google.com/');
 					},
 				},
@@ -120,7 +120,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.config'),
 					click() {
-						electronLog.info('Editing Config File');
+						console.info('Editing Config File');
 						electron.app.emit('edit-config-file');
 					},
 				},
@@ -170,7 +170,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 							message: info.join('\n'),
 							buttons: ['Ok'],
 						});
-						electronLog.info('Opened About window');
+						console.info('Opened About window');
 					},
 				},
 			],
@@ -210,7 +210,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 						if (focusedWindow) {
 							focusedWindow.webContents.goBack();
 						}
-						electronLog.info('Navigated back');
+						console.info('Navigated back');
 					},
 				},
 				{
@@ -220,7 +220,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 						if (focusedWindow) {
 							focusedWindow.webContents.goForward();
 						}
-						electronLog.info('Navigated forward');
+						console.info('Navigated forward');
 					},
 				},
 				{
@@ -241,7 +241,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 						if (focusedWindow) {
 							focusedWindow.webContents.goBack();
 						}
-						electronLog.info('Navigated back');
+						console.info('Navigated back');
 					},
 				},
 				{
@@ -251,7 +251,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 						if (focusedWindow) {
 							focusedWindow.webContents.goForward();
 						}
-						electronLog.info('Navigated forward');
+						console.info('Navigated forward');
 					},
 				},
 				{
