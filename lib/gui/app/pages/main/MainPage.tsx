@@ -15,13 +15,12 @@
  */
 
 import CogSvg from '@fortawesome/fontawesome-free/svgs/solid/gear.svg';
-import CloseSvg from '@fortawesome/fontawesome-free/svgs/solid/x.svg';
 import QuestionCircleSvg from '@fortawesome/fontawesome-free/svgs/solid/circle-question.svg';
 
 import * as path from 'path';
 import prettyBytes from 'pretty-bytes';
 import * as React from 'react';
-import { Alert, Flex, Link } from 'rendition';
+import { Flex } from 'rendition';
 import styled from 'styled-components';
 
 import FinishPage from '../../components/finish/finish';
@@ -34,10 +33,8 @@ import * as selectionState from '../../models/selection-state';
 import * as settings from '../../models/settings';
 import { observe } from '../../models/store';
 import { open as openInternalRemote } from '../../os/open-internal-remote/services/open-internal-remote';
-import { open as openExternal } from '../../os/open-external/services/open-external';
 import {
 	IconButton as BaseIcon,
-	IconButton,
 	ThemedProvider,
 } from '../../styled-components';
 
@@ -49,7 +46,6 @@ import { FlashStep } from './Flash';
 
 import EtcherSvg from '../../../assets/etcher.svg';
 import { SafeWebview } from '../../components/safe-webview/safe-webview';
-import { theme } from '../../theme';
 
 const Icon = styled(BaseIcon)`
 	margin-right: 20px;
@@ -101,8 +97,6 @@ const StepBorder = styled.div<{
 	margin-left: ${(props) => (props.right ? '-120px' : undefined)};
 `;
 
-const ANALYTICS_ALERT_VISIBILITY_KEY = 'analytics_alert_visible';
-
 interface MainPageStateFromStore {
 	isFlashing: boolean;
 	hasImage: boolean;
@@ -119,7 +113,6 @@ interface MainPageState {
 	isWebviewShowing: boolean;
 	hideSettings: boolean;
 	featuredProjectURL?: string;
-	analyticsAlertIsVisible: boolean;
 }
 
 export class MainPage extends React.Component<
@@ -132,8 +125,6 @@ export class MainPage extends React.Component<
 			current: 'main',
 			isWebviewShowing: false,
 			hideSettings: true,
-			analyticsAlertIsVisible:
-				localStorage.getItem(ANALYTICS_ALERT_VISIBILITY_KEY) !== 'false',
 			...this.stateHelper(),
 		};
 	}
@@ -162,29 +153,11 @@ export class MainPage extends React.Component<
 		return url.toString();
 	}
 
-	private hideAnalyticsAlert = () => {
-		if (this.state.analyticsAlertIsVisible) {
-			localStorage.setItem(ANALYTICS_ALERT_VISIBILITY_KEY, 'false');
-			this.setState({ analyticsAlertIsVisible: false });
-		}
-	};
-
 	public async componentDidMount() {
 		observe(() => {
 			this.setState(this.stateHelper());
 		});
 		this.setState({ featuredProjectURL: await this.getFeaturedProjectURL() });
-	}
-
-	public componentDidUpdate(
-		_prevProps: object,
-		prevState: Readonly<MainPageState & MainPageStateFromStore>,
-	) {
-		if (this.state.analyticsAlertIsVisible) {
-			if (prevState.hideSettings !== this.state.hideSettings) {
-				this.setState({ analyticsAlertIsVisible: false });
-			}
-		}
 	}
 
 	private renderMain() {
@@ -201,13 +174,12 @@ export class MainPage extends React.Component<
 			>
 				<Flex
 					justifyContent="space-between"
-					mb={this.state.analyticsAlertIsVisible ? '0px' : '92px'}
+					mb="92px"
 				>
 					{notFlashingOrSplitView && (
 						<>
 							<SourceSelector
 								flashing={this.state.isFlashing}
-								hideAnalyticsAlert={this.hideAnalyticsAlert}
 							/>
 							<Flex>
 								<StepBorder disabled={shouldDriveStepBeDisabled} left />
@@ -216,7 +188,6 @@ export class MainPage extends React.Component<
 								disabled={shouldDriveStepBeDisabled}
 								hasDrive={this.state.hasDrive}
 								flashing={this.state.isFlashing}
-								hideAnalyticsAlert={this.hideAnalyticsAlert}
 							/>
 							<Flex>
 								<StepBorder disabled={shouldFlashStepBeDisabled} right />
@@ -285,38 +256,6 @@ export class MainPage extends React.Component<
 						style={{ zIndex: 1 }}
 					/>
 				</Flex>
-				{this.state.analyticsAlertIsVisible && (
-					<Alert mt="18px" style={{ boxShadow: 'none', fontSize: '12px' }}>
-						<Flex alignItems="center" justifyContent="space-between">
-							<Flex flexDirection="column">
-								<div>
-									Etcher collects a limited amount of anonymous data to help us
-									improve user experience. You can opt out in the{' '}
-									<Link onClick={() => this.setState({ hideSettings: false })}>
-										settings
-									</Link>
-									.
-								</div>
-								<div>
-									For more information about how we use this data, see our{' '}
-									<Link
-										onClick={(e) => {
-											e.stopPropagation();
-											openExternal('https://www.balena.io/privacy-policy');
-										}}
-									>
-										privacy policy
-									</Link>
-									.
-								</div>
-							</Flex>
-							{/* TODO: can we use onDismiss instead? */}
-							<IconButton onClick={this.hideAnalyticsAlert}>
-								<CloseSvg height="0.75rem" fill={theme.colors.text.main} />
-							</IconButton>
-						</Flex>
-					</Alert>
-				)}
 			</Flex>
 		);
 	}

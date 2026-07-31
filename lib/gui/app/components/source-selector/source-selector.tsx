@@ -308,7 +308,6 @@ const FlowSelector = styled(
 
 interface SourceSelectorProps {
 	flashing: boolean;
-	hideAnalyticsAlert: () => void;
 }
 
 interface SourceSelectorState {
@@ -360,20 +359,6 @@ export class SourceSelector extends React.Component<
 		ipcRenderer.removeListener('select-image', this.onSelectImage);
 	}
 
-	public componentDidUpdate(
-		_prevProps: Readonly<SourceSelectorProps>,
-		prevState: Readonly<SourceSelectorState>,
-	) {
-		if (
-			(!prevState.showDriveSelector && this.state.showDriveSelector) ||
-			(!prevState.showURLSelector && this.state.showURLSelector) ||
-			(!prevState.showImageDetails && this.state.showImageDetails) ||
-			(!prevState.imageSelectorOpen && this.state.imageSelectorOpen)
-		) {
-			this.props.hideAnalyticsAlert();
-		}
-	}
-
 	private async onSelectImage(_event: IpcRendererEvent, imagePath: string) {
 		this.setState({ imageLoading: true });
 		await this.selectSource(
@@ -393,7 +378,6 @@ export class SourceSelector extends React.Component<
 
 	private reselectSource() {
 		selectionState.deselectImage();
-		this.props.hideAnalyticsAlert();
 	}
 
 	private selectSource(

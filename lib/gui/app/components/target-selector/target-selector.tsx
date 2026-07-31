@@ -87,14 +87,12 @@ interface TargetSelectorProps {
 	disabled: boolean;
 	hasDrive: boolean;
 	flashing: boolean;
-	hideAnalyticsAlert: () => void;
 }
 
 export const TargetSelector = ({
 	disabled,
 	hasDrive,
 	flashing,
-	hideAnalyticsAlert,
 }: TargetSelectorProps) => {
 	// TODO: inject these from redux-connector
 	const [{ driveListLabel, targets }, setStateSlice] = React.useState(
@@ -124,10 +122,9 @@ export const TargetSelector = ({
 				disabled={disabled}
 				show={!hasDrive}
 				tooltip={driveListLabel}
-				openDriveSelector={() => {
-					setShowTargetSelectorModal(true);
-					hideAnalyticsAlert();
-				}}
+			openDriveSelector={() => {
+				setShowTargetSelectorModal(true);
+			}}
 				reselectDrive={() => {
 					setShowTargetSelectorModal(true);
 				}}
