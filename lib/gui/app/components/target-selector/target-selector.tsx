@@ -122,9 +122,9 @@ export const TargetSelector = ({
 				disabled={disabled}
 				show={!hasDrive}
 				tooltip={driveListLabel}
-			openDriveSelector={() => {
-				setShowTargetSelectorModal(true);
-			}}
+				openDriveSelector={() => {
+					setShowTargetSelectorModal(true);
+				}}
 				reselectDrive={() => {
 					setShowTargetSelectorModal(true);
 				}}

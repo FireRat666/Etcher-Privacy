@@ -23,7 +23,7 @@ describe('Browser: MiddleEllipsis', function () {
 		it('should throw error if limit < 3', function () {
 			expect(() => {
 				middleEllipsis('No', 2);
-			}).to.throw('middleEllipsis: Limit should be at least 3');
+			}).to.throw('middleEllipsis: Ellipses Limit should be at least 3');
 		});
 
 		describe('given the input length is greater than the limit', function () {

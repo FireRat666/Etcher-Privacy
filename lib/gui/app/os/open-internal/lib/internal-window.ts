@@ -14,11 +14,15 @@
  * limitations under the License.
  */
 
-import * as electron from 'electron';
+import type * as electron from 'electron';
 
 const ERR_ABORTED = -3;
 
-function errorPage(url: string, errorDescription: string, errorCode: number): string {
+function errorPage(
+	url: string,
+	errorDescription: string,
+	errorCode: number,
+): string {
 	const html = `<!doctype html>
 <html>
 <head>
