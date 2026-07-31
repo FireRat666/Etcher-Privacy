@@ -35,10 +35,20 @@ if (platform !== 'linux' || (geteuid && geteuid() === 0)) {
 }
 
 if (platform === 'win32') {
-	const {
-		DriverlessDeviceAdapter: driverless,
-	} = require('etcher-sdk/build/scanner/adapters/driverless');
-	adapters.push(new driverless());
+	try {
+		// winusb-driver-generator is an optional dependency that can fail to
+		// install (e.g. incompatible Node version), in which case the
+		// driverless adapter would crash the process on scan.
+		require('winusb-driver-generator');
+		const {
+			DriverlessDeviceAdapter: driverless,
+		} = require('etcher-sdk/build/scanner/adapters/driverless');
+		adapters.push(new driverless());
+	} catch (error: any) {
+		console.warn(
+			`winusb-driver-generator is unavailable (${error?.message ?? error}); disabling driverless device support`,
+		);
+	}
 }
 
 export const scanner = new sdk.scanner.Scanner(adapters);

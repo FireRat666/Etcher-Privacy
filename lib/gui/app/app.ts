@@ -144,11 +144,22 @@ spawnChildAndConnect({
 		requestMetadata = async (params: any): Promise<SourceMetadata> => {
 			emit('sourceMetadata', JSON.stringify(params));
 
-			return new Promise((resolve) =>
-				registerHandler('sourceMetadata', (data: any) => {
+			return new Promise((resolve, reject) => {
+				const onMetadata = (data: any) => {
+					clearTimeout(timeout);
 					resolve(JSON.parse(data));
-				}),
-			);
+				};
+				const onFail = () => {
+					clearTimeout(timeout);
+					reject(new Error('Failed to get source metadata'));
+				};
+				// Never hang the UI if the sidecar dies or stalls
+				const timeout = setTimeout(() => {
+					reject(new Error('Timed out getting source metadata'));
+				}, 60000);
+				registerHandler('sourceMetadata', onMetadata);
+				registerHandler('fail', onFail);
+			});
 		};
 
 		registerHandler('drives', (data: any) => {
