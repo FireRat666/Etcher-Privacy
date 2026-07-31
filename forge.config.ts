@@ -17,7 +17,9 @@ import { hostDependencies, productDescription } from './package.json';
 const osxSigningEnabled =
 	process.env.NODE_ENV === 'production' && !!process.env.XCODE_APP_LOADER_EMAIL;
 const winSigningEnabled =
-	process.env.NODE_ENV === 'production' && !!process.env.SM_CLIENT_CERT_FILE;
+	process.env.NODE_ENV === 'production' &&
+	!!process.env.SM_CLIENT_CERT_FILE &&
+	!!process.env.SM_CODE_SIGNING_CERT_SHA1_HASH;
 
 const osxSigningConfig: any = {};
 let winSigningConfig: any = {};
