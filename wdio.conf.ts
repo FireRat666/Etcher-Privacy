@@ -1,4 +1,19 @@
 /// <reference types="wdio-electron-service" />
+import path from 'path';
+
+function getAppBinaryPath(): string {
+	const arch = process.arch;
+	const platform = process.platform;
+	const outDir = path.join(__dirname, 'out');
+
+	if (platform === 'win32') {
+		return path.join(outDir, `Etcher Privacy-win32-${arch}`, 'Etcher Privacy.exe');
+	} else if (platform === 'darwin') {
+		return path.join(outDir, `Etcher Privacy-darwin-${arch}`, 'Etcher Privacy.app', 'Contents', 'MacOS', 'Etcher Privacy');
+	} else {
+		return path.join(outDir, `Etcher Privacy-linux-${arch}`, 'etcher-privacy');
+	}
+}
 
 export const config: WebdriverIO.Config = {
 	//
@@ -72,6 +87,7 @@ export const config: WebdriverIO.Config = {
 			// Electron service options
 			// see https://webdriver.io/docs/desktop-testing/electron/configuration/#service-options
 			'wdio:electronServiceOptions': {
+				appBinaryPath: getAppBinaryPath(),
 				appArgs: process.platform === 'linux' ? ['headless'] : [],
 			},
 		},
