@@ -207,8 +207,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
 					click(_item, focusedWindow) {
-						if (focusedWindow) {
-							(focusedWindow as electron.BrowserWindow).webContents.goBack();
+						if (focusedWindow instanceof electron.BrowserWindow) {
+							focusedWindow.webContents.goBack();
 						}
 						console.info('Navigated back');
 					},
@@ -217,8 +217,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
 					click(_item, focusedWindow) {
-						if (focusedWindow) {
-							(focusedWindow as electron.BrowserWindow).webContents.goForward();
+						if (focusedWindow instanceof electron.BrowserWindow) {
+							focusedWindow.webContents.goForward();
 						}
 						console.info('Navigated forward');
 					},
@@ -238,8 +238,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
 					click(_item, focusedWindow) {
-						if (focusedWindow) {
-							(focusedWindow as electron.BrowserWindow).webContents.goBack();
+						if (focusedWindow instanceof electron.BrowserWindow) {
+							focusedWindow.webContents.goBack();
 						}
 						console.info('Navigated back');
 					},
@@ -248,8 +248,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
 					click(_item, focusedWindow) {
-						if (focusedWindow) {
-							(focusedWindow as electron.BrowserWindow).webContents.goForward();
+						if (focusedWindow instanceof electron.BrowserWindow) {
+							focusedWindow.webContents.goForward();
 						}
 						console.info('Navigated forward');
 					},

@@ -230,7 +230,19 @@ async function createMainWindow() {
 	return mainWindow;
 }
 
-electron.app.on('edit-config-file' as any, () => {
+type CustomAppEvents = {
+	'edit-config-file': () => void;
+	relaunch: () => void;
+};
+
+function onCustomAppEvent<K extends keyof CustomAppEvents>(
+	event: K,
+	listener: CustomAppEvents[K],
+): void {
+	electron.app.on(event as any, listener);
+}
+
+onCustomAppEvent('edit-config-file', () => {
 	if (isLinux) {
 		console.info(
 			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
@@ -271,7 +283,7 @@ electron.app.on('before-quit', () => {
 	process.exit(EXIT_CODES.SUCCESS);
 });
 
-electron.app.on('relaunch' as any, () => {
+onCustomAppEvent('relaunch', () => {
 	console.warn('Restarting App...');
 	if (mainWindow) {
 		store.set('windowDetails', {
