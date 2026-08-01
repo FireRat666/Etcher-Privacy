@@ -3,13 +3,12 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# v2.1.7
+# v2.1.6.2-P
 ## (2026-08-01)
 
 * update .nvmrc [FireRat]
 * Fix node-gyp binary resolution for Electron builds [FireRat]
 * Fix Windows test job: approve install scripts and force-install winusb-driver-generator [FireRat]
-* Fix node-gyp binary resolution for Electron builds [FireRat]
 * Share the custom app event contract between registration and emission [FireRat]
 * Fix sidecar Node ABI mismatch by packaging with Node 24 [FireRat]
 * Require Node 24 and update CI tooling [FireRat]
@@ -17,27 +16,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Prettify store.ts formatting to satisfy catch-uncommitted [FireRat]
 * Reset version to 2.1.6-P and fix remaining TypeScript errors [FireRat]
 * v2.1.7 [FireRat]
-* Update npm-shrinkwrap.json for @reforged/maker-appimage ^5.2.0 [FireRat]
-* Update @reforged/maker-appimage to ^5.2.0 and require SM_CODE_SIGNING_CERT_SHA1_HASH for Windows signing [FireRat]
-* Restore readFile import in windows-network-drives.ts [FireRat]
-* Fix lint uncommitted diffs, sinon os.platform stubbing, and middleEllipsis test assertion [FireRat]
-* Fix wdio-electron-service build tool conflict and use standard macos runners [FireRat]
-* Release v2.1.6-P [FireRat]
-* Enable Flowzone's built-in versioning [FireRat]
-* Bump version to 2.1.6-P and take over versioning from Flowzone [FireRat]
-* Fall back to GITHUB_TOKEN for Flowzone and normalize changelog heading [FireRat]
-* Add versionist config and dependencies manifest [FireRat]
-* Pass the FLOWZONE_TOKEN secret to the Flowzone workflow explicitly [FireRat]
-* Trigger CI after adding FLOWZONE_TOKEN [FireRat]
-* Add Flowzone CI pipeline and make unsigned builds first-class [FireRat]
-* Remove success and featured project webviews, forward renderer logs, and rebuild sidecar on Node 20 [FireRat]
-* Fix target selection crash, harden sidecar requests, and restore winusb driver support on Node 20 [FireRat]
-* Make internal windows robust and replace electron-log with the builtin console logger [FireRat]
-* Remove stale telemetry alert and rename window title [FireRat]
-* Fix TypeScript module resolution for NodeNext [FireRat]
-* Rebrand to Etcher Privacy and fix build on forge 7.8.1 [FireRat]
-* fix [Alexander Frick]
-* 1.19.22 rebase [Alexander Frick]
 
 # v2.1.6-P
 ## (2026-07-31)
