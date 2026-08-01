@@ -14,6 +14,9 @@ function exists(p) {
 }
 
 function writeFile(filePath, content, mode) {
+	try {
+		fs.rmSync(filePath, { force: true });
+	} catch (_) {}
 	fs.writeFileSync(filePath, content, { encoding: 'utf8' });
 	if (mode) {
 		try {
@@ -42,7 +45,12 @@ function createShims(targetBinPath) {
 		'" %*\n' +
 		')\n';
 	const ps1Wrapper =
-		'& "$PSScriptRoot\\node.exe" "$PSScriptRoot\\' + relTarget + '" $args\n';
+		'$node = Join-Path $PSScriptRoot "node.exe"\n' +
+		'if (-not (Test-Path $node)) { $node = "node" }\n' +
+		'& $node (Join-Path $PSScriptRoot "' +
+		relTarget +
+		'") $args\n' +
+		'exit $LASTEXITCODE\n';
 
 	// Write unix shim (no extension)
 	writeFile(path.join(binDir, 'node-gyp'), unixWrapper, 0o755);

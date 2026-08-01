@@ -69,6 +69,7 @@
     "styled-components": "5.3.11",
     "sys-class-rgb-led": "3.0.1",
     "uuid": "9.0.1",
+    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-4",
     "ws": "8.18.0"
   },
   "devDependencies": {
@@ -166,32 +167,28 @@
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
-    "utf-8-validate": "^5.0.2",
-    "winusb-driver-generator": "^2.1.10"
+    "utf-8-validate": "^5.0.2"
   },
   "overrides": {
-    "@electron/node-gyp": "npm:node-gyp@^11.1.0"
+    "@electron/node-gyp": "npm:node-gyp@^11.1.0",
+    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-4"
   },
   "allowScripts": {
-    "@ronomon/direct-io@3.0.1": true,
-    "bufferutil@4.0.8": true,
-    "core-js@2.6.12": true,
-    "core-js@3.49.0": true,
-    "drivelist@12.0.2": true,
-    "edgedriver@5.6.1": true,
-    "edgedriver@6.3.0": true,
-    "electron@37.2.4": true,
-    "electron-winstaller@5.4.4": true,
-    "es5-ext@0.10.64": true,
-    "esbuild@0.28.1": true,
-    "geckodriver@4.2.1": true,
-    "geckodriver@4.5.1": true,
-    "geckodriver@6.1.1": true,
-    "lzma-native@8.0.6": true,
-    "mountutils@2.0.6": true,
-    "usb@2.18.0": true,
-    "utf-8-validate@5.0.10": true,
-    "winusb-driver-generator@2.1.10": true,
-    "xxhash-addon@2.1.0": true
+    "@ronomon/direct-io": true,
+    "bufferutil": true,
+    "core-js": true,
+    "drivelist": true,
+    "edgedriver": true,
+    "electron": true,
+    "electron-winstaller": true,
+    "es5-ext": true,
+    "esbuild": true,
+    "geckodriver": true,
+    "lzma-native": true,
+    "mountutils": true,
+    "usb": true,
+    "utf-8-validate": true,
+    "xxhash-addon": true,
+    "github:FireRat666/winusb-driver-generator#0cd1a2b3c4b513fc17ae6adb6c561d0d94a8a408": true
   }
 }
