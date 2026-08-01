@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# v2.1.6.2-P
+# v2.1.6-2-p
 ## (2026-08-01)
 
 * update .nvmrc [FireRat]
@@ -15,9 +15,8 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * - Fix the punctuation of the forge.config.mts publishing note from "eg." to "e.g.," - Define a CustomAppEvents contract with a typed onCustomAppEvent helper, replacing the as any casts on the edit-config-file and relaunch listeners - Narrow focusedWindow with an instanceof BrowserWindow check in all back/forward menu handlers, replacing the type casts [FireRat]
 * Prettify store.ts formatting to satisfy catch-uncommitted [FireRat]
 * Reset version to 2.1.6-P and fix remaining TypeScript errors [FireRat]
-* v2.1.7 [FireRat]
 
-# v2.1.6-P
+# v2.1.6-1-p
 ## (2026-07-31)
 
 * Update npm-shrinkwrap.json for @reforged/maker-appimage ^5.2.0 [FireRat]
