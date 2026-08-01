@@ -4,7 +4,7 @@
   "displayName": "Etcher Privacy",
   "productName": "Etcher Privacy",
   "appName": "Etcher Privacy",
-  "version": "2.1.6-2-p",
+  "version": "2.1.7",
   "packageType": "local",
   "main": ".webpack/main",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
@@ -162,7 +162,7 @@
     "node": ">=24"
   },
   "versionist": {
-    "publishedAt": "2026-08-01T04:01:09.007Z"
+    "publishedAt": "2026-08-01T05:43:11.839Z"
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
