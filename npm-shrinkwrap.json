@@ -1,12 +1,12 @@
 {
   "name": "etcher-privacy",
-  "version": "2.1.6-P",
+  "version": "2.1.7",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "etcher-privacy",
-      "version": "2.1.6-P",
+      "version": "2.1.7",
       "hasInstallScript": true,
       "license": "Apache-2.0",
       "dependencies": {

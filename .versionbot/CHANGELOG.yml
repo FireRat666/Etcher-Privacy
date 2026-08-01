@@ -1,4 +1,340 @@
 - commits:
+    - subject: update .nvmrc
+      hash: c2bf65eee04b1d662e4cb7ab76b999a758b2b9d3
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Fix node-gyp binary resolution for Electron builds
+      hash: a8b2f2c93fde5b9f2d4e52f613efa330979b05cf
+      body: |-
+        - Add postinstall script to create cross-platform node-gyp shims
+        - Downgrade utf-8-validate to v5 for compatibility
+        - Override @electron/node-gyp to use node-gyp v11
+        - Regenerate npm-shrinkwrap.json
+      footer: {}
+      author: FireRat
+    - subject: "Fix Windows test job: approve install scripts and force-install
+        winusb-driver-generator"
+      hash: 8485236864238b281d7d4bfc85846d84197b2352
+      body: >-
+        package.json: add allowScripts policy approving install scripts for 19
+        native/build packages (electron, esbuild, drivelist, etc.) so npm
+        11.16's allow-scripts gate runs them during npm ci instead of skipping
+        them
+
+
+        package.json: pre-approve winusb-driver-generator@2.1.10 so its install
+        script runs when force-installed
+
+
+        .github/actions/test/action.yml: on Windows, install
+        winusb-driver-generator with --force (bypassing its engines >=20 < 23
+        check on Node 24) via --no-save --package-lock=false before the npm ls
+        verification
+      footer: {}
+      author: FireRat
+    - subject: Fix node-gyp binary resolution for Electron builds
+      hash: 8fdfab3dda52fc2d506d93805f9b41591937a8a3
+      body: |-
+        - Add postinstall script to create cross-platform node-gyp shims
+        - Downgrade utf-8-validate to v5 for compatibility
+        - Override @electron/node-gyp to use node-gyp v11
+        - Regenerate npm-shrinkwrap.json
+      footer: {}
+      author: FireRat
+    - subject: Share the custom app event contract between registration and emission
+      hash: 24ca51702ad61e8499730f48a3291f4338066216
+      body: >-
+        - Extract CustomAppEvents and onCustomAppEvent from etcher.ts into a
+        shared custom-app-events module
+
+        - Add a typed emitCustomAppEvent wrapper and use it in menu.ts for the
+        edit-config-file event, keeping event names compile-time checked on both
+        sides
+      footer: {}
+      author: FireRat
+    - subject: Fix sidecar Node ABI mismatch by packaging with Node 24
+      hash: 9f75a6fa4d6a38dffcb29620905af7963c70559e
+      body: >-
+        - Upgrade @yao-pkg/pkg to 6.22.0 (pkg-fetch 3.6.5) so Node 24 base
+        binaries are available
+
+        - Target node24 for the sidecar executable instead of node20, matching
+        the Node 24 build environment and fixing the mountutils dlopen failure
+        at the end of flashing
+      footer: {}
+      author: FireRat
+    - subject: Require Node 24 and update CI tooling
+      hash: 2d9bf0a4d2c4a4453293f78fbec7fe5c9e8c912c
+      body: >-
+        - Raise the engines requirement to Node >=24 in package.json and the
+        shrinkwrap
+
+        - Default the publish and test workflow actions to Node 24 and upgrade
+        actions/setup-node to v4
+
+        - Pass the target arch to the mountutils rebuild via npm_config_arch
+        instead of the --arch flag
+
+        - Remove a stale nested utf-8-validate entry from the lockfile
+      footer: {}
+      author: FireRat
+    - subject: '- Fix the punctuation of the forge.config.mts publishing note from
+        "eg." to "e.g.," - Define a CustomAppEvents contract with a typed
+        onCustomAppEvent helper, replacing the as any casts on the
+        edit-config-file and relaunch listeners - Narrow focusedWindow with an
+        instanceof BrowserWindow check in all back/forward menu handlers,
+        replacing the type casts'
+      hash: d7b3d559caffa79a1258b201398fe9cd0f862563
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Prettify store.ts formatting to satisfy catch-uncommitted
+      hash: 70b5052a7b88de1a5fba0c8a2c6b907afe50f55c
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Reset version to 2.1.6-P and fix remaining TypeScript errors
+      hash: 65606d54a2d7d85cd0dfc7c5ef4cb328e2c0805e
+      body: >-
+        - Revert the 2.1.7 bump back to 2.1.6-P in package.json, shrinkwrap,
+        changelog, and versionbot state, merging changelog entries under one
+        heading
+
+        - Rename forge.config.ts to forge.config.mts with explicit .ts import
+        extensions, enabling allowImportingTsExtensions
+
+        - Add a webkit-app-region module declaration and remove the @ts-ignore
+        it replaces
+
+        - Fix the remaining TypeScript errors: typed immutable state casts, a
+        discriminated union for sidecar connection results, styled-component
+        generic constraints, stricter callback/event param typing, and explicit
+        return paths
+
+        - Allow the optional tooltip on settings entries and use the modal title
+        prop instead of titleElement
+      footer: {}
+      author: FireRat
+    - subject: v2.1.7
+      hash: be347353ff9bbd08ea2f5066a2096e08229c50ed
+      body: "[skip ci]"
+      footer: {}
+      author: FireRat
+    - subject: Update npm-shrinkwrap.json for @reforged/maker-appimage ^5.2.0
+      hash: 40339e9c6a6b60ad1761a955b193e2869e5570ad
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Update @reforged/maker-appimage to ^5.2.0 and require
+        SM_CODE_SIGNING_CERT_SHA1_HASH for Windows signing
+      hash: 34e55bfb70df1063a1a458be86e56ebaa8a152f9
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Restore readFile import in windows-network-drives.ts
+      hash: 77ab30fe87b15673b4caff35e054dbe39f0479ba
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Fix lint uncommitted diffs, sinon os.platform stubbing, and
+        middleEllipsis test assertion
+      hash: db3076660073a73e824d98deebf474029dbf752c
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Fix wdio-electron-service build tool conflict and use standard macos
+        runners
+      hash: 870d3267c11e84aef1a815bbeb2c0cea227f2147
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Release v2.1.6-P
+      hash: e70fbd54963b5c8bac9ca81bc0aebb197a0b4519
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Enable Flowzone's built-in versioning
+      hash: c6428ad567132baa96cf387ce11bcc9a1d6b1fce
+      body: "- Drop the disable_versioning flag from the Flowzone workflow so it
+        resumes handling version bumps and releases"
+      footer: {}
+      author: FireRat
+    - subject: Bump version to 2.1.6-P and take over versioning from Flowzone
+      hash: 6d5a5b7df13727c90202e10e6770ecec4d2785c5
+      body: >-
+        - Run the Flowzone pipeline on v-prefixed tags and disable its built-in
+        versioning
+
+        - Bump the app version to 2.1.6-P in package.json and the changelog
+        heading
+      footer: {}
+      author: FireRat
+    - subject: Fall back to GITHUB_TOKEN for Flowzone and normalize changelog heading
+      hash: 70884f3fb441793294547c69b0a264d710d0b281
+      body: >-
+        - Use GITHUB_TOKEN as a fallback for FLOWZONE_TOKEN in the Flowzone
+        workflow
+
+        - Rename the changelog version heading to the v-prefixed format (v2.1.6)
+      footer: {}
+      author: FireRat
+    - subject: Add versionist config and dependencies manifest
+      hash: cd57c7b5aa86b3458eb7741ec4139e3a5a00ca50
+      body: >-
+        - Configure versionist to tag versions with a v-prefix and prepend
+        changelog entries from line 5
+
+        - Bump the patch version for every commit using the default template
+
+        - Add an empty dependencies.yml manifest
+      footer: {}
+      author: FireRat
+    - subject: Pass the FLOWZONE_TOKEN secret to the Flowzone workflow explicitly
+      hash: 67041c5af2f46d715bd13f77eebf8cc3992055d4
+      body: "- Replace secrets: inherit with an explicit secret mapping, since the
+        repo and the product-os/flowzone reusable workflow are not in the same
+        organization or enterprise and inherit silently passes nothing"
+      footer: {}
+      author: FireRat
+    - subject: Trigger CI after adding FLOWZONE_TOKEN
+      hash: a8a16ad5bb9be69a87778e98d431fffd039badc7
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Add Flowzone CI pipeline and make unsigned builds first-class
+      hash: 5b75983ff39839494c0f0cee26239f386ca7f867
+      body: >-
+        - Add Flowzone workflow triggering on pull requests and pushes to
+        master, with four-OS test and publish matrices
+
+        - Add test action running lint, packaging, and wdio on Node 20.19,
+        verifying winusb-driver-generator instead of reinstalling it
+
+        - Add publish action producing unsigned Windows, macOS, and Linux
+        installers, with signing steps that run only when certificate secrets
+        are present
+
+        - Remove unused Sentry and Amplitude analytics tokens from the publish
+        action
+
+        - Gate macOS and Windows signing in forge.config.ts on signing secrets
+        so unsigned builds skip code-signing cleanly
+      footer: {}
+      author: FireRat
+    - subject: Remove success and featured project webviews, forward renderer logs,
+        and rebuild sidecar on Node 20
+      hash: 5f2f609b65ece70f4d28b20673f5663e1b934d6f
+      body: >-
+        - Drop the success banner webview from the finish page and the featured
+        project webview from the main page, simplifying the main page into a
+        plain flashing/non-flashing layout
+
+        - Forward renderer console output to the terminal via IPC
+        (console-forwarder + main process handler)
+
+        - Target Node 20 for the pkg sidecar binary and note the mountutils
+        rebuild requirement
+      footer: {}
+      author: FireRat
+    - subject: Fix target selection crash, harden sidecar requests, and restore winusb
+        driver support on Node 20
+      hash: d5f71c09f6b710038f10bd459c8d3a2238e975c4
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: Make internal windows robust and replace electron-log with the builtin
+        console logger
+      hash: 327d7cddfcb9b4bbcd12e06e7da86083dc1a8e64
+      body: >-
+        Rework open-internal into a shared internal-window module used by both
+        the
+
+        main process and the remote renderer service, so any URL type
+        (http/https,
+
+        chrome://, file://, etc.) opens in a properly secured BrowserWindow.
+
+
+        Add a did-fail-load handler and catch load errors to render a dark error
+        page
+
+        in the window instead of leaving a blank one, and re-open target=_blank
+        and
+
+        window.open popups as new internal windows.
+
+
+        Replace every electron-log call with the builtin console logger
+        (info/warn/
+
+        error) across the main process and renderer, so all log output goes to
+        the
+
+        console and no log files are written.
+
+
+        Remove the electron-log dependency from package.json and
+        npm-shrinkwrap.json.
+
+
+        Drop the unused SENTRY_TOKEN DefinePlugin from webpack.config.ts, the
+        last
+
+        remaining Sentry reference in the codebase.
+
+
+        Clear the completed TODO.md items.
+      footer: {}
+      author: FireRat
+    - subject: Remove stale telemetry alert and rename window title
+      hash: 041147249ba2a61662cfc5a0a2afa2df7b48399b
+      body: >-
+        - Remove the analytics opt-out banner from the main page, along with its
+        state, localStorage key, and dismiss handler
+
+        - Drop the hideAnalyticsAlert prop plumbing from source and target
+        selectors
+
+        - Rename the window title from Etcher-ng to Etcher Privacy
+      footer: {}
+      author: FireRat
+    - subject: Fix TypeScript module resolution for NodeNext
+      hash: 55bf9137d4de3814add462e35181d0508deb4af7
+      body: >-
+        - Switch main and sidecar tsconfigs from CommonJS to NodeNext/Node16
+        module resolution
+
+        - Replace namespace imports with default imports for CJS packages
+        (debug, electron-store, electron-context-menu)
+
+        - Add typings for pretty-bytes
+
+        - Enable skipLibCheck for the main tsconfig
+
+        - Load @wdio/globals dynamically in e2e test and use WebdriverIO.Config
+        type in wdio config
+      footer: {}
+      author: FireRat
+    - subject: Rebrand to Etcher Privacy and fix build on forge 7.8.1
+      hash: 1f4d02cbab3ea8d1338f99e9dafe2b5ffacb2f48
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: fix
+      hash: 4ac8b305309aa090eb82206ce2edf9fcc60fdc96
+      body: ""
+      footer: {}
+      author: Alexander Frick
+    - subject: 1.19.22 rebase
+      hash: c9e9e6b7b3e75a8d03f0adf4755ea424b28633dc
+      body: ""
+      footer: {}
+      author: Alexander Frick
+  version: 2.1.7
+  title: ""
+  date: 2026-08-01T04:01:08.903Z
+- commits:
     - subject: Update npm-shrinkwrap.json for @reforged/maker-appimage ^5.2.0
       hash: 40339e9c6a6b60ad1761a955b193e2869e5570ad
       body: ""
