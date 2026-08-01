@@ -28,6 +28,7 @@ import * as i18next from 'i18next';
 interface Setting {
 	name: string;
 	label: string | JSX.Element;
+	tooltip?: string;
 }
 
 async function getSettingsList(): Promise<Setting[]> {

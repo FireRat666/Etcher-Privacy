@@ -42,7 +42,7 @@ Run the following command on each platform:
 npm run make
 ```
 
-This will produce all targets (eg. zip, dmg) specified in forge.config.ts for the
+This will produce all targets (e.g., zip, dmg) specified in forge.config.mts for the
 host platform and architecture.
 
 The resulting artifacts can be found in `out/make`.

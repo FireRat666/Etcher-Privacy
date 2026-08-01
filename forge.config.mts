@@ -9,8 +9,8 @@ import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-nati
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { exec } from 'child_process';
 
-import { mainConfig, rendererConfig } from './webpack.config';
-import * as sidecar from './forge.sidecar';
+import { mainConfig, rendererConfig } from './webpack.config.ts';
+import * as sidecar from './forge.sidecar.ts';
 
 import { hostDependencies, productDescription } from './package.json';
 

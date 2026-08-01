@@ -3,7 +3,7 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# v2.1.7
+# v2.1.6-P
 ## (2026-07-31)
 
 * Update npm-shrinkwrap.json for @reforged/maker-appimage ^5.2.0 [FireRat]
@@ -27,10 +27,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * Rebrand to Etcher Privacy and fix build on forge 7.8.1 [FireRat]
 * fix [Alexander Frick]
 * 1.19.22 rebase [Alexander Frick]
-
-# v2.1.6-P
-## (2026-07-31)
-
 * Rebase onto balena Etcher v2.1.6 (Electron 37) [FireRat666]
 * Remove Sentry error reporting and the analytics-client tracking module [FireRat666]
 * Remove the auto-updater and EtcherPro promotions [FireRat666]

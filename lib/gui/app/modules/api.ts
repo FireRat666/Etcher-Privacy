@@ -88,14 +88,14 @@ async function spawnChild(
 type ChildApi = {
 	emit: (type: string, payload: any) => void;
 	registerHandler: (event: string, handler: any) => void;
-	failed: boolean;
+	failed: false;
 };
 
 async function connectToChildProcess(
 	etcherServerAddress: string,
 	etcherServerPort: string,
 	etcherServerId: string,
-): Promise<ChildApi | { failed: boolean }> {
+): Promise<ChildApi | { failed: true }> {
 	return new Promise((resolve, reject) => {
 		// TODO: default to IPC connections https://github.com/websockets/ws/blob/master/doc/ws.md#ipc-connections
 		// TODO: use the path as cheap authentication
@@ -225,12 +225,12 @@ async function spawnChildAndConnect({
 	try {
 		let retry = 0;
 		while (retry < connectionRetryAttempts) {
-			const { emit, registerHandler, failed } = await connectToChildProcess(
+			const result = await connectToChildProcess(
 				etcherServerAddress,
 				etcherServerPort,
 				etcherServerId,
 			);
-			if (failed) {
+			if (result.failed) {
 				retry++;
 				console.log(
 					`Connection to sidecar flasher process attempt ${retry} / ${connectionRetryAttempts} failed; retrying in ${connectionRetryDelay}ms...`,
@@ -240,7 +240,7 @@ async function spawnChildAndConnect({
 				);
 				continue;
 			}
-			return { failed, emit, registerHandler };
+			return result;
 		}
 		// TODO: raised an error to the user if we reach this point
 		throw new Error('Connection to sidecar flasher process timed out');

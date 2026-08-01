@@ -240,7 +240,6 @@ export class MainPage extends React.Component<
 					paddingTop="14px"
 					style={{
 						// Allow window to be dragged from header
-						// @ts-ignore
 						WebkitAppRegion: 'drag',
 						position: 'relative',
 						zIndex: 2,

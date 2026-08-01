@@ -329,7 +329,7 @@ export class FlashStep extends React.PureComponent<
 				{this.state.errorMessage && (
 					<SmallModal
 						width={400}
-						titleElement={'Attention'}
+						title={'Attention'}
 						cancel={() => this.handleFlashErrorResponse(false)}
 						done={() => this.handleFlashErrorResponse(true)}
 						action={'Retry'}

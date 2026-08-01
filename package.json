@@ -4,7 +4,7 @@
   "displayName": "Etcher Privacy",
   "productName": "Etcher Privacy",
   "appName": "Etcher Privacy",
-  "version": "2.1.7",
+  "version": "2.1.6-P",
   "packageType": "local",
   "main": ".webpack/main",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
@@ -18,7 +18,7 @@
     "url": "https://github.com/FireRat666/Etcher-Privacy.git"
   },
   "scripts": {
-    "prettify": "prettier --write lib/**/*.css && balena-lint --fix --typescript typings lib tests forge.config.ts forge.sidecar.ts webpack.config.ts",
+    "prettify": "prettier --write lib/**/*.css && balena-lint --fix --typescript typings lib tests forge.config.mts forge.sidecar.ts webpack.config.ts",
     "lint": "npm run prettify && catch-uncommitted",
     "test": "echo 'Only use custom tests; if you want to test locally, use `npm run wdio`' && exit 0",
     "package": "electron-forge package",
@@ -35,7 +35,8 @@
     "clean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack && rimraf node_modules",
     "distclean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack",
     "burn": "rimraf package-lock.json && rimraf npm-shrinkwrap.json && rimraf node_modules",
-    "shrink": "npm shrinkwrap"
+    "shrink": "npm shrinkwrap",
+    "postinstall": "node ./scripts/fix-node-gyp-bin.js"
   },
   "husky": {
     "hooks": {
@@ -68,6 +69,7 @@
     "styled-components": "5.3.11",
     "sys-class-rgb-led": "3.0.1",
     "uuid": "9.0.1",
+    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-4",
     "ws": "8.18.0"
   },
   "devDependencies": {
@@ -97,7 +99,7 @@
     "@wdio/local-runner": "8.39.1",
     "@wdio/mocha-framework": "8.39.0",
     "@wdio/spec-reporter": "8.39.0",
-    "@yao-pkg/pkg": "5.12.0",
+    "@yao-pkg/pkg": "^6.22.0",
     "catch-uncommitted": "2.0.0",
     "chai": "4.5.0",
     "copy-webpack-plugin": "10.2.4",
@@ -158,14 +160,35 @@
     ]
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=24"
   },
   "versionist": {
     "publishedAt": "2026-07-31T12:55:40.374Z"
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
-    "utf-8-validate": "6.0.4",
-    "winusb-driver-generator": "^2.1.10"
+    "utf-8-validate": "^5.0.2"
+  },
+  "overrides": {
+    "@electron/node-gyp": "npm:node-gyp@^11.1.0",
+    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-4"
+  },
+  "allowScripts": {
+    "@ronomon/direct-io": true,
+    "bufferutil": true,
+    "core-js": true,
+    "drivelist": true,
+    "edgedriver": true,
+    "electron": true,
+    "electron-winstaller": true,
+    "es5-ext": true,
+    "esbuild": true,
+    "geckodriver": true,
+    "lzma-native": true,
+    "mountutils": true,
+    "usb": true,
+    "utf-8-validate": true,
+    "xxhash-addon": true,
+    "github:FireRat666/winusb-driver-generator#0cd1a2b3c4b513fc17ae6adb6c561d0d94a8a408": true
   }
 }
