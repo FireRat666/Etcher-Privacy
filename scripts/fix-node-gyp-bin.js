@@ -83,11 +83,19 @@ function patchNodeGypUtil() {
 		try {
 			let content = fs.readFileSync(uPath, 'utf8');
 			if (!content.includes('options.maxBuffer = 1024 * 1024 * 50')) {
-				content = content.replace(
+				const patched = content.replace(
 					'const child = cp.execFile(...args, (...a) => resolve(a))',
 					'const options = (typeof args[args.length - 1] === "object" && args[args.length - 1] !== null && !Array.isArray(args[args.length - 1])) ? args.pop() : {};\n  options.maxBuffer = 1024 * 1024 * 50;\n  const child = cp.execFile(...args, options, (...a) => resolve(a))'
 				);
-				fs.writeFileSync(uPath, content, 'utf8');
+				if (patched === content) {
+					console.warn(
+						'fix-node-gyp-bin.js: expected cp.execFile pattern not found in',
+						uPath,
+					);
+					process.exitCode = 1;
+					continue;
+				}
+				fs.writeFileSync(uPath, patched, 'utf8');
 			}
 		} catch (err) {
 			console.warn('fix-node-gyp-bin.js: failed to patch', uPath, err && err.message);
