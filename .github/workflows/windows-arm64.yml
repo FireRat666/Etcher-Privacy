@@ -56,6 +56,8 @@ jobs:
           path: |
             ~/.cache/electron
             ~/.cache/electron-gyp
+            ~/AppData/Local/electron/Cache
+            ~/AppData/Local/electron-gyp/Cache
             ~/.pkg-cache
           key: windows-arm64-downloads-${{ hashFiles('npm-shrinkwrap.json') }}
           restore-keys: |

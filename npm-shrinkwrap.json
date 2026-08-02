@@ -13074,7 +13074,7 @@
     },
     "node_modules/etcher-sdk/node_modules/unbzip2-stream": {
       "version": "1.4.2",
-      "resolved": "git+ssh://git@github.com/balena-io-modules/unbzip2-stream.git#4a54f56a25b58950f9e4277c56db2912d62242e7",
+      "resolved": "git+https://github.com/balena-io-modules/unbzip2-stream.git#4a54f56a25b58950f9e4277c56db2912d62242e7",
       "integrity": "sha512-hqSQ+EGPNNs80IGpZszUngM7ttKBCgjRtrw+2PTRDUd1UNvPOoSL4M7V1bDBJXktGv8KaVJFRKk2mWi6RmbiEg==",
       "license": "MIT"
     },
@@ -27124,7 +27124,7 @@
     },
     "node_modules/winusb-driver-generator": {
       "version": "2.1.10-5",
-      "resolved": "git+ssh://git@github.com/FireRat666/winusb-driver-generator.git#9b87440003ea34924eaf77f3fad62fb50d04110d",
+      "resolved": "git+https://github.com/FireRat666/winusb-driver-generator.git#9b87440003ea34924eaf77f3fad62fb50d04110d",
       "hasInstallScript": true,
       "license": "Apache-2.0",
       "dependencies": {
