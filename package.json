@@ -4,7 +4,7 @@
   "displayName": "Etcher Privacy",
   "productName": "Etcher Privacy",
   "appName": "Etcher Privacy",
-  "version": "2.1.7",
+  "version": "2.1.7-p",
   "packageType": "local",
   "main": ".webpack/main",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
@@ -13,11 +13,13 @@
   "license": "Apache-2.0",
   "copyright": "Copyright © 2026 FireRat666",
   "homepage": "https://github.com/FireRat666/Etcher-Privacy#readme",
+
   "repository": {
     "type": "git",
     "url": "https://github.com/FireRat666/Etcher-Privacy.git"
   },
   "scripts": {
+    "setupWinNodeGyp": "node ./scripts/setup-win-node-gyp.js",
     "prettify": "prettier --write lib/**/*.css && balena-lint --fix --typescript typings lib tests forge.config.mts forge.sidecar.ts webpack.config.ts",
     "lint": "npm run prettify && catch-uncommitted",
     "test": "echo 'Only use custom tests; if you want to test locally, use `npm run wdio`' && exit 0",
@@ -36,7 +38,7 @@
     "distclean": "rimraf ./out && rimraf ./dist && rimraf ./dist-builder && rimraf ./.webpack",
     "burn": "rimraf package-lock.json && rimraf npm-shrinkwrap.json && rimraf node_modules",
     "shrink": "npm shrinkwrap",
-    "postinstall": "node ./scripts/fix-node-gyp-bin.js"
+    "postinstall": "node ./scripts/fix-node-gyp-bin.js && node ./scripts/patch-lzma-native.js"
   },
   "husky": {
     "hooks": {
@@ -69,7 +71,7 @@
     "styled-components": "5.3.11",
     "sys-class-rgb-led": "3.0.1",
     "uuid": "11.1.1",
-    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-4",
+    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-5",
     "ws": "8.21.1"
   },
   "devDependencies": {
@@ -170,8 +172,8 @@
   },
   "overrides": {
     "@mapbox/rehype-prism": "0.9.0",
-    "@electron/node-gyp": "npm:node-gyp@^11.1.0",
-    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-4",
+    "@electron/node-gyp": "npm:node-gyp@^12.1.0",
+    "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-5",
     "@puppeteer/browsers": {
       "tar-fs": "3.1.3"
     },
@@ -184,6 +186,8 @@
       "minimatch": "3.1.4"
     },
     "jsonpointer": "5.0.1",
+    "lzma-native": "8.0.6",
+    "node-addon-api": "8.9.0",
     "mermaid": "10.9.6",
     "prismjs": "1.30.0",
     "serialize-javascript": "7.0.7",
@@ -210,6 +214,6 @@
     "usb": true,
     "utf-8-validate": true,
     "xxhash-addon": true,
-    "github:FireRat666/winusb-driver-generator#0cd1a2b3c4b513fc17ae6adb6c561d0d94a8a408": true
+    "github:FireRat666/winusb-driver-generator#9b87440003ea34924eaf77f3fad62fb50d04110d": true
   }
 }

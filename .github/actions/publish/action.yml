@@ -114,6 +114,11 @@ runs:
       env:
         SM_CLIENT_CERT_FILE_B64: ${{ fromJSON(inputs.secrets).SM_CLIENT_CERT_FILE_B64 }}
 
+    - name: Setup node-gyp for VS2026
+      if: runner.os == 'Windows'
+      shell: pwsh
+      run: npm run setupWinNodeGyp
+
     - name: Package release
       shell: bash
       # IMPORTANT: before making changes to this step please consult @engineering in balena's chat.
