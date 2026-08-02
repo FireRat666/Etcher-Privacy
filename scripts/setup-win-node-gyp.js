@@ -41,6 +41,36 @@ if (foundVs && process.env.GITHUB_ENV && exists(process.env.GITHUB_ENV)) {
 	} catch (_) {}
 }
 
+// 1b. Expose the global node-gyp path so downstream steps (e.g. publish) can
+// reuse it without re-deriving the installation logic.
+let globalGypBin = null;
+try {
+	const gypBin = path.join(
+		execSync('npm prefix -g', { encoding: 'utf8' }).trim(),
+		'node_modules',
+		'node-gyp',
+		'bin',
+		'node-gyp.js'
+	);
+	if (exists(gypBin)) {
+		globalGypBin = gypBin;
+	}
+} catch (_) {}
+
+if (
+	globalGypBin &&
+	process.env.GITHUB_ENV &&
+	exists(process.env.GITHUB_ENV)
+) {
+	try {
+		fs.appendFileSync(
+			process.env.GITHUB_ENV,
+			`npm_config_node_gyp=${globalGypBin}\n`,
+			'utf8'
+		);
+	} catch (_) {}
+}
+
 // 2. Guard against stale cached node-gyp (< 12.1.0) on npm bundled node-gyp
 try {
 	const nodeDir = path.dirname(process.execPath);

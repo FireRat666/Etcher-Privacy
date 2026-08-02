@@ -164,7 +164,10 @@ function pkgNodeVersion(): string {
 }
 
 function nativeModuleNodeVersion(): string {
-	return process.versions.node;
+	// Match pkg's node24 runtime so native modules share the same ABI
+	// regardless of the host Node.js version. Keep in sync with the node24
+	// base version fetched by @yao-pkg/pkg-fetch.
+	return '24.18.1';
 }
 
 function copyArtifact(
