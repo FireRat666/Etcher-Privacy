@@ -4,7 +4,7 @@
   "displayName": "Etcher Privacy",
   "productName": "Etcher Privacy",
   "appName": "Etcher Privacy",
-  "version": "2.1.7-p",
+  "version": "2.1.7",
   "packageType": "local",
   "main": ".webpack/main",
   "description": "Flash OS images to SD cards and USB drives, safely and easily.",
@@ -13,7 +13,6 @@
   "license": "Apache-2.0",
   "copyright": "Copyright © 2026 FireRat666",
   "homepage": "https://github.com/FireRat666/Etcher-Privacy#readme",
-
   "repository": {
     "type": "git",
     "url": "https://github.com/FireRat666/Etcher-Privacy.git"
@@ -164,7 +163,7 @@
     "node": ">=24"
   },
   "versionist": {
-    "publishedAt": "2026-08-01T05:43:11.839Z"
+    "publishedAt": "2026-08-02T11:56:39.865Z"
   },
   "optionalDependencies": {
     "bufferutil": "4.0.8",
