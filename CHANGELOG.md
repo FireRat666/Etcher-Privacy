@@ -4,6 +4,7 @@ All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
 # v2.1.7
+# v2.1.7-p
 ## (2026-08-02)
 
 * build: fail install when the node-gyp util patch target is missing [FireRat]
@@ -22,45 +23,6 @@ This project adheres to [Semantic Versioning](http://semver.org/).
 * fix: replace animated GIF with static icon to fix WPF BitmapDecoder crash [FireRat]
 * feat: verify writes after flashing by default [FireRat]
 * feat: prevent system sleep while flashing [FireRat]
-* chore: clean up changelog for v2.1.6-2-p [FireRat]
-* v2.1.7 [FireRat]
-* Update version to valid SemVer 2.1.6-2-p [FireRat]
-* Pin @mapbox/rehype-prism to 0.9.0 to clear npm audit vulnerabilities [FireRat]
-* Bump version to 2.1.6.2-P and clean up changelog [FireRat]
-* Upgrade Electron to 43 and refresh dependencies [FireRat]
-* v2.1.7 [FireRat]
-* update .nvmrc [FireRat]
-* Fix node-gyp binary resolution for Electron builds [FireRat]
-* Fix Windows test job: approve install scripts and force-install winusb-driver-generator [FireRat]
-* Fix node-gyp binary resolution for Electron builds [FireRat]
-* Share the custom app event contract between registration and emission [FireRat]
-* Fix sidecar Node ABI mismatch by packaging with Node 24 [FireRat]
-* Require Node 24 and update CI tooling [FireRat]
-* - Fix the punctuation of the forge.config.mts publishing note from "eg." to "e.g.," - Define a CustomAppEvents contract with a typed onCustomAppEvent helper, replacing the as any casts on the edit-config-file and relaunch listeners - Narrow focusedWindow with an instanceof BrowserWindow check in all back/forward menu handlers, replacing the type casts [FireRat]
-* Prettify store.ts formatting to satisfy catch-uncommitted [FireRat]
-* Reset version to 2.1.6-P and fix remaining TypeScript errors [FireRat]
-* v2.1.7 [FireRat]
-* Update npm-shrinkwrap.json for @reforged/maker-appimage ^5.2.0 [FireRat]
-* Update @reforged/maker-appimage to ^5.2.0 and require SM_CODE_SIGNING_CERT_SHA1_HASH for Windows signing [FireRat]
-* Restore readFile import in windows-network-drives.ts [FireRat]
-* Fix lint uncommitted diffs, sinon os.platform stubbing, and middleEllipsis test assertion [FireRat]
-* Fix wdio-electron-service build tool conflict and use standard macos runners [FireRat]
-* Release v2.1.6-P [FireRat]
-* Enable Flowzone's built-in versioning [FireRat]
-* Bump version to 2.1.6-P and take over versioning from Flowzone [FireRat]
-* Fall back to GITHUB_TOKEN for Flowzone and normalize changelog heading [FireRat]
-* Add versionist config and dependencies manifest [FireRat]
-* Pass the FLOWZONE_TOKEN secret to the Flowzone workflow explicitly [FireRat]
-* Trigger CI after adding FLOWZONE_TOKEN [FireRat]
-* Add Flowzone CI pipeline and make unsigned builds first-class [FireRat]
-* Remove success and featured project webviews, forward renderer logs, and rebuild sidecar on Node 20 [FireRat]
-* Fix target selection crash, harden sidecar requests, and restore winusb driver support on Node 20 [FireRat]
-* Make internal windows robust and replace electron-log with the builtin console logger [FireRat]
-* Remove stale telemetry alert and rename window title [FireRat]
-* Fix TypeScript module resolution for NodeNext [FireRat]
-* Rebrand to Etcher Privacy and fix build on forge 7.8.1 [FireRat]
-* fix [Alexander Frick]
-* 1.19.22 rebase [Alexander Frick]
 
 # v2.1.6-2-p
 ## (2026-08-01)
