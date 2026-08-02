@@ -3,7 +3,14 @@
 const fs = require('fs');
 const path = require('path');
 
-if (process.platform !== 'win32' || process.arch !== 'arm64') {
+// Determine the build target arch so cross-compiling (e.g. --arch=arm64 on an
+// x64 host) still runs the patch. npm_config_arch is set by node-gyp/npm.
+const buildArch =
+	process.env.npm_config_arch ||
+	process.env.ETCHER_BUILD_ARCH ||
+	process.arch;
+
+if (process.platform !== 'win32' || buildArch !== 'arm64') {
 	process.exit(0);
 }
 

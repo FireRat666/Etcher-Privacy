@@ -26,8 +26,8 @@ jobs:
       fail-fast: false
       matrix:
         os:
-          - ubuntu-22.04
-          - windows-2022
+          - ubuntu-24.04
+          - windows-2025
 
     env:
       ELECTRON_NO_ATTACH_CONSOLE: 'true'

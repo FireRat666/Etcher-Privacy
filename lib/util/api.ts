@@ -87,13 +87,18 @@ let emitSourceMetadata: (
 
 // Terminate the child process
 async function terminate(exitCode?: number, cleanupBeforeExit = true) {
-	if (cleanupBeforeExit) {
-		const { cleanup } = await import('./child-writer.js');
-		await cleanup(Date.now());
+	try {
+		if (cleanupBeforeExit) {
+			const { cleanup } = await import('./child-writer.js');
+			await cleanup(Date.now());
+		}
+	} catch (error: any) {
+		console.error('terminate: error during cleanup:', error);
+	} finally {
+		process.nextTick(() => {
+			process.exit(exitCode || SUCCESS);
+		});
 	}
-	process.nextTick(() => {
-		process.exit(exitCode || SUCCESS);
-	});
 }
 
 // kill the process if no initial connections or heartbeat for X sec (default 10)
@@ -180,27 +185,31 @@ function setup(): Promise<EmitLog> {
 			 */
 			const onWrite = async (options: WriteOptions) => {
 				log('write requested');
-				const { write, cleanup } = await import('./child-writer.js');
+				try {
+					const { write, cleanup } = await import('./child-writer.js');
 
-				// Remove leftover tmp files older than 1 hour
-				cleanup(Date.now() - 60 * 60 * 1000);
+					// Remove leftover tmp files older than 1 hour
+					await cleanup(Date.now() - 60 * 60 * 1000);
 
-				let exitCode = SUCCESS;
+					let exitCode = SUCCESS;
 
-				// Write to the drives
-				const results = await write(options);
+					// Write to the drives
+					const results = await write(options);
 
-				// handle potential errors from the write process
-				if (results.errors.length > 0) {
-					results.errors = results.errors.map(toJSON);
-					exitCode = GENERAL_ERROR;
+					// handle potential errors from the write process
+					if (results.errors.length > 0) {
+						results.errors = results.errors.map(toJSON);
+						exitCode = GENERAL_ERROR;
+					}
+
+					// send the results back to the client
+					emit('done', { results });
+
+					// terminate this process
+					await terminate(exitCode);
+				} catch (error: any) {
+					await handleError(error);
 				}
-
-				// send the results back to the client
-				emit('done', { results });
-
-				// terminate this process
-				await terminate(exitCode);
 			};
 
 			/**
@@ -255,8 +264,12 @@ function setup(): Promise<EmitLog> {
 				// start scanning for drives
 				scan: async () => {
 					log('Scan requested');
-					const { startScanning } = await import('./scanner.js');
-					startScanning();
+					try {
+						const { startScanning } = await import('./scanner.js');
+						await startScanning();
+					} catch (error: any) {
+						await handleError(error);
+					}
 				},
 
 				// route `cancel` from client

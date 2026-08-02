@@ -63,6 +63,9 @@ jobs:
         shell: bash
         run: |
           npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
+          # npm ci skips the root postinstall (fix-node-gyp-bin.js, patch-lzma-native.js);
+          # run it explicitly so lzma-native is patched before the rebuild compiles it.
+          node scripts/patch-lzma-native.js
           npm rebuild
 
       - name: Package & Make macOS x64
@@ -85,6 +88,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: gh-release-macos-x64
+          if-no-files-found: error
           path: |
             out/make/**/*.dmg
             out/make/**/*.zip

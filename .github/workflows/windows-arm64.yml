@@ -102,9 +102,7 @@ jobs:
           name: gh-release-windows-arm64
           if-no-files-found: error
           path: |
-            out/make/squirrel.windows/arm64/*.exe
             out/make/zip/win32/arm64/*.zip
-            out/make/squirrel.windows/arm64/*.nupkg
 
   release:
     name: Release Windows ARM64 (Manual Dispatch)
@@ -121,7 +119,7 @@ jobs:
           path: artifacts
 
       - name: Publish to GitHub Release
-        uses: softprops/action-gh-release@v2
+        uses: softprops/action-gh-release@v3
         with:
           files: artifacts/**
           tag_name: ${{ inputs.release_tag }}

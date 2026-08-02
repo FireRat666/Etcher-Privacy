@@ -2,7 +2,9 @@
 const fs = require('fs');
 const path = require('path');
 
-const { execSync } = require('child_process');
+const { execFileSync, execSync } = require('child_process');
+
+const { findVisualStudio } = require('./vs-installations');
 
 if (process.platform !== 'win32') {
 	process.exit(0);
@@ -26,17 +28,7 @@ function semverLt(v1, v2) {
 	return false;
 }
 
-const vsInstallations = [
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\VC', year: '2026' },
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\Enterprise\\VC', year: '2026' },
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\Community\\VC', year: '2026' },
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\BuildTools\\VC', year: '2026' },
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC', year: '2022' },
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC', year: '2022' },
-	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\BuildTools\\VC', year: '2022' },
-];
-
-const foundVs = vsInstallations.find((item) => exists(item.path));
+const foundVs = findVisualStudio();
 
 // 1. Export GYP_MSVS_VERSION and VCINSTALLDIR to GITHUB_ENV if running in GitHub Actions
 if (foundVs && process.env.GITHUB_ENV && exists(process.env.GITHUB_ENV)) {
@@ -74,7 +66,10 @@ try {
 			);
 			if (exists(gypBin)) {
 				console.log(`Directing npm to global node-gyp at ${gypBin}...`);
-				execSync(`npm config set node-gyp "${gypBin}"`, { stdio: 'inherit' });
+				execFileSync('npm.cmd', ['config', 'set', 'node-gyp', gypBin], {
+					shell: true,
+					stdio: 'inherit',
+				});
 			}
 		}
 	}
@@ -82,15 +77,14 @@ try {
 	const npmNodeGypUtil = path.join(npmNodeGypDir, 'lib', 'util.js');
 	if (exists(npmNodeGypUtil)) {
 		let content = fs.readFileSync(npmNodeGypUtil, 'utf8');
-		if (!content.includes('maxBuffer: 1024 * 1024 * 50')) {
+		if (!content.includes('options.maxBuffer = 1024 * 1024 * 50')) {
 			content = content.replace(
 				'const child = cp.execFile(...args, (...a) => resolve(a))',
-				'const options = (typeof args[args.length - 1] === "object" && args[args.length - 1] !== null) ? args.pop() : {};\n  options.maxBuffer = 1024 * 1024 * 50;\n  const child = cp.execFile(...args, options, (...a) => resolve(a))'
+				'const options = (typeof args[args.length - 1] === "object" && args[args.length - 1] !== null && !Array.isArray(args[args.length - 1])) ? args.pop() : {};\n  options.maxBuffer = 1024 * 1024 * 50;\n  const child = cp.execFile(...args, options, (...a) => resolve(a))'
 			);
 			fs.writeFileSync(npmNodeGypUtil, content, 'utf8');
 		}
 	}
 } catch (err) {
 	console.error('setup-win-node-gyp.js warning:', err && err.message);
-	process.exitCode = 1;
 }

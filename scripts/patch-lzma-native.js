@@ -25,7 +25,7 @@ const patchStr = `    String id = Value(entry[std::string(id_)]).ToString();
 
 if (!content.includes(targetStr)) {
 	console.warn('patch-lzma-native.js: warning - expected target string not found in filter-array.cpp');
-	process.exit(0);
+	process.exit(1);
 }
 
 content = content.replace(targetStr, patchStr);

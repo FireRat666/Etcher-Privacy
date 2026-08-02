@@ -2,6 +2,8 @@
 const fs = require('fs');
 const path = require('path');
 
+const { findVisualStudio } = require('./vs-installations');
+
 const repoRoot = path.resolve(__dirname, '..');
 const binDir = path.join(repoRoot, 'node_modules', '.bin');
 
@@ -80,14 +82,16 @@ function patchNodeGypUtil() {
 		if (!exists(uPath)) continue;
 		try {
 			let content = fs.readFileSync(uPath, 'utf8');
-			if (!content.includes('maxBuffer: 1024 * 1024 * 50')) {
+			if (!content.includes('options.maxBuffer = 1024 * 1024 * 50')) {
 				content = content.replace(
 					'const child = cp.execFile(...args, (...a) => resolve(a))',
-					'const options = (typeof args[args.length - 1] === "object" && args[args.length - 1] !== null) ? args.pop() : {};\n  options.maxBuffer = 1024 * 1024 * 50;\n  const child = cp.execFile(...args, options, (...a) => resolve(a))'
+					'const options = (typeof args[args.length - 1] === "object" && args[args.length - 1] !== null && !Array.isArray(args[args.length - 1])) ? args.pop() : {};\n  options.maxBuffer = 1024 * 1024 * 50;\n  const child = cp.execFile(...args, options, (...a) => resolve(a))'
 				);
 				fs.writeFileSync(uPath, content, 'utf8');
 			}
-		} catch (_) {}
+		} catch (err) {
+			console.warn('fix-node-gyp-bin.js: failed to patch', uPath, err && err.message);
+		}
 	}
 }
 
@@ -96,19 +100,10 @@ function main() {
 	let foundYear = process.env.GYP_MSVS_VERSION || null;
 
 	if (process.platform === 'win32') {
-		const vsInstallations = [
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\VC', year: '2026' },
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\Enterprise\\VC', year: '2026' },
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\Community\\VC', year: '2026' },
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\BuildTools\\VC', year: '2026' },
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Enterprise\\VC', year: '2022' },
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\Community\\VC', year: '2022' },
-			{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2022\\BuildTools\\VC', year: '2022' },
-		];
-		const item = vsInstallations.find((i) => exists(i.path));
-		if (item) {
-			if (!foundVc) foundVc = item.path;
-			if (!foundYear) foundYear = item.year;
+		const foundVs = findVisualStudio();
+		if (foundVs) {
+			if (!foundVc) foundVc = foundVs.path;
+			if (!foundYear) foundYear = foundVs.year;
 		}
 		if (foundVc && !foundYear) {
 			foundYear = (foundVc.includes('\\18\\') || foundVc.includes('\\2026\\')) ? '2026' : '2022';

@@ -165,6 +165,25 @@ describe('Shared: DriveConstraints', function () {
 				expect(result).to.be.true;
 			});
 
+			it('should return false for a Windows path whose .. traversal resolves outside the mount point', function () {
+				const result = constraints.isSourceDrive(
+					{
+						mountpoints: [
+							{
+								label: 'label',
+								path: 'E:\\MNT',
+							},
+						],
+					} as constraints.DrivelistDrive,
+					{
+						...windowsImage,
+						path: 'e:\\mnt\\child\\..\\..\\outside\\image.img',
+					},
+				);
+
+				expect(result).to.be.false;
+			});
+
 			it('should return false if the image does not live inside a mount point of the drive', function () {
 				const result = constraints.isSourceDrive(
 					{

@@ -214,8 +214,14 @@ async function createMainWindow() {
 
 	// mainWindow.setFullScreen(true);
 
+	let showWindowTimeout: NodeJS.Timeout | undefined;
+
 	const showWindow = () => {
-		if (mainWindow && !mainWindow.isVisible()) {
+		if (showWindowTimeout !== undefined) {
+			clearTimeout(showWindowTimeout);
+			showWindowTimeout = undefined;
+		}
+		if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.isVisible()) {
 			mainWindow.webContents.setZoomFactor(width / defaultWidth);
 			mainWindow.show();
 		}
@@ -228,7 +234,7 @@ async function createMainWindow() {
 	});
 
 	// Fallback for Linux VMs / software rendering where ready-to-show may be delayed or missed
-	setTimeout(showWindow, 1500);
+	showWindowTimeout = setTimeout(showWindow, 1500);
 
 	// Prevent external resources from being loaded (like images)
 	// when dropping them on the WebView.
@@ -249,7 +255,13 @@ async function createMainWindow() {
 	// Stop preventing the system from sleeping if the renderer crashes
 	// or the window is closed while flashing
 	mainWindow.webContents.on('render-process-gone', stopSleepBlocker);
-	mainWindow.on('closed', stopSleepBlocker);
+	mainWindow.on('closed', () => {
+		if (showWindowTimeout !== undefined) {
+			clearTimeout(showWindowTimeout);
+			showWindowTimeout = undefined;
+		}
+		stopSleepBlocker();
+	});
 
 	mainWindow.on('close', () => {
 		if (mainWindow) {
