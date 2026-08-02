@@ -140,6 +140,9 @@ const translation = {
 				'Trim unallocated space on raw images (in ext-type partitions)',
 			decompressFirst:
 				'Decompress compressed images (i.e. .tar.xz) before flashing',
+			preventSleep: 'Prevent the system from going to sleep while flashing',
+			preventSleepDesc:
+				'Keep the screen on and the system awake while writing to prevent the flash from being interrupted',
 		},
 		menu: {
 			edit: 'Edit',

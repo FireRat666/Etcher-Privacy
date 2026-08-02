@@ -77,6 +77,7 @@ const DEFAULT_SETTINGS: _.Dictionary<any> = {
 	verify: false,
 	autoBlockmapping: true,
 	decompressFirst: true,
+	preventSleep: true,
 };
 
 const settings = _.cloneDeep(DEFAULT_SETTINGS);
