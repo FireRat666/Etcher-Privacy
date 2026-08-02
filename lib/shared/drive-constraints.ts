@@ -16,6 +16,7 @@
 
 import type { Drive } from 'drivelist';
 import { isNil } from 'lodash';
+import * as path from 'path';
 import pathIsInside from 'path-is-inside';
 
 import * as messages from './messages';
@@ -45,6 +46,38 @@ function sourceIsInsideDrive(source: string, drive: DrivelistDrive) {
 	for (const mountpoint of drive.mountpoints || []) {
 		if (pathIsInside(source, mountpoint.path)) {
 			return true;
+		}
+		const isWinStyle =
+			/^[a-zA-Z]:/.test(source) ||
+			source.startsWith('\\\\') ||
+			/^[a-zA-Z]:/.test(mountpoint.path) ||
+			mountpoint.path.startsWith('\\\\');
+		if (isWinStyle) {
+			const normalizeWin = (p: string) => {
+				let norm = p.trim();
+				if (/^[a-zA-Z]:\\?$/i.test(norm)) {
+					norm = norm.slice(0, 2) + '\\';
+				} else {
+					norm = path.win32.normalize(norm);
+				}
+				return norm.toLowerCase();
+			};
+			const winSource = normalizeWin(source);
+			const winMount = normalizeWin(mountpoint.path);
+			const relative = path.win32.relative(winMount, winSource);
+			const isParentTraversal =
+				relative === '..' ||
+				relative.startsWith('..' + path.win32.sep) ||
+				relative.startsWith('../');
+			if (!isParentTraversal && !path.win32.isAbsolute(relative)) {
+				return true;
+			}
+		} else {
+			const relative = path.posix.relative(mountpoint.path, source);
+			const isParentTraversal = relative === '..' || relative.startsWith('../');
+			if (!isParentTraversal && !path.posix.isAbsolute(relative)) {
+				return true;
+			}
 		}
 	}
 	return false;
