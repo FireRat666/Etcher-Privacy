@@ -200,6 +200,30 @@ function copyArtifact(
 		fs.copyFileSync(drivelistNative, drivelistDest);
 	}
 
+	if (platform === 'win32' && arch === 'arm64') {
+		if (process.platform !== 'win32') {
+			throw new Error(
+				'Packaging for win32/arm64 requires running on a Windows host.',
+			);
+		}
+		const vcpkgRoot = process.env.VCPKG_INSTALLATION_ROOT || 'C:\\vcpkg';
+		const vcpkgTriplet = process.env.VCPKG_DEFAULT_TRIPLET || 'arm64-windows';
+		const lzmaDll = path.join(
+			vcpkgRoot,
+			'installed',
+			vcpkgTriplet,
+			'bin',
+			'liblzma.dll',
+		);
+		if (!fs.existsSync(lzmaDll)) {
+			throw new Error(
+				`Missing liblzma.dll at '${lzmaDll}'. Run 'vcpkg install liblzma:arm64-windows' before packaging.`,
+			);
+		}
+		const lzmaDest = path.resolve(resourcesPath, 'liblzma.dll');
+		log(`copying '${lzmaDll}' to '${lzmaDest}'`);
+		fs.copyFileSync(lzmaDll, lzmaDest);
+	}
 }
 
 export class SidecarPlugin extends PluginBase<void> {
