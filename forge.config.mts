@@ -131,10 +131,6 @@ const config: ForgeConfig = {
 				categories: ['Utility'],
 				section: 'utils',
 				priority: 'optional',
-				productDescription,
-				scripts: {
-					postinst: './after-install.tpl',
-				},
 				depends: hostDependencies['debian'],
 			},
 		}),
