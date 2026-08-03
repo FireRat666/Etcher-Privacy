@@ -190,19 +190,6 @@ function copyArtifact(
 	log(`copying '${binPath}' to '${dest}'`);
 	fs.copyFileSync(binPath, dest);
 
-	const drivelistNative = path.resolve(
-		'node_modules',
-		'drivelist',
-		'build',
-		'Release',
-		'drivelist.node',
-	);
-	if (fs.existsSync(drivelistNative)) {
-		const drivelistDest = path.resolve(resourcesPath, 'drivelist.node');
-		log(`copying '${drivelistNative}' to '${drivelistDest}'`);
-		fs.copyFileSync(drivelistNative, drivelistDest);
-	}
-
 	if (platform === 'win32' && arch === 'arm64') {
 		if (process.platform !== 'win32') {
 			throw new Error(
