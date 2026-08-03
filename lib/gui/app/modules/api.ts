@@ -56,34 +56,46 @@ async function spawnChild(
 		// can only be accessed by the user that mounted the AppImage.
 		// Root can't read the FUSE mount, so we copy the sidecar binary
 		// to a temp location that root can access.
-		if (
-			os.platform() === 'linux' &&
-			process.env.APPIMAGE &&
-			process.env.APPDIR
-		) {
-			const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-'));
-			const tmpBin = path.join(tmpDir, path.basename(argv[0]));
-			fs.copyFileSync(argv[0], tmpBin);
-			fs.chmodSync(tmpBin, 0o755);
-			const digest = createHash('sha256')
-				.update(fs.readFileSync(tmpBin))
-				.digest('hex');
-			// Elevate a shell that opens the copy on a fixed fd, verifies its
-			// digest, and execs the verified fd, so root never executes a
-			// swapped pathname.
-			argv = [
-				'/bin/bash',
-				'-c',
-				'exec 3< "$1" && test "$(sha256sum /proc/self/fd/3 | cut -d" " -f1)" = "$2" && exec /proc/self/fd/3 "${@:3}"',
-				'etcher-util',
-				tmpBin,
-				digest,
-			];
+		let tmpDir: string | undefined;
+		try {
+			if (
+				os.platform() === 'linux' &&
+				process.env.APPIMAGE &&
+				process.env.APPDIR
+			) {
+				tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-'));
+				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
+				fs.copyFileSync(argv[0], tmpBin);
+				fs.chmodSync(tmpBin, 0o755);
+				const digest = createHash('sha256')
+					.update(fs.readFileSync(tmpBin))
+					.digest('hex');
+				// Elevate a shell that opens the copy on a fixed fd, immediately removes
+				// the temp binary and directory, verifies its digest on fd 3, and execs fd 3.
+				argv = [
+					'/bin/bash',
+					'-c',
+					'exec 3< "$1" && rm -f "$1" && rmdir "$2" && test "$(sha256sum /proc/self/fd/3 | cut -d" " -f1)" = "$3" && exec /proc/self/fd/3 "${@:4}"',
+					'etcher-util',
+					tmpBin,
+					tmpDir,
+					digest,
+				];
+			}
+			const result = await permissions.elevateCommand(argv, {
+				applicationName: packageJSON.displayName,
+				env,
+			});
+			if (result.cancelled && tmpDir) {
+				fs.rmSync(tmpDir, { recursive: true, force: true });
+			}
+			return result;
+		} catch (error) {
+			if (tmpDir) {
+				fs.rmSync(tmpDir, { recursive: true, force: true });
+			}
+			throw error;
 		}
-		return permissions.elevateCommand(argv, {
-			applicationName: packageJSON.displayName,
-			env,
-		});
 	} else {
 		if (process.platform === 'win32') {
 			// we need to ensure we reset the env as a previous elevation process might have kept them in a wrong state

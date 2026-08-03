@@ -27,13 +27,6 @@ import type { WriteOptions } from './types/types';
 import type { DrivelistDrive } from '../shared/drive-constraints';
 import type { SourceMetadata } from '../shared/typings/source-selector';
 
-// Static imports so that pkg compiles these into the binary.
-// (pkg does not patch the ESM module loader, so dynamic import() can't
-//  read from its snapshot VFS — only statically traced deps work.)
-import { write, cleanup } from './child-writer.js';
-import { getSourceMetadata } from './source-metadata.js';
-import { startScanning } from './scanner.js';
-
 function includeSidecarDirectoryInDllSearchPath() {
 	if (process.platform !== 'win32') {
 		return;
@@ -60,6 +53,13 @@ function injectEnvFromArgs() {
 // Inject env vars from arguments if not already present
 injectEnvFromArgs();
 includeSidecarDirectoryInDllSearchPath();
+
+// Require sidecar modules after setting up PATH and environment variables
+// so native addon bindings load with the correct environment.
+// Using require() with string literals allows pkg to trace and bundle these files.
+const { write, cleanup } = require('./child-writer.js') as typeof import('./child-writer.js');
+const { getSourceMetadata } = require('./source-metadata.js') as typeof import('./source-metadata.js');
+const { startScanning } = require('./scanner.js') as typeof import('./scanner.js');
 
 console.log(
 	'Etcher child process started with the following environment variables:',
