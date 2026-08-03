@@ -13,6 +13,7 @@
  */
 
 import { createHash } from 'crypto';
+import _debug from 'debug';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec } from 'child_process';
 import * as fs from 'fs';
@@ -25,6 +26,7 @@ import * as errors from '../../../shared/errors';
 const THREADS_PER_CPU = 16;
 const connectionRetryDelay = 1000;
 const connectionRetryAttempts = 10;
+const sidecarDebug = _debug('etcher:sidecar');
 
 async function writerArgv(): Promise<string[]> {
 	const entryPoint = await window.etcher.getEtcherUtilPath();
@@ -111,10 +113,10 @@ async function spawnChild(
 			env,
 		});
 		spawned.stdout?.on('data', (data) => {
-			console.log(`[sidecar stdout] ${data.toString().trim()}`);
+			sidecarDebug(`[sidecar stdout] ${data.toString().trim()}`);
 		});
 		spawned.stderr?.on('data', (data) => {
-			console.error(`[sidecar stderr] ${data.toString().trim()}`);
+			sidecarDebug(`[sidecar stderr] ${data.toString().trim()}`);
 		});
 		return { cancelled: false, spawned };
 	}
