@@ -22,11 +22,19 @@ import {
 import { Scanner } from 'etcher-sdk/build/scanner/scanner';
 import { geteuid, platform } from 'process';
 
-const adapters: Adapter[] = [
-	new BlockDeviceAdapter({
-		includeSystemDrives: () => true,
-	}),
-];
+const adapters: Adapter[] = [];
+
+try {
+	adapters.push(
+		new BlockDeviceAdapter({
+			includeSystemDrives: () => true,
+		}),
+	);
+} catch (error: any) {
+	console.warn(
+		`BlockDeviceAdapter is unavailable (${error?.message ?? error}); disabling block device adapter`,
+	);
+}
 
 // Can't use permissions.isElevated() here as it returns a promise and we need to set
 // module.exports = scanner right now.

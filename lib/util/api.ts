@@ -54,15 +54,19 @@ function injectEnvFromArgs() {
 injectEnvFromArgs();
 includeSidecarDirectoryInDllSearchPath();
 
-// Require sidecar modules after setting up PATH and environment variables
-// so native addon bindings load with the correct environment.
-// Using require() with string literals allows pkg to trace and bundle these files.
-const { write, cleanup } =
-	require('./child-writer.js') as typeof import('./child-writer.js');
-const { getSourceMetadata } =
-	require('./source-metadata.js') as typeof import('./source-metadata.js');
-const { startScanning } =
-	require('./scanner.js') as typeof import('./scanner.js');
+// Lazy getters containing string-literal require() calls.
+// Using require() with string literals allows pkg static analysis to trace and bundle
+// these files into the binary snapshot, while lazy execution ensures process startup
+// and WebSocket server binding succeed cleanly before module loading.
+function getChildWriter() {
+	return require('./child-writer.js') as typeof import('./child-writer.js');
+}
+function getSourceMetadataModule() {
+	return require('./source-metadata.js') as typeof import('./source-metadata.js');
+}
+function getScannerModule() {
+	return require('./scanner.js') as typeof import('./scanner.js');
+}
 
 console.log(
 	'Etcher child process started with the following environment variables:',
@@ -99,7 +103,7 @@ let emitSourceMetadata: (
 async function terminate(exitCode?: number, cleanupBeforeExit = true) {
 	try {
 		if (cleanupBeforeExit) {
-			await cleanup(Date.now());
+			await getChildWriter().cleanup(Date.now());
 		}
 	} catch (error: any) {
 		console.error('terminate: error during cleanup:', error);
@@ -195,6 +199,7 @@ function setup(): Promise<EmitLog> {
 			const onWrite = async (options: WriteOptions) => {
 				log('write requested');
 				try {
+					const { write, cleanup } = getChildWriter();
 					// Remove leftover tmp files older than 1 hour
 					await cleanup(Date.now() - 60 * 60 * 1000);
 
@@ -226,6 +231,7 @@ function setup(): Promise<EmitLog> {
 				log('sourceMetadata requested');
 				const { selected, SourceType, auth } = JSON.parse(params);
 				try {
+					const { getSourceMetadata } = getSourceMetadataModule();
 					const sourceMatadata = await getSourceMetadata(
 						selected,
 						SourceType,
@@ -271,6 +277,7 @@ function setup(): Promise<EmitLog> {
 				scan: async () => {
 					log('Scan requested');
 					try {
+						const { startScanning } = getScannerModule();
 						await startScanning();
 					} catch (error: any) {
 						await handleError(error);

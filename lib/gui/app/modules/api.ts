@@ -110,6 +110,12 @@ async function spawnChild(
 		const spawned = await spawn(argv[0], argv.slice(1), {
 			env,
 		});
+		spawned.stdout?.on('data', (data) => {
+			console.log(`[sidecar stdout] ${data.toString().trim()}`);
+		});
+		spawned.stderr?.on('data', (data) => {
+			console.error(`[sidecar stderr] ${data.toString().trim()}`);
+		});
 		return { cancelled: false, spawned };
 	}
 }
