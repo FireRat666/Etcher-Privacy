@@ -57,9 +57,12 @@ includeSidecarDirectoryInDllSearchPath();
 // Require sidecar modules after setting up PATH and environment variables
 // so native addon bindings load with the correct environment.
 // Using require() with string literals allows pkg to trace and bundle these files.
-const { write, cleanup } = require('./child-writer.js') as typeof import('./child-writer.js');
-const { getSourceMetadata } = require('./source-metadata.js') as typeof import('./source-metadata.js');
-const { startScanning } = require('./scanner.js') as typeof import('./scanner.js');
+const { write, cleanup } =
+	require('./child-writer.js') as typeof import('./child-writer.js');
+const { getSourceMetadata } =
+	require('./source-metadata.js') as typeof import('./source-metadata.js');
+const { startScanning } =
+	require('./scanner.js') as typeof import('./scanner.js');
 
 console.log(
 	'Etcher child process started with the following environment variables:',
