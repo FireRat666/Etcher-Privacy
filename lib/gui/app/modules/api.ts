@@ -55,7 +55,11 @@ async function spawnChild(
 		// can only be accessed by the user that mounted the AppImage.
 		// Root can't read the FUSE mount, so we copy the sidecar binary
 		// to a temp location that root can access.
-		if (os.platform() === 'linux' && process.env.APPIMAGE && process.env.APPDIR) {
+		if (
+			os.platform() === 'linux' &&
+			process.env.APPIMAGE &&
+			process.env.APPDIR
+		) {
 			const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-'));
 			const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 			fs.copyFileSync(argv[0], tmpBin);
