@@ -14,7 +14,9 @@
 
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec } from 'child_process';
+import * as fs from 'fs';
 import * as os from 'os';
+import * as path from 'path';
 import * as packageJSON from '../../../../package.json';
 import * as permissions from '../../../shared/permissions';
 import * as errors from '../../../shared/errors';
@@ -24,22 +26,8 @@ const connectionRetryDelay = 1000;
 const connectionRetryAttempts = 10;
 
 async function writerArgv(): Promise<string[]> {
-	let entryPoint = await window.etcher.getEtcherUtilPath();
-	// AppImages run over FUSE, so the files inside the mount point
-	// can only be accessed by the user that mounted the AppImage.
-	// This means we can't re-spawn Etcher as root from the same
-	// mount-point, and as a workaround, we re-mount the original
-	// AppImage as root.
-	if (os.platform() === 'linux' && process.env.APPIMAGE && process.env.APPDIR) {
-		entryPoint = entryPoint.replace(process.env.APPDIR, '');
-		return [
-			process.env.APPIMAGE,
-			'-e',
-			`require(\`\${process.env.APPDIR}${entryPoint}\`)`,
-		];
-	} else {
-		return [entryPoint];
-	}
+	const entryPoint = await window.etcher.getEtcherUtilPath();
+	return [entryPoint];
 }
 
 async function spawnChild(
@@ -48,7 +36,7 @@ async function spawnChild(
 	etcherServerAddress: string,
 	etcherServerPort: string,
 ) {
-	const argv = await writerArgv();
+	let argv = await writerArgv();
 	const env: any = {
 		ETCHER_SERVER_ADDRESS: etcherServerAddress,
 		ETCHER_SERVER_ID: etcherServerId,
@@ -63,6 +51,17 @@ async function spawnChild(
 
 	if (withPrivileges) {
 		console.log('...with privileges...');
+		// AppImages run over FUSE, so the files inside the mount point
+		// can only be accessed by the user that mounted the AppImage.
+		// Root can't read the FUSE mount, so we copy the sidecar binary
+		// to a temp location that root can access.
+		if (os.platform() === 'linux' && process.env.APPIMAGE && process.env.APPDIR) {
+			const tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-'));
+			const tmpBin = path.join(tmpDir, path.basename(argv[0]));
+			fs.copyFileSync(argv[0], tmpBin);
+			fs.chmodSync(tmpBin, 0o755);
+			argv = [tmpBin];
+		}
 		return permissions.elevateCommand(argv, {
 			applicationName: packageJSON.displayName,
 			env,
