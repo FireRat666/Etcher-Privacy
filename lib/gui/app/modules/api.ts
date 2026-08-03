@@ -12,6 +12,7 @@
  *  - centralise the api for both the writer and the scanner instead of having two instances running
  */
 
+import { createHash } from 'crypto';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec } from 'child_process';
 import * as fs from 'fs';
@@ -64,7 +65,20 @@ async function spawnChild(
 			const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 			fs.copyFileSync(argv[0], tmpBin);
 			fs.chmodSync(tmpBin, 0o755);
-			argv = [tmpBin];
+			const digest = createHash('sha256')
+				.update(fs.readFileSync(tmpBin))
+				.digest('hex');
+			// Elevate a shell that opens the copy on a fixed fd, verifies its
+			// digest, and execs the verified fd, so root never executes a
+			// swapped pathname.
+			argv = [
+				'/bin/bash',
+				'-c',
+				'exec 3< "$1" && test "$(sha256sum /proc/self/fd/3 | cut -d" " -f1)" = "$2" && exec /proc/self/fd/3 "${@:3}"',
+				'etcher-util',
+				tmpBin,
+				digest,
+			];
 		}
 		return permissions.elevateCommand(argv, {
 			applicationName: packageJSON.displayName,
