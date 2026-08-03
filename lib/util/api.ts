@@ -27,6 +27,13 @@ import type { WriteOptions } from './types/types';
 import type { DrivelistDrive } from '../shared/drive-constraints';
 import type { SourceMetadata } from '../shared/typings/source-selector';
 
+// Static imports so that pkg compiles these into the binary.
+// (pkg does not patch the ESM module loader, so dynamic import() can't
+//  read from its snapshot VFS — only statically traced deps work.)
+import { write, cleanup } from './child-writer.js';
+import { getSourceMetadata } from './source-metadata.js';
+import { startScanning } from './scanner.js';
+
 function includeSidecarDirectoryInDllSearchPath() {
 	if (process.platform !== 'win32') {
 		return;
@@ -89,7 +96,6 @@ let emitSourceMetadata: (
 async function terminate(exitCode?: number, cleanupBeforeExit = true) {
 	try {
 		if (cleanupBeforeExit) {
-			const { cleanup } = await import('./child-writer.js');
 			await cleanup(Date.now());
 		}
 	} catch (error: any) {
@@ -186,8 +192,6 @@ function setup(): Promise<EmitLog> {
 			const onWrite = async (options: WriteOptions) => {
 				log('write requested');
 				try {
-					const { write, cleanup } = await import('./child-writer.js');
-
 					// Remove leftover tmp files older than 1 hour
 					await cleanup(Date.now() - 60 * 60 * 1000);
 
@@ -219,7 +223,6 @@ function setup(): Promise<EmitLog> {
 				log('sourceMetadata requested');
 				const { selected, SourceType, auth } = JSON.parse(params);
 				try {
-					const { getSourceMetadata } = await import('./source-metadata.js');
 					const sourceMatadata = await getSourceMetadata(
 						selected,
 						SourceType,
@@ -265,7 +268,6 @@ function setup(): Promise<EmitLog> {
 				scan: async () => {
 					log('Scan requested');
 					try {
-						const { startScanning } = await import('./scanner.js');
 						await startScanning();
 					} catch (error: any) {
 						await handleError(error);
