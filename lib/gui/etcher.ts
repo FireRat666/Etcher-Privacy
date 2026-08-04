@@ -33,6 +33,7 @@ import './app/i18n';
 import * as EXIT_CODES from '../shared/exit-codes';
 import * as settings from './app/models/settings';
 import { buildWindowMenu } from './menu';
+import { onCustomAppEvent } from './custom-app-events';
 import * as i18n from 'i18next';
 
 const customProtocol = 'etcher';
@@ -213,8 +214,14 @@ async function createMainWindow() {
 
 	// mainWindow.setFullScreen(true);
 
+	let showWindowTimeout: NodeJS.Timeout | undefined;
+
 	const showWindow = () => {
-		if (mainWindow && !mainWindow.isVisible()) {
+		if (showWindowTimeout !== undefined) {
+			clearTimeout(showWindowTimeout);
+			showWindowTimeout = undefined;
+		}
+		if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.isVisible()) {
 			mainWindow.webContents.setZoomFactor(width / defaultWidth);
 			mainWindow.show();
 		}
@@ -227,7 +234,7 @@ async function createMainWindow() {
 	});
 
 	// Fallback for Linux VMs / software rendering where ready-to-show may be delayed or missed
-	setTimeout(showWindow, 1500);
+	showWindowTimeout = setTimeout(showWindow, 1500);
 
 	// Prevent external resources from being loaded (like images)
 	// when dropping them on the WebView.
@@ -248,7 +255,13 @@ async function createMainWindow() {
 	// Stop preventing the system from sleeping if the renderer crashes
 	// or the window is closed while flashing
 	mainWindow.webContents.on('render-process-gone', stopSleepBlocker);
-	mainWindow.on('closed', stopSleepBlocker);
+	mainWindow.on('closed', () => {
+		if (showWindowTimeout !== undefined) {
+			clearTimeout(showWindowTimeout);
+			showWindowTimeout = undefined;
+		}
+		stopSleepBlocker();
+	});
 
 	mainWindow.on('close', () => {
 		if (mainWindow) {
@@ -278,7 +291,7 @@ async function createMainWindow() {
 	return mainWindow;
 }
 
-electron.app.on('edit-config-file', () => {
+onCustomAppEvent('edit-config-file', () => {
 	if (isLinux) {
 		console.info(
 			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
@@ -320,7 +333,7 @@ electron.app.on('before-quit', () => {
 	process.exit(EXIT_CODES.SUCCESS);
 });
 
-electron.app.on('relaunch', () => {
+onCustomAppEvent('relaunch', () => {
 	console.warn('Restarting App...');
 	if (mainWindow) {
 		store.set('windowDetails', {
