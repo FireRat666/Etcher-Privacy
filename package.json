@@ -67,7 +67,7 @@
     "semver": "7.6.3",
     "styled-components": "5.3.11",
     "sys-class-rgb-led": "3.0.1",
-    "uuid": "9.0.1",
+    "uuid": "14.0.0",
     "ws": "8.18.0"
   },
   "devDependencies": {
