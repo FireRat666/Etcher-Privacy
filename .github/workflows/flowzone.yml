@@ -6,6 +6,11 @@ on:
   push:
     branches: [main, master]
     tags: ['v*']
+
+env:
+  GYP_MSVS_VERSION: '2026'
+  npm_config_msvs_version: '2026'
+
 jobs:
   flowzone:
     name: Flowzone
@@ -16,19 +21,17 @@ jobs:
       custom_test_matrix: >
         {
           "os": [
-            ["ubuntu-22.04"],
-            ["windows-2022"],
-            ["macos-14"],
-            ["macos-latest"]
+            ["ubuntu-24.04"],
+            ["windows-2025"],
+            ["macos-15"]
           ]
         }
       custom_publish_matrix: >
         {
           "os": [
-            ["ubuntu-22.04"],
-            ["windows-2022"],
-            ["macos-14"],
-            ["macos-latest"]
+            ["ubuntu-24.04"],
+            ["windows-2025"],
+            ["macos-15"]
           ]
         }
       github_prerelease: true

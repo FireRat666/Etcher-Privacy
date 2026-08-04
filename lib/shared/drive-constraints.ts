@@ -17,7 +17,6 @@
 import type { Drive } from 'drivelist';
 import { isNil } from 'lodash';
 import * as path from 'path';
-import pathIsInside from 'path-is-inside';
 
 import * as messages from './messages';
 import type { SourceMetadata } from './typings/source-selector';
@@ -44,9 +43,6 @@ export function isSystemDrive(drive: DrivelistDrive): boolean {
 
 function sourceIsInsideDrive(source: string, drive: DrivelistDrive) {
 	for (const mountpoint of drive.mountpoints || []) {
-		if (pathIsInside(source, mountpoint.path)) {
-			return true;
-		}
 		const isWinStyle =
 			/^[a-zA-Z]:/.test(source) ||
 			source.startsWith('\\\\') ||

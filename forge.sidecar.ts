@@ -55,6 +55,7 @@ function addWebpackDefine(
 
 function build(
 	sourcesDir: string,
+	platform: string,
 	buildForArchs: string,
 	binDir: string,
 	binName: string,
@@ -71,12 +72,53 @@ function build(
 			: // otherwise build in arch-specific directory within binDir
 				path.resolve(binDir, arch, binName);
 
-		// FIXME: rebuilding mountutils shouldn't be necessary, but it is.
-		// It's coming from etcher-sdk, a fix has been upstreamed but to use
-		// the latest etcher-sdk we need to upgrade axios at the same time.
-		// mountutils is a non-NAPI native addon, so it must be rebuilt against
-		// the same Node version that pkg embeds (see the pkg `--target` below).
-		commands.push(['npm', ['rebuild', 'mountutils', `--arch=${arch}`]]);
+		const nativeModules = [
+			'mountutils',
+			'usb',
+			'lzma-native',
+			'drivelist',
+			'xxhash-addon',
+			'winusb-driver-generator',
+			'node-raspberrypi-usbboot',
+		];
+
+		nativeModules.forEach((mod) => {
+			const modDir = path.resolve('node_modules', mod);
+			if (
+				!fs.existsSync(modDir) ||
+				!fs.existsSync(path.join(modDir, 'binding.gyp'))
+			) {
+				return;
+			}
+
+			const extraArgs: string[] = [];
+			if (mod === 'usb') {
+				extraArgs.push('--use_udev=0');
+			}
+
+			commands.push([
+				'npx',
+				[
+					'node-gyp',
+					'rebuild',
+					`--target=${nativeModuleNodeVersion()}`,
+					`--arch=${arch}`,
+					`--platform=${platform}`,
+					...extraArgs,
+				],
+				{
+					cwd: modDir,
+					env: {
+						...process.env,
+						npm_config_arch: arch,
+						npm_config_platform: platform,
+						npm_config_runtime: 'node',
+						npm_config_target: nativeModuleNodeVersion(),
+						CXXFLAGS: `${process.env.CXXFLAGS || ''} -std=c++20`.trim(),
+					},
+				},
+			]);
+		});
 
 		commands.push([
 			'pkg',
@@ -89,10 +131,10 @@ function build(
 				'--public',
 				'--public-packages',
 				'"*"',
-				// always build for host platform and node version
+				// Always build for the Forge target platform and Node version.
 				// https://github.com/vercel/pkg-fetch/releases
 				'--target',
-				`node20-${arch}`,
+				`${pkgNodeVersion()}-${pkgPlatform(platform)}-${arch}`,
 				'--output',
 				binPath,
 			],
@@ -105,8 +147,32 @@ function build(
 	});
 }
 
+function pkgPlatform(platform: string): string {
+	if (platform === 'win32') {
+		return 'win';
+	}
+
+	if (platform === 'darwin') {
+		return 'macos';
+	}
+
+	return platform;
+}
+
+function pkgNodeVersion(): string {
+	return 'node24';
+}
+
+function nativeModuleNodeVersion(): string {
+	// Match pkg's node24 runtime so native modules share the same ABI
+	// regardless of the host Node.js version. Keep in sync with the node24
+	// base version fetched by @yao-pkg/pkg-fetch.
+	return '24.18.1';
+}
+
 function copyArtifact(
 	buildPath: string,
+	platform: string,
 	arch: string,
 	binDir: string,
 	binName: string,
@@ -123,6 +189,7 @@ function copyArtifact(
 	const dest = path.resolve(resourcesPath, path.basename(binPath));
 	log(`copying '${binPath}' to '${dest}'`);
 	fs.copyFileSync(binPath, dest);
+
 }
 
 export class SidecarPlugin extends PluginBase<void> {
@@ -148,7 +215,7 @@ export class SidecarPlugin extends PluginBase<void> {
 			},
 			generateAssets: async (_config, platform, arch) => {
 				log('generateAssets', { platform, arch });
-				build(SRC_DIR, arch, BIN_DIR, BIN_NAME);
+				build(SRC_DIR, platform, arch, BIN_DIR, BIN_NAME);
 			},
 			packageAfterCopy: async (
 				_config,
@@ -163,7 +230,7 @@ export class SidecarPlugin extends PluginBase<void> {
 					platform,
 					arch,
 				});
-				copyArtifact(buildPath, arch, BIN_DIR, BIN_NAME);
+				copyArtifact(buildPath, platform, arch, BIN_DIR, BIN_NAME);
 			},
 		};
 	}
