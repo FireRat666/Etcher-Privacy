@@ -85,6 +85,7 @@ function normalizeRecentUrlImages(urls: any[]): URL[] {
 				return new URL(url);
 			} catch (error: any) {
 				// Invalid URL, skip
+				return undefined;
 			}
 		})
 		.filter((url) => url !== undefined);
@@ -117,7 +118,9 @@ const Card = styled(BaseCard)`
 `;
 
 // TODO move these styles to rendition
-const ModalText = styled.p`
+const ModalText = styled((props: React.HTMLProps<HTMLParagraphElement>) => (
+	<p {...props} />
+))`
 	a {
 		color: rgb(0, 174, 239);
 
@@ -474,7 +477,7 @@ export class SourceSelector extends React.Component<
 
 	private handleError(
 		title: string,
-		sourcePath: string,
+		_sourcePath: string,
 		description: string,
 		error?: Error,
 	) {
@@ -510,7 +513,8 @@ export class SourceSelector extends React.Component<
 	private async onDrop(event: React.DragEvent<HTMLDivElement>) {
 		const file = event.dataTransfer.files.item(0);
 		if (file != null) {
-			await this.selectSource(file.path, 'File').promise;
+			await this.selectSource((file as File & { path: string }).path, 'File')
+				.promise;
 		}
 	}
 
@@ -565,7 +569,7 @@ export class SourceSelector extends React.Component<
 		let image =
 			selectionImage !== undefined ? selectionImage : ({} as SourceMetadata);
 
-		image = image.drive ?? image;
+		image = (image.drive ?? image) as SourceMetadata;
 
 		let cancelURLSelection = () => {
 			// noop
