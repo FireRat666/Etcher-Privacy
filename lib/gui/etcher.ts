@@ -213,14 +213,21 @@ async function createMainWindow() {
 
 	// mainWindow.setFullScreen(true);
 
+	const showWindow = () => {
+		if (mainWindow && !mainWindow.isVisible()) {
+			mainWindow.webContents.setZoomFactor(width / defaultWidth);
+			mainWindow.show();
+		}
+	};
+
 	// Prevent flash of white when starting the application
 	mainWindow.once('ready-to-show', () => {
 		console.timeEnd('ready-to-show');
-		// Electron sometimes caches the zoomFactor
-		// making it obnoxious to switch back-and-forth
-		mainWindow.webContents.setZoomFactor(width / defaultWidth);
-		mainWindow.show();
+		showWindow();
 	});
+
+	// Fallback for Linux VMs / software rendering where ready-to-show may be delayed or missed
+	setTimeout(showWindow, 1500);
 
 	// Prevent external resources from being loaded (like images)
 	// when dropping them on the WebView.
