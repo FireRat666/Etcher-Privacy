@@ -20,7 +20,7 @@
         "electron-store": "8.2.0",
         "etcher-sdk": "10.0.0",
         "i18next": "23.11.2",
-        "immutable": "4.3.7",
+        "immutable": "4.3.9",
         "lodash": "4.17.21",
         "outdent": "0.8.0",
         "path-is-inside": "1.0.2",
@@ -15755,22 +15755,6 @@
         "express": "^4.0.0 || ^5.0.0-alpha.1"
       }
     },
-    "node_modules/express-ws/node_modules/utf-8-validate": {
-      "version": "5.0.10",
-      "resolved": "https://registry.npmjs.org/utf-8-validate/-/utf-8-validate-5.0.10.tgz",
-      "integrity": "sha512-Z6czzLq4u8fPOyx7TU6X3dvUZVvoJmxSQ+IcrlmagKhilxlhZgxPK6C5Jqbkw1IDUmFTM+cz9QDnnLTwDz/2gQ==",
-      "dev": true,
-      "hasInstallScript": true,
-      "license": "MIT",
-      "optional": true,
-      "peer": true,
-      "dependencies": {
-        "node-gyp-build": "^4.3.0"
-      },
-      "engines": {
-        "node": ">=6.14.2"
-      }
-    },
     "node_modules/express-ws/node_modules/ws": {
       "version": "7.5.13",
       "resolved": "https://registry.npmjs.org/ws/-/ws-7.5.13.tgz",
@@ -18785,9 +18769,9 @@
       "license": "MIT"
     },
     "node_modules/immutable": {
-      "version": "4.3.7",
-      "resolved": "https://registry.npmjs.org/immutable/-/immutable-4.3.7.tgz",
-      "integrity": "sha512-1hqclzwYwjRDFLjcFxOM5AYkkG0rpFPpr1RLPMEuGczoS7YA8gLhy8SWXYRAA/XwfEHpfo3cw5JGioS32fnMRw==",
+      "version": "4.3.9",
+      "resolved": "https://registry.npmjs.org/immutable/-/immutable-4.3.9.tgz",
+      "integrity": "sha512-ObHy4YN7ycwZOUCLI1/6svfyAFu7vL8RhAvVu/bh/RZW9EPlOyDaQ9jDQWCtdqzaXUjgXZCW1migtHE7YI7UGQ==",
       "license": "MIT"
     },
     "node_modules/import-fresh": {
