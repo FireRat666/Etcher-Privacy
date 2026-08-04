@@ -7,11 +7,16 @@
 const PRE_VERSION = /^#\s+v?(\d+\.\d+\.\d+)-(\d+)-p\s*$/;
 const VERSION = /^(\d+\.\d+\.\d+)-(\d+)-p$/;
 
+const versionParts = (version) => {
+	const [, base, counter] = version.match(VERSION);
+	return [...base.split('.').map(Number), Number(counter)];
+};
+
 const greater = (a, b) => {
-	const pa = a.match(VERSION);
-	const pb = b.match(VERSION);
-	for (let i = 1; i <= 4; i++) {
-		const diff = parseInt(pa[i], 10) - parseInt(pb[i], 10);
+	const pa = versionParts(a);
+	const pb = versionParts(b);
+	for (let i = 0; i < 4; i++) {
+		const diff = pa[i] - pb[i];
 		if (diff !== 0) {
 			return diff > 0;
 		}
