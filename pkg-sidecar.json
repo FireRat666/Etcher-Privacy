@@ -1,5 +1,6 @@
 {
   "assets": [
+    "out/sidecar/src/**",
     "node_modules/usb/**",
     "node_modules/lzma-native/**",
     "node_modules/drivelist/**",

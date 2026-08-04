@@ -54,6 +54,20 @@ function injectEnvFromArgs() {
 injectEnvFromArgs();
 includeSidecarDirectoryInDllSearchPath();
 
+// Lazy getters containing string-literal require() calls.
+// Using require() with string literals allows pkg static analysis to trace and bundle
+// these files into the binary snapshot, while lazy execution ensures process startup
+// and WebSocket server binding succeed cleanly before module loading.
+function getChildWriter() {
+	return require('./child-writer.js') as typeof import('./child-writer.js');
+}
+function getSourceMetadataModule() {
+	return require('./source-metadata.js') as typeof import('./source-metadata.js');
+}
+function getScannerModule() {
+	return require('./scanner.js') as typeof import('./scanner.js');
+}
+
 console.log(
 	'Etcher child process started with the following environment variables:',
 );
@@ -87,13 +101,17 @@ let emitSourceMetadata: (
 
 // Terminate the child process
 async function terminate(exitCode?: number, cleanupBeforeExit = true) {
-	if (cleanupBeforeExit) {
-		const { cleanup } = await import('./child-writer.js');
-		await cleanup(Date.now());
+	try {
+		if (cleanupBeforeExit) {
+			await getChildWriter().cleanup(Date.now());
+		}
+	} catch (error: any) {
+		console.error('terminate: error during cleanup:', error);
+	} finally {
+		process.nextTick(() => {
+			process.exit(exitCode || SUCCESS);
+		});
 	}
-	process.nextTick(() => {
-		process.exit(exitCode || SUCCESS);
-	});
 }
 
 // kill the process if no initial connections or heartbeat for X sec (default 10)
@@ -180,27 +198,30 @@ function setup(): Promise<EmitLog> {
 			 */
 			const onWrite = async (options: WriteOptions) => {
 				log('write requested');
-				const { write, cleanup } = await import('./child-writer.js');
+				try {
+					const { write, cleanup } = getChildWriter();
+					// Remove leftover tmp files older than 1 hour
+					await cleanup(Date.now() - 60 * 60 * 1000);
 
-				// Remove leftover tmp files older than 1 hour
-				cleanup(Date.now() - 60 * 60 * 1000);
+					let exitCode = SUCCESS;
 
-				let exitCode = SUCCESS;
+					// Write to the drives
+					const results = await write(options);
 
-				// Write to the drives
-				const results = await write(options);
+					// handle potential errors from the write process
+					if (results.errors.length > 0) {
+						results.errors = results.errors.map(toJSON);
+						exitCode = GENERAL_ERROR;
+					}
 
-				// handle potential errors from the write process
-				if (results.errors.length > 0) {
-					results.errors = results.errors.map(toJSON);
-					exitCode = GENERAL_ERROR;
+					// send the results back to the client
+					emit('done', { results });
+
+					// terminate this process
+					await terminate(exitCode);
+				} catch (error: any) {
+					await handleError(error);
 				}
-
-				// send the results back to the client
-				emit('done', { results });
-
-				// terminate this process
-				await terminate(exitCode);
 			};
 
 			/**
@@ -210,7 +231,7 @@ function setup(): Promise<EmitLog> {
 				log('sourceMetadata requested');
 				const { selected, SourceType, auth } = JSON.parse(params);
 				try {
-					const { getSourceMetadata } = await import('./source-metadata.js');
+					const { getSourceMetadata } = getSourceMetadataModule();
 					const sourceMatadata = await getSourceMetadata(
 						selected,
 						SourceType,
@@ -255,8 +276,12 @@ function setup(): Promise<EmitLog> {
 				// start scanning for drives
 				scan: async () => {
 					log('Scan requested');
-					const { startScanning } = await import('./scanner.js');
-					startScanning();
+					try {
+						const { startScanning } = getScannerModule();
+						await startScanning();
+					} catch (error: any) {
+						await handleError(error);
+					}
 				},
 
 				// route `cancel` from client
