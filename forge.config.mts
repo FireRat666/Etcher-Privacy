@@ -14,6 +14,10 @@ import * as sidecar from './forge.sidecar.ts';
 
 import { hostDependencies, productDescription } from './package.json';
 
+if (process.platform === 'win32' && !process.env.GYP_MSVS_VERSION) {
+	process.env.GYP_MSVS_VERSION = '2026';
+}
+
 const osxSigningEnabled =
 	process.env.NODE_ENV === 'production' && !!process.env.XCODE_APP_LOADER_EMAIL;
 const winSigningEnabled =
@@ -39,9 +43,19 @@ if (winSigningEnabled) {
 	};
 }
 
+class SafeMakerSquirrel extends MakerSquirrel {
+	async make(opts: any) {
+		if (opts.targetArch === 'arm64') {
+			return [];
+		}
+		return super.make(opts);
+	}
+}
+
 const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
+		arch: process.platform === 'darwin' ? ['x64', 'arm64'] : undefined,
 		icon: './assets/icon',
 		executableName:
 			process.platform === 'linux' ? 'etcher-privacy' : 'Etcher Privacy',
@@ -70,7 +84,7 @@ const config: ForgeConfig = {
 	},
 	makers: [
 		new MakerZIP(),
-		new MakerSquirrel({
+		new SafeMakerSquirrel({
 			setupIcon: 'assets/icon.ico',
 			...winSigningConfig,
 		}),
