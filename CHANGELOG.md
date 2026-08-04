@@ -3,27 +3,6 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
-# v2.1.7
-# v2.1.7-p
-## (2026-08-02)
-
-* build: fail install when the node-gyp util patch target is missing [FireRat]
-* build: align sidecar rebuilds with pkg node24 and reuse setupWinNodeGyp [FireRat]
-* fix: harden CI, sidecar lifecycle, and drive-source checks [FireRat]
-* ci: speed up Windows ARM64 build [FireRat]
-* chore: bump version to 2.1.7-p [FireRat]
-* test: run headless wdio with --no-sandbox on Linux [FireRat]
-* ci: add regression test workflow [FireRat]
-* ci: add macOS x64 and Windows ARM64 release workflows [FireRat]
-* build: fix sidecar native module rebuilds on macOS and Windows [FireRat]
-* fix: resolve TS2835 dynamic imports and sidecar DLL search path [FireRat]
-* refactor: import etcher-sdk via subpaths for slimmer sidecar bundle [FireRat]
-* fix: improve Windows drive source path matching [FireRat]
-* fix: correct Linux install path and improve window startup reliability [FireRat]
-* fix: replace animated GIF with static icon to fix WPF BitmapDecoder crash [FireRat]
-* feat: verify writes after flashing by default [FireRat]
-* feat: prevent system sleep while flashing [FireRat]
-
 # v2.1.6-2-p
 ## (2026-08-01)
 
