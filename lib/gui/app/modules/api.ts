@@ -12,34 +12,26 @@
  *  - centralise the api for both the writer and the scanner instead of having two instances running
  */
 
+import { createHash } from 'crypto';
+import _debug from 'debug';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec } from 'child_process';
+import * as fs from 'fs';
 import * as os from 'os';
+import * as path from 'path';
 import * as packageJSON from '../../../../package.json';
 import * as permissions from '../../../shared/permissions';
 import * as errors from '../../../shared/errors';
+import { findExecutableStagingDir } from './sidecar-staging';
 
 const THREADS_PER_CPU = 16;
 const connectionRetryDelay = 1000;
 const connectionRetryAttempts = 10;
+const sidecarDebug = _debug('etcher:sidecar');
 
 async function writerArgv(): Promise<string[]> {
-	let entryPoint = await window.etcher.getEtcherUtilPath();
-	// AppImages run over FUSE, so the files inside the mount point
-	// can only be accessed by the user that mounted the AppImage.
-	// This means we can't re-spawn Etcher as root from the same
-	// mount-point, and as a workaround, we re-mount the original
-	// AppImage as root.
-	if (os.platform() === 'linux' && process.env.APPIMAGE && process.env.APPDIR) {
-		entryPoint = entryPoint.replace(process.env.APPDIR, '');
-		return [
-			process.env.APPIMAGE,
-			'-e',
-			`require(\`\${process.env.APPDIR}${entryPoint}\`)`,
-		];
-	} else {
-		return [entryPoint];
-	}
+	const entryPoint = await window.etcher.getEtcherUtilPath();
+	return [entryPoint];
 }
 
 async function spawnChild(
@@ -48,7 +40,7 @@ async function spawnChild(
 	etcherServerAddress: string,
 	etcherServerPort: string,
 ) {
-	const argv = await writerArgv();
+	let argv = await writerArgv();
 	const env: any = {
 		ETCHER_SERVER_ADDRESS: etcherServerAddress,
 		ETCHER_SERVER_ID: etcherServerId,
@@ -63,10 +55,50 @@ async function spawnChild(
 
 	if (withPrivileges) {
 		console.log('...with privileges...');
-		return permissions.elevateCommand(argv, {
-			applicationName: packageJSON.displayName,
-			env,
-		});
+		// AppImages run over FUSE, so the files inside the mount point
+		// can only be accessed by the user that mounted the AppImage.
+		// Root can't read the FUSE mount, so we copy the sidecar binary
+		// to a temp location that root can access.
+		let tmpDir: string | undefined;
+		try {
+			if (
+				os.platform() === 'linux' &&
+				process.env.APPIMAGE &&
+				process.env.APPDIR
+			) {
+				tmpDir = fs.mkdtempSync(
+					path.join(findExecutableStagingDir(), 'etcher-'),
+				);
+				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
+				const binBuffer = fs.readFileSync(argv[0]);
+				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o755 });
+				const digest = createHash('sha256').update(binBuffer).digest('hex');
+				// Elevate a shell that opens the copy on a fixed fd, immediately removes
+				// the temp binary and directory, verifies its digest on fd 3, and execs fd 3.
+				argv = [
+					'/bin/bash',
+					'-c',
+					'exec 3< "$1" && rm -f "$1" && rmdir "$2" && test "$(sha256sum /proc/self/fd/3 | cut -d" " -f1)" = "$3" && exec /proc/self/fd/3 "${@:4}"',
+					'etcher-util',
+					tmpBin,
+					tmpDir,
+					digest,
+				];
+			}
+			const result = await permissions.elevateCommand(argv, {
+				applicationName: packageJSON.displayName,
+				env,
+			});
+			if (result.cancelled && tmpDir) {
+				fs.rmSync(tmpDir, { recursive: true, force: true });
+			}
+			return result;
+		} catch (error) {
+			if (tmpDir) {
+				fs.rmSync(tmpDir, { recursive: true, force: true });
+			}
+			throw error;
+		}
 	} else {
 		if (process.platform === 'win32') {
 			// we need to ensure we reset the env as a previous elevation process might have kept them in a wrong state
@@ -81,6 +113,12 @@ async function spawnChild(
 		const spawned = await spawn(argv[0], argv.slice(1), {
 			env,
 		});
+		spawned.stdout?.on('data', (data) => {
+			sidecarDebug(`[sidecar stdout] ${data.toString().trim()}`);
+		});
+		spawned.stderr?.on('data', (data) => {
+			sidecarDebug(`[sidecar stderr] ${data.toString().trim()}`);
+		});
 		return { cancelled: false, spawned };
 	}
 }
@@ -88,14 +126,14 @@ async function spawnChild(
 type ChildApi = {
 	emit: (type: string, payload: any) => void;
 	registerHandler: (event: string, handler: any) => void;
-	failed: boolean;
+	failed: false;
 };
 
 async function connectToChildProcess(
 	etcherServerAddress: string,
 	etcherServerPort: string,
 	etcherServerId: string,
-): Promise<ChildApi | { failed: boolean }> {
+): Promise<ChildApi | { failed: true }> {
 	return new Promise((resolve, reject) => {
 		// TODO: default to IPC connections https://github.com/websockets/ws/blob/master/doc/ws.md#ipc-connections
 		// TODO: use the path as cheap authentication
@@ -225,12 +263,12 @@ async function spawnChildAndConnect({
 	try {
 		let retry = 0;
 		while (retry < connectionRetryAttempts) {
-			const { emit, registerHandler, failed } = await connectToChildProcess(
+			const result = await connectToChildProcess(
 				etcherServerAddress,
 				etcherServerPort,
 				etcherServerId,
 			);
-			if (failed) {
+			if (result.failed) {
 				retry++;
 				console.log(
 					`Connection to sidecar flasher process attempt ${retry} / ${connectionRetryAttempts} failed; retrying in ${connectionRetryDelay}ms...`,
@@ -240,7 +278,7 @@ async function spawnChildAndConnect({
 				);
 				continue;
 			}
-			return { failed, emit, registerHandler };
+			return result;
 		}
 		// TODO: raised an error to the user if we reach this point
 		throw new Error('Connection to sidecar flasher process timed out');
