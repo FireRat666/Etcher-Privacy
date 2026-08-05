@@ -13,7 +13,7 @@ import { exec } from 'child_process';
 import { mainConfig, rendererConfig } from './webpack.config.ts';
 import * as sidecar from './forge.sidecar.ts';
 
-import { hostDependencies, productDescription, version } from './package.json';
+import { hostDependencies, productDescription } from './package.json';
 
 if (process.platform === 'win32' && !process.env.GYP_MSVS_VERSION) {
 	process.env.GYP_MSVS_VERSION = '2026';
@@ -56,6 +56,12 @@ class SafeMakerSquirrel extends MakerSquirrel {
 		if (opts.targetArch === 'arm64') {
 			return [];
 		}
+		if (opts.packageJSON && typeof opts.packageJSON.version === 'string') {
+			opts.packageJSON = {
+				...opts.packageJSON,
+				version: squirrelVersion(opts.packageJSON.version),
+			};
+		}
 		return super.make(opts);
 	}
 }
@@ -94,7 +100,6 @@ const config: ForgeConfig = {
 		new MakerZIP(),
 		new SafeMakerSquirrel({
 			setupIcon: 'assets/icon.ico',
-			version: squirrelVersion(version),
 			...winSigningConfig,
 		}),
 		new MakerDMG({
