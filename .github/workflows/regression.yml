@@ -53,4 +53,4 @@ jobs:
         shell: bash
         run: |
           npm run lint
-          npx mocha -r ts-node/register tests/shared/**/*.spec.ts tests/gui/models/flash-state.spec.ts
+          npx mocha -r ts-node/register tests/shared/**/*.spec.ts tests/gui/models/flash-state.spec.ts tests/gui/modules/sidecar-staging.spec.ts

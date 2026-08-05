@@ -22,6 +22,7 @@ import * as path from 'path';
 import * as packageJSON from '../../../../package.json';
 import * as permissions from '../../../shared/permissions';
 import * as errors from '../../../shared/errors';
+import { findExecutableStagingDir } from './sidecar-staging';
 
 const THREADS_PER_CPU = 16;
 const connectionRetryDelay = 1000;
@@ -65,7 +66,9 @@ async function spawnChild(
 				process.env.APPIMAGE &&
 				process.env.APPDIR
 			) {
-				tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-'));
+				tmpDir = fs.mkdtempSync(
+					path.join(findExecutableStagingDir(), 'etcher-'),
+				);
 				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 				const binBuffer = fs.readFileSync(argv[0]);
 				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o755 });

@@ -13,7 +13,7 @@ import { exec } from 'child_process';
 import { mainConfig, rendererConfig } from './webpack.config.ts';
 import * as sidecar from './forge.sidecar.ts';
 
-import { hostDependencies, productDescription } from './package.json';
+import { hostDependencies, productDescription, version } from './package.json';
 
 if (process.platform === 'win32' && !process.env.GYP_MSVS_VERSION) {
 	process.env.GYP_MSVS_VERSION = '2026';
@@ -42,6 +42,13 @@ if (winSigningEnabled) {
 	winSigningConfig = {
 		signWithParams: `-sha1 ${process.env.SM_CODE_SIGNING_CERT_SHA1_HASH} -tr ${process.env.TIMESTAMP_SERVER} -td sha256 -fd sha256 -d etcher-privacy`,
 	};
+}
+
+// Squirrel.Windows requires 4 numeric version components (X.Y.Z.N) because
+// NuGet / Squirrel.Windows Update.exe parser rejects hyphenated prerelease versions.
+function squirrelVersion(v: string): string {
+	const m = v.match(/^(\d+\.\d+\.\d+)-(\d+)-[A-Za-z0-9][A-Za-z0-9.-]*$/);
+	return m ? `${m[1]}.${m[2]}` : v;
 }
 
 class SafeMakerSquirrel extends MakerSquirrel {
@@ -87,6 +94,7 @@ const config: ForgeConfig = {
 		new MakerZIP(),
 		new SafeMakerSquirrel({
 			setupIcon: 'assets/icon.ico',
+			version: squirrelVersion(version),
 			...winSigningConfig,
 		}),
 		new MakerDMG({
