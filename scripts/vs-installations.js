@@ -6,6 +6,8 @@ const { execFileSync } = require('child_process');
 // Hard-coded fallbacks used when vswhere.exe is unavailable.
 const VS_INSTALLATIONS_FALLBACK = [
 	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\18\\Enterprise\\VC', year: '2026' },
+	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\18\\Community\\VC', year: '2026' },
+	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\18\\BuildTools\\VC', year: '2026' },
 	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\Enterprise\\VC', year: '2026' },
 	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\Community\\VC', year: '2026' },
 	{ path: 'C:\\Program Files\\Microsoft Visual Studio\\2026\\BuildTools\\VC', year: '2026' },

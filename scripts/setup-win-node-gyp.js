@@ -52,15 +52,18 @@ if (foundVs && process.env.GITHUB_ENV && exists(process.env.GITHUB_ENV)) {
 // reuse it without re-deriving the installation logic.
 let globalGypBin = null;
 try {
-	const gypBin = path.join(
+	const globalNodeGypDir = path.join(
 		execSync('npm prefix -g', { encoding: 'utf8' }).trim(),
 		'node_modules',
-		'node-gyp',
-		'bin',
-		'node-gyp.js'
+		'node-gyp'
 	);
-	if (exists(gypBin)) {
-		globalGypBin = gypBin;
+	const gypBin = path.join(globalNodeGypDir, 'bin', 'node-gyp.js');
+	const pkgPath = path.join(globalNodeGypDir, 'package.json');
+	if (exists(gypBin) && exists(pkgPath)) {
+		const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
+		if (pkg.version && !semverLt(pkg.version, '12.1.0')) {
+			globalGypBin = gypBin;
+		}
 	}
 } catch (_) {}
 

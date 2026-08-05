@@ -26,9 +26,9 @@ describe('Browser: sidecar staging', function () {
 		);
 
 		it('should report a non-existent directory as not executable', function () {
-			expect(
-				isExecutableDirectory(path.join(os.tmpdir(), 'etcher-no-such-dir')),
-			).to.be.false;
+			const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-no-such-dir-'));
+			fs.rmSync(dir, { recursive: true, force: true });
+			expect(isExecutableDirectory(dir)).to.be.false;
 		});
 	});
 
