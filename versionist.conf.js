@@ -24,6 +24,13 @@ const greater = (a, b) => {
 	return false;
 };
 
+const normalizeVersion = (v) => {
+	const m = String(v).match(/^(\d+\.\d+\.\d+)-(?:(\d+)-)?[pP]$/);
+	if (!m) return null;
+	const counter = m[2] !== undefined ? m[2] : '0';
+	return `${m[1]}-${counter}-p`;
+};
+
 module.exports = {
 	getGitReferenceFromVersion: 'v-prefix',
 
@@ -59,11 +66,12 @@ module.exports = {
 	},
 
 	getCurrentBaseVersion: (documentedVersions, history, callback) => {
-		const pkgVersion = require('./package.json').version;
-		if (!VERSION.test(pkgVersion)) {
+		const pkgVersionRaw = require('./package.json').version;
+		const pkgVersion = normalizeVersion(pkgVersionRaw);
+		if (!pkgVersion) {
 			return callback(
 				new Error(
-					`package.json version "${pkgVersion}" does not match expected X.Y.Z-N-p format`,
+					`package.json version "${pkgVersionRaw}" does not match expected X.Y.Z-N-p or X.Y.Z-p format`,
 				),
 			);
 		}
