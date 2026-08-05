@@ -33,6 +33,7 @@ import './app/i18n';
 import * as EXIT_CODES from '../shared/exit-codes';
 import * as settings from './app/models/settings';
 import { buildWindowMenu } from './menu';
+import { onCustomAppEvent } from './custom-app-events';
 import * as i18n from 'i18next';
 
 const customProtocol = 'etcher';
@@ -53,6 +54,42 @@ electron.ipcMain.on(
 		}
 	},
 );
+
+// A reference to the active power save blocker, preventing the system
+// from going to sleep while flashing
+let sleepBlockerId: number | undefined;
+
+/**
+ * @summary Prevent the system from going to sleep while flashing
+ *
+ * @description
+ * Uses `prevent-display-sleep` so the screen stays on and the system
+ * does not go to sleep on Windows, macOS and Linux.
+ */
+function startSleepBlocker() {
+	if (sleepBlockerId !== undefined) {
+		return;
+	}
+	sleepBlockerId = electron.powerSaveBlocker.start('prevent-display-sleep');
+	console.info('Preventing the system from sleeping while flashing');
+}
+
+/**
+ * @summary Stop preventing the system from going to sleep
+ */
+function stopSleepBlocker() {
+	if (sleepBlockerId === undefined) {
+		return;
+	}
+	electron.powerSaveBlocker.stop(sleepBlockerId);
+	sleepBlockerId = undefined;
+	console.info('Re-enabled system sleep');
+}
+
+// The renderer asks to disable the screensaver and prevent system sleep
+// while flashing, and to re-enable it afterwards
+electron.ipcMain.on('disable-screensaver', startSleepBlocker);
+electron.ipcMain.on('enable-screensaver', stopSleepBlocker);
 
 const store = new Store();
 
@@ -104,6 +141,7 @@ async function getCommandLineURL(argv: string[]): Promise<string | undefined> {
 		}
 		return value;
 	}
+	return undefined;
 }
 
 const sourceSelectorReady = new Promise((resolve) => {
@@ -176,14 +214,27 @@ async function createMainWindow() {
 
 	// mainWindow.setFullScreen(true);
 
+	let showWindowTimeout: NodeJS.Timeout | undefined;
+
+	const showWindow = () => {
+		if (showWindowTimeout !== undefined) {
+			clearTimeout(showWindowTimeout);
+			showWindowTimeout = undefined;
+		}
+		if (mainWindow && !mainWindow.isDestroyed() && !mainWindow.isVisible()) {
+			mainWindow.webContents.setZoomFactor(width / defaultWidth);
+			mainWindow.show();
+		}
+	};
+
 	// Prevent flash of white when starting the application
 	mainWindow.once('ready-to-show', () => {
 		console.timeEnd('ready-to-show');
-		// Electron sometimes caches the zoomFactor
-		// making it obnoxious to switch back-and-forth
-		mainWindow.webContents.setZoomFactor(width / defaultWidth);
-		mainWindow.show();
+		showWindow();
 	});
+
+	// Fallback for Linux VMs / software rendering where ready-to-show may be delayed or missed
+	showWindowTimeout = setTimeout(showWindow, 1500);
 
 	// Prevent external resources from being loaded (like images)
 	// when dropping them on the WebView.
@@ -201,6 +252,17 @@ async function createMainWindow() {
 		checkForUpdates();
 	});
 
+	// Stop preventing the system from sleeping if the renderer crashes
+	// or the window is closed while flashing
+	mainWindow.webContents.on('render-process-gone', stopSleepBlocker);
+	mainWindow.on('closed', () => {
+		if (showWindowTimeout !== undefined) {
+			clearTimeout(showWindowTimeout);
+			showWindowTimeout = undefined;
+		}
+		stopSleepBlocker();
+	});
+
 	mainWindow.on('close', () => {
 		if (mainWindow) {
 			store.set('windowDetails', {
@@ -214,7 +276,8 @@ async function createMainWindow() {
 		}
 	});
 
-	const windowDetails = store.get('windowDetails');
+	const windowDetails = store.get('windowDetails') as
+		{ position: [number, number] } | undefined;
 
 	if (windowDetails) {
 		mainWindow.setPosition(
@@ -228,7 +291,7 @@ async function createMainWindow() {
 	return mainWindow;
 }
 
-electron.app.on('edit-config-file', () => {
+onCustomAppEvent('edit-config-file', () => {
 	if (isLinux) {
 		console.info(
 			'Note that JSON must be a recognized file type for the OS to open the config.json file.',
@@ -264,12 +327,13 @@ electron.app.on('window-all-closed', () => {
 // make use of it to ensure the browser window is completely destroyed.
 // See https://github.com/electron/electron/issues/5273
 electron.app.on('before-quit', () => {
+	stopSleepBlocker();
 	console.info('Etcher Privacy is quitting now');
 	electron.app.releaseSingleInstanceLock();
 	process.exit(EXIT_CODES.SUCCESS);
 });
 
-electron.app.on('relaunch', () => {
+onCustomAppEvent('relaunch', () => {
 	console.warn('Restarting App...');
 	if (mainWindow) {
 		store.set('windowDetails', {
@@ -310,7 +374,7 @@ contextMenu({
 	showInspectElement: true,
 	showLookUpSelection: true,
 	showSearchWithGoogle: false,
-	prepend: (defaultActions, parameters) => [
+	prepend: (_defaultActions, parameters) => [
 		{
 			label: 'Open Link in New Window',
 			// Only show it when right-clicking a link
@@ -420,7 +484,7 @@ async function main(): Promise<void> {
 		});
 		await selectImageURL(await getCommandLineURL(process.argv));
 
-		electron.ipcMain.on('change-lng', function (event, args) {
+		electron.ipcMain.on('change-lng', function (_event, args) {
 			i18n.changeLanguage(args, () => {
 				console.log('Language changed to: ' + args);
 			});
