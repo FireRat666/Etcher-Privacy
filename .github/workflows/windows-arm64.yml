@@ -1,0 +1,129 @@
+name: Windows ARM64
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Upload verified Windows ARM64 distributables to the release
+        required: false
+        default: true
+        type: boolean
+      release_tag:
+        description: Tag name for the release (e.g. untagged-xyz or v2.1.7)
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  make:
+    name: Make Windows ARM64
+    runs-on: windows-11-arm
+    permissions:
+      contents: read
+    timeout-minutes: 60
+    env:
+      VCPKG_DEFAULT_BINARY_CACHE: ${{ github.workspace }}/.vcpkg-binary-cache
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Cache build downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-gyp
+            ~/AppData/Local/electron/Cache
+            ~/AppData/Local/electron-gyp/Cache
+            ~/.pkg-cache
+          key: windows-arm64-downloads-${{ hashFiles('npm-shrinkwrap.json') }}
+          restore-keys: |
+            windows-arm64-downloads-
+
+      - name: Create vcpkg binary cache directory
+        shell: pwsh
+        run: New-Item -ItemType Directory -Force -Path $env:VCPKG_DEFAULT_BINARY_CACHE
+
+      - name: Cache vcpkg binaries
+        uses: actions/cache@v4
+        with:
+          path: ${{ env.VCPKG_DEFAULT_BINARY_CACHE }}
+          key: windows-arm64-vcpkg-liblzma-${{ hashFiles('scripts/patch-lzma-native-windows-arm64.js', 'forge.sidecar.ts') }}
+          restore-keys: |
+            windows-arm64-vcpkg-liblzma-
+
+      - name: Install dependencies & setup ARM64 prerequisites
+        shell: bash
+        run: |
+          npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
+          node scripts/fix-node-gyp-bin.js
+          node scripts/patch-pkg-fetch-node20-windows.js
+          node scripts/patch-lzma-native.js
+          vcpkg install liblzma:arm64-windows
+          node scripts/patch-lzma-native-windows-arm64.js
+
+      - name: Run Windows node-gyp setup
+        shell: bash
+        run: npm run setupWinNodeGyp
+
+      - name: Package & Make Windows ARM64
+        shell: bash
+        env:
+          GYP_MSVS_VERSION: '2022'
+          npm_config_msvs_version: '2022'
+        run: |
+          npx electron-forge make --platform=win32 --arch=arm64
+
+      - name: Upload Windows ARM64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gh-release-windows-arm64
+          if-no-files-found: error
+          path: |
+            out/make/zip/win32/arm64/*.zip
+
+  release:
+    name: Release Windows ARM64 (Manual Dispatch)
+    needs: make
+    if: inputs.publish_release == true && inputs.release_tag != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download Windows ARM64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: gh-release-windows-arm64
+          path: artifacts
+
+      - name: Publish to GitHub Release
+        uses: softprops/action-gh-release@v3
+        with:
+          files: artifacts/**
+          tag_name: ${{ inputs.release_tag }}
+          target_commitish: ${{ github.sha }}
+          draft: true
+          prerelease: true
+          fail_on_unmatched_files: false
