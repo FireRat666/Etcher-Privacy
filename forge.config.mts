@@ -44,23 +44,10 @@ if (winSigningEnabled) {
 	};
 }
 
-// NuGet / Squirrel.Windows requires single-segment prereleases (no multiple hyphens like 2.1.6-1-p).
-// Map 2.1.6-1-p -> 2.1.6-1p which is valid SemVer 1.0 / NuGet package versioning.
-function squirrelVersion(v: string): string {
-	const m = v.match(/^(\d+\.\d+\.\d+)-(\d+)-([A-Za-z0-9.-]+)$/);
-	return m ? `${m[1]}-${m[2]}${m[3]}` : v;
-}
-
 class SafeMakerSquirrel extends MakerSquirrel {
 	async make(opts: MakerOptions) {
 		if (opts.targetArch === 'arm64') {
 			return [];
-		}
-		if (opts.packageJSON && typeof opts.packageJSON.version === 'string') {
-			opts.packageJSON = {
-				...opts.packageJSON,
-				version: squirrelVersion(opts.packageJSON.version),
-			};
 		}
 		return super.make(opts);
 	}
