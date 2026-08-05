@@ -15,7 +15,8 @@ describe('Browser: sidecar staging', function () {
 		linuxIt(
 			'should report a real temporary directory as executable',
 			function () {
-				const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-test-'));
+				const staging = findExecutableStagingDir();
+				const dir = fs.mkdtempSync(path.join(staging, 'etcher-test-'));
 				try {
 					expect(isExecutableDirectory(dir)).to.be.true;
 				} finally {
@@ -32,8 +33,22 @@ describe('Browser: sidecar staging', function () {
 	});
 
 	describe('.findExecutableStagingDir()', function () {
+		let originalXdgRuntimeDir: string | undefined;
+
+		before(function () {
+			originalXdgRuntimeDir = process.env.XDG_RUNTIME_DIR;
+		});
+
 		beforeEach(function () {
 			delete process.env.XDG_RUNTIME_DIR;
+		});
+
+		after(function () {
+			if (originalXdgRuntimeDir === undefined) {
+				delete process.env.XDG_RUNTIME_DIR;
+			} else {
+				process.env.XDG_RUNTIME_DIR = originalXdgRuntimeDir;
+			}
 		});
 
 		it('should use the temporary directory when it is executable', function () {

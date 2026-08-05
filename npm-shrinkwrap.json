@@ -6,7 +6,7 @@
   "packages": {
     "": {
       "name": "etcher-privacy",
-      "version": "2.1.6-1-p",
+      "version": "2.1.6-p",
       "hasInstallScript": true,
       "license": "Apache-2.0",
       "dependencies": {
