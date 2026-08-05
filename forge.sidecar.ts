@@ -170,6 +170,10 @@ function nativeModuleNodeVersion(): string {
 	return '24.18.1';
 }
 
+function getBinName(platform: string): string {
+	return `etcher-util${pkgPlatform(platform) === 'win' ? '.exe' : ''}`;
+}
+
 function copyArtifact(
 	buildPath: string,
 	platform: string,
@@ -197,7 +201,7 @@ function copyArtifact(
 			);
 		}
 		const vcpkgRoot = process.env.VCPKG_INSTALLATION_ROOT || 'C:\\vcpkg';
-		const vcpkgTriplet = process.env.VCPKG_DEFAULT_TRIPLET || 'arm64-windows';
+		const vcpkgTriplet = 'arm64-windows';
 		const lzmaDll = path.join(
 			vcpkgRoot,
 			'installed',
@@ -239,7 +243,7 @@ export class SidecarPlugin extends PluginBase<void> {
 			},
 			generateAssets: async (_config, platform, arch) => {
 				log('generateAssets', { platform, arch });
-				build(SRC_DIR, platform, arch, BIN_DIR, BIN_NAME);
+				build(SRC_DIR, platform, arch, BIN_DIR, getBinName(platform));
 			},
 			packageAfterCopy: async (
 				_config,
@@ -254,7 +258,7 @@ export class SidecarPlugin extends PluginBase<void> {
 					platform,
 					arch,
 				});
-				copyArtifact(buildPath, platform, arch, BIN_DIR, BIN_NAME);
+				copyArtifact(buildPath, platform, arch, BIN_DIR, getBinName(platform));
 			},
 		};
 	}

@@ -1,7 +1,17 @@
 {
   "assets": [
     "out/sidecar/src/**",
-    "node_modules/**",
-    "node_modules/**/*.node"
+    "node_modules/etcher-sdk/**",
+    "node_modules/axios/**",
+    "node_modules/outdent/**",
+    "node_modules/lodash/**",
+    "node_modules/ws/**",
+    "node_modules/mountutils/**",
+    "node_modules/usb/**",
+    "node_modules/lzma-native/**",
+    "node_modules/drivelist/**",
+    "node_modules/xxhash-addon/**",
+    "node_modules/winusb-driver-generator/**",
+    "node_modules/node-raspberrypi-usbboot/**"
   ]
 }

@@ -1,4 +1,5 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
+import type { MakerOptions } from '@electron-forge/maker-base';
 import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
@@ -12,7 +13,7 @@ import { exec } from 'child_process';
 import { mainConfig, rendererConfig } from './webpack.config.ts';
 import * as sidecar from './forge.sidecar.ts';
 
-import { hostDependencies, productDescription, version } from './package.json';
+import { hostDependencies, productDescription } from './package.json';
 
 if (process.platform === 'win32' && !process.env.GYP_MSVS_VERSION) {
 	process.env.GYP_MSVS_VERSION = '2026';
@@ -43,17 +44,8 @@ if (winSigningEnabled) {
 	};
 }
 
-// Squirrel.Windows (Setup.exe) uses .NET's System.Version, which only accepts
-// numeric segments, so a SemVer prerelease like 2.1.6-3-p is rejected.
-// Map X.Y.Z-N-p -> X.Y.Z.N for the Windows installer, keeping the real
-// version everywhere else (app metadata, zip, tags).
-function squirrelVersion(v: string): string {
-	const m = v.match(/^(\d+\.\d+\.\d+)-(\d+)-[A-Za-z0-9][A-Za-z0-9.-]*$/);
-	return m ? `${m[1]}.${m[2]}` : v;
-}
-
 class SafeMakerSquirrel extends MakerSquirrel {
-	async make(opts: any) {
+	async make(opts: MakerOptions) {
 		if (opts.targetArch === 'arm64') {
 			return [];
 		}
@@ -95,7 +87,6 @@ const config: ForgeConfig = {
 		new MakerZIP(),
 		new SafeMakerSquirrel({
 			setupIcon: 'assets/icon.ico',
-			version: squirrelVersion(version),
 			...winSigningConfig,
 		}),
 		new MakerDMG({

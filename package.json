@@ -212,7 +212,6 @@
     "mountutils": true,
     "usb": true,
     "utf-8-validate": true,
-    "github:FireRat666/winusb-driver-generator#v2.1.10-5": true,
     "xxhash-addon": true,
     "github:FireRat666/winusb-driver-generator#9b87440003ea34924eaf77f3fad62fb50d04110d": true
   }

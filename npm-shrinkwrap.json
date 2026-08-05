@@ -27126,7 +27126,7 @@
     },
     "node_modules/winusb-driver-generator": {
       "version": "2.1.10-5",
-      "resolved": "git+ssh://git@github.com/FireRat666/winusb-driver-generator.git#9b87440003ea34924eaf77f3fad62fb50d04110d",
+      "resolved": "git+https://github.com/FireRat666/winusb-driver-generator.git#9b87440003ea34924eaf77f3fad62fb50d04110d",
       "hasInstallScript": true,
       "license": "Apache-2.0",
       "dependencies": {

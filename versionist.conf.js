@@ -59,9 +59,24 @@ module.exports = {
 	},
 
 	getCurrentBaseVersion: (documentedVersions, history, callback) => {
-		let base = '2.1.6-0-p';
+		const pkgVersion = require('./package.json').version;
+		if (!VERSION.test(pkgVersion)) {
+			return callback(
+				new Error(
+					`package.json version "${pkgVersion}" does not match expected X.Y.Z-N-p format`,
+				),
+			);
+		}
+		let base = pkgVersion;
 		for (const version of documentedVersions) {
-			if (VERSION.test(version) && greater(version, base)) {
+			if (!VERSION.test(version)) {
+				return callback(
+					new Error(
+						`documented version "${version}" does not match expected X.Y.Z-N-p format`,
+					),
+				);
+			}
+			if (greater(version, base)) {
 				base = version;
 			}
 		}

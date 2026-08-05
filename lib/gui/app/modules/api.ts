@@ -67,11 +67,9 @@ async function spawnChild(
 			) {
 				tmpDir = fs.mkdtempSync(path.join(os.tmpdir(), 'etcher-'));
 				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
-				fs.copyFileSync(argv[0], tmpBin);
-				fs.chmodSync(tmpBin, 0o755);
-				const digest = createHash('sha256')
-					.update(fs.readFileSync(tmpBin))
-					.digest('hex');
+				const binBuffer = fs.readFileSync(argv[0]);
+				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o755 });
+				const digest = createHash('sha256').update(binBuffer).digest('hex');
 				// Elevate a shell that opens the copy on a fixed fd, immediately removes
 				// the temp binary and directory, verifies its digest on fd 3, and execs fd 3.
 				argv = [

@@ -37,9 +37,9 @@ function createShims(targetBinPath, foundVc, foundYear) {
 	const relTarget = makeRelative(binDir, targetBinPath);
 	const unixWrapper = '#!/usr/bin/env node\nrequire("' + relTarget + '");\n';
 	const vcEnvCmd = foundVc ? '@IF NOT DEFINED VCINSTALLDIR SET "VCINSTALLDIR=' + foundVc + '"\n' : '';
-	const vcEnvPs1 = foundVc ? 'if (-not $env:VCINSTALLDIR) { $env:VCINSTALLDIR = "' + foundVc + '" }\n' : '';
+	const vcEnvPs1 = foundVc ? "if (-not $env:VCINSTALLDIR) { $env:VCINSTALLDIR = '" + foundVc.replace(/'/g, "''") + "' }\n" : '';
 	const gypMsvsCmd = foundYear ? '@IF NOT DEFINED GYP_MSVS_VERSION SET "GYP_MSVS_VERSION=' + foundYear + '"\n' : '';
-	const gypMsvsPs1 = foundYear ? 'if (-not $env:GYP_MSVS_VERSION) { $env:GYP_MSVS_VERSION = "' + foundYear + '" }\n' : '';
+	const gypMsvsPs1 = foundYear ? "if (-not $env:GYP_MSVS_VERSION) { $env:GYP_MSVS_VERSION = '" + foundYear.replace(/'/g, "''") + "' }\n" : '';
 
 	const cmdWrapper =
 		vcEnvCmd +
@@ -92,7 +92,6 @@ function patchNodeGypUtil() {
 						'fix-node-gyp-bin.js: expected cp.execFile pattern not found in',
 						uPath,
 					);
-					process.exitCode = 1;
 					continue;
 				}
 				fs.writeFileSync(uPath, patched, 'utf8');

@@ -16,7 +16,6 @@ on:
       release_tag:
         description: Tag name for the release (e.g. untagged-xyz or v2.1.7)
         required: true
-        default: ''
         type: string
 
 permissions:
@@ -79,6 +78,7 @@ jobs:
         shell: bash
         run: |
           npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
+          node scripts/fix-node-gyp-bin.js
           node scripts/patch-pkg-fetch-node20-windows.js
           node scripts/patch-lzma-native.js
           vcpkg install liblzma:arm64-windows

@@ -48,22 +48,8 @@ runs:
 
     - name: Setup node-gyp for VS2026
       if: runner.os == 'Windows'
-      shell: pwsh
-      run: |
-        # npm's git-dependency build uses an isolated node-gyp (10.3.1) that
-        # cannot detect Visual Studio 2026.  Install node-gyp 12.4.0
-        # globally and tell npm to use it for every native build.
-        npm install -g node-gyp@12.4.0
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        $gypPath = Join-Path (npm prefix -g) 'node_modules\node-gyp\bin\node-gyp.js'
-        if (-not (Test-Path $gypPath)) {
-          Write-Error "node-gyp JS entrypoint not found at $gypPath"
-          exit 1
-        }
-        Write-Host "Using global node-gyp at: $gypPath"
-        npm config set node-gyp "$gypPath"
-        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        echo "npm_config_node_gyp=$gypPath" >> $env:GITHUB_ENV
+      shell: bash
+      run: npm run setupWinNodeGyp
 
     - name: Test release
       shell: bash
