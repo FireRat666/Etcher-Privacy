@@ -46,7 +46,8 @@ if (winSigningEnabled) {
 
 function squirrelVersion(v: string): string {
 	// Convert X.Y.Z-N-p -> X.Y.Z-pN (e.g. 2.1.6-1-p -> 2.1.6-p1)
-	// NuGet pack rejects -1-p and -1p, but accepts -p1 and -p-1.
+	// electron-winstaller reads package.json inside app.asar (which has 2.1.6-1-p).
+	// Overriding this.config.version ensures electron-winstaller uses 2.1.6-p1 for NuGet / Squirrel.
 	const m = v.match(/^(\d+\.\d+\.\d+)-(\d+)-([A-Za-z0-9.-]+)$/);
 	return m ? `${m[1]}-${m[3]}${m[2]}` : v;
 }
@@ -56,11 +57,14 @@ class SafeMakerSquirrel extends MakerSquirrel {
 		if (opts.targetArch === 'arm64') {
 			return [];
 		}
-		if (opts.packageJSON && typeof opts.packageJSON.version === 'string') {
+		const ver = opts.packageJSON?.version;
+		if (typeof ver === 'string') {
+			const sanitized = squirrelVersion(ver);
 			opts.packageJSON = {
 				...opts.packageJSON,
-				version: squirrelVersion(opts.packageJSON.version),
+				version: sanitized,
 			};
+			(this.config as any).version = sanitized;
 		}
 		return super.make(opts);
 	}
