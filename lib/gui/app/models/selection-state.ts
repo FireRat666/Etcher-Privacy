@@ -14,6 +14,8 @@
  * limitations under the License.
  */
 
+import type * as Immutable from 'immutable';
+
 import type { DrivelistDrive } from '../../../shared/drive-constraints';
 import type { SourceMetadata } from '../../../shared/typings/source-selector';
 
@@ -52,7 +54,11 @@ export function selectSource(source: SourceMetadata) {
  * @summary Get all selected drives' devices
  */
 export function getSelectedDevices(): string[] {
-	return store.getState().getIn(['selection', 'devices']).toJS();
+	return (
+		store
+			.getState()
+			.getIn(['selection', 'devices']) as Immutable.OrderedSet<string>
+	).toJS();
 }
 
 /**
