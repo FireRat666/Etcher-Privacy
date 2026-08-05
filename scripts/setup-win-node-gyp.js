@@ -30,6 +30,13 @@ function semverLt(v1, v2) {
 
 const foundVs = findVisualStudio();
 
+const rootPackageJson = JSON.parse(
+	fs.readFileSync(path.join(__dirname, '..', 'package.json'), 'utf8'),
+);
+const nodeGypVersionSpec =
+	(rootPackageJson.overrides && rootPackageJson.overrides['@electron/node-gyp']) || '';
+const nodeGypVersion = nodeGypVersionSpec.replace(/^npm:node-gyp@/, '') || '12.1.0';
+
 // 1. Export GYP_MSVS_VERSION and VCINSTALLDIR to GITHUB_ENV if running in GitHub Actions
 if (foundVs && process.env.GITHUB_ENV && exists(process.env.GITHUB_ENV)) {
 	try {
@@ -85,8 +92,8 @@ try {
 	if (exists(pkgPath)) {
 		const pkg = JSON.parse(fs.readFileSync(pkgPath, 'utf8'));
 		if (semverLt(pkg.version, '12.1.0')) {
-			console.log(`Upgrading stale bundled node-gyp (${pkg.version}) to >= 12.1.0...`);
-			execSync(`npm install -g node-gyp@12.4.0 --force`, { stdio: 'inherit' });
+			console.log(`Upgrading stale bundled node-gyp (${pkg.version}) to >= ${nodeGypVersion}...`);
+			execSync(`npm install -g node-gyp@${nodeGypVersion} --force`, { stdio: 'inherit' });
 			const gypBin = path.join(
 				execSync('npm prefix -g', { encoding: 'utf8' }).trim(),
 				'node_modules',

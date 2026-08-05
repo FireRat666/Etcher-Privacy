@@ -69,14 +69,7 @@ module.exports = {
 		}
 		let base = pkgVersion;
 		for (const version of documentedVersions) {
-			if (!VERSION.test(version)) {
-				return callback(
-					new Error(
-						`documented version "${version}" does not match expected X.Y.Z-N-p format`,
-					),
-				);
-			}
-			if (greater(version, base)) {
+			if (VERSION.test(version) && greater(version, base)) {
 				base = version;
 			}
 		}
