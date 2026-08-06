@@ -98,10 +98,6 @@ const isLinux = process.platform === 'linux';
 const isWin = process.platform === 'win32';
 const isMac = process.platform === 'darwin';
 
-async function checkForUpdates() {
-	console.info('Auto-Updates disabled for this build');
-}
-
 function logMainProcessException(error: any) {
 	console.error(error);
 }
@@ -247,10 +243,6 @@ async function createMainWindow() {
 
 	const page = mainWindow.webContents;
 	remoteMain.enable(page);
-
-	page.once('did-frame-finish-load', async () => {
-		checkForUpdates();
-	});
 
 	// Stop preventing the system from sleeping if the renderer crashes
 	// or the window is closed while flashing
@@ -513,12 +505,6 @@ async function main(): Promise<void> {
 			});
 		});
 	}
-}
-
-// Handle creating/removing shortcuts on Windows when installing/uninstalling.
-// tslint:disable-next-line:no-var-requires
-if (require('electron-squirrel-startup')) {
-	electron.app.quit();
 }
 
 main();

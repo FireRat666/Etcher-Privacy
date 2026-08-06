@@ -1,6 +1,4 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import type { MakerOptions } from '@electron-forge/maker-base';
-import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
@@ -21,13 +19,7 @@ if (process.platform === 'win32' && !process.env.GYP_MSVS_VERSION) {
 
 const osxSigningEnabled =
 	process.env.NODE_ENV === 'production' && !!process.env.XCODE_APP_LOADER_EMAIL;
-const winSigningEnabled =
-	process.env.NODE_ENV === 'production' &&
-	!!process.env.SM_CLIENT_CERT_FILE &&
-	!!process.env.SM_CODE_SIGNING_CERT_SHA1_HASH;
-
 const osxSigningConfig: any = {};
-let winSigningConfig: any = {};
 
 if (osxSigningEnabled) {
 	osxSigningConfig.osxNotarize = {
@@ -36,38 +28,6 @@ if (osxSigningEnabled) {
 		appleIdPassword: process.env.XCODE_APP_LOADER_PASSWORD,
 		teamId: process.env.XCODE_APP_LOADER_TEAM_ID,
 	};
-}
-
-if (winSigningEnabled) {
-	winSigningConfig = {
-		signWithParams: `-sha1 ${process.env.SM_CODE_SIGNING_CERT_SHA1_HASH} -tr ${process.env.TIMESTAMP_SERVER} -td sha256 -fd sha256 -d etcher-privacy`,
-	};
-}
-
-function squirrelVersion(v: string): string {
-	// Convert X.Y.Z-N-p -> X.Y.Z-pN (e.g. 2.1.6-1-p -> 2.1.6-p1)
-	// electron-winstaller reads package.json inside app.asar (which has 2.1.6-1-p).
-	// Overriding this.config.version ensures electron-winstaller uses 2.1.6-p1 for NuGet / Squirrel.
-	const m = v.match(/^(\d+\.\d+\.\d+)-(\d+)-([A-Za-z0-9.-]+)$/);
-	return m ? `${m[1]}-${m[3]}${m[2]}` : v;
-}
-
-class SafeMakerSquirrel extends MakerSquirrel {
-	async make(opts: MakerOptions) {
-		if (opts.targetArch === 'arm64') {
-			return [];
-		}
-		const ver = opts.packageJSON?.version;
-		if (typeof ver === 'string') {
-			const sanitized = squirrelVersion(ver);
-			opts.packageJSON = {
-				...opts.packageJSON,
-				version: sanitized,
-			};
-			(this.config as any).version = sanitized;
-		}
-		return super.make(opts);
-	}
 }
 
 const config: ForgeConfig = {
@@ -102,10 +62,6 @@ const config: ForgeConfig = {
 	},
 	makers: [
 		new MakerZIP(),
-		new SafeMakerSquirrel({
-			setupIcon: 'assets/icon.ico',
-			...winSigningConfig,
-		}),
 		new MakerDMG({
 			background: './assets/dmg/background.tiff',
 			icon: './assets/icon.icns',
