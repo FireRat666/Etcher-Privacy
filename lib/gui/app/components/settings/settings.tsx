@@ -28,6 +28,7 @@ import * as i18next from 'i18next';
 interface Setting {
 	name: string;
 	label: string | JSX.Element;
+	tooltip?: string;
 }
 
 async function getSettingsList(): Promise<Setting[]> {
@@ -46,6 +47,11 @@ async function getSettingsList(): Promise<Setting[]> {
 			name: 'decompressFirst',
 			label: i18next.t('settings.decompressFirst'),
 			tooltip: i18next.t('settings.decompressFirst'),
+		},
+		{
+			name: 'preventSleep',
+			label: i18next.t('settings.preventSleep'),
+			tooltip: i18next.t('settings.preventSleepDesc'),
 		},
 	];
 	return list;

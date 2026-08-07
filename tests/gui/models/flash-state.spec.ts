@@ -14,9 +14,30 @@
  * limitations under the License.
  */
 
+const electronMock = {
+	ipcRenderer: {
+		send: () => undefined,
+	},
+};
+try {
+	const electronPath = require.resolve('electron');
+	require.cache[electronPath] = {
+		id: electronPath,
+		filename: electronPath,
+		loaded: true,
+		exports: electronMock,
+	} as any;
+} catch {
+	// ignore
+}
+
 import { expect } from 'chai';
+import * as electron from 'electron';
+import type { SinonStub } from 'sinon';
+import { assert, stub } from 'sinon';
 
 import * as flashState from '../../../lib/gui/app/models/flash-state';
+import * as settings from '../../../lib/gui/app/models/settings';
 
 describe('Model: flashState', function () {
 	beforeEach(function () {
@@ -495,6 +516,64 @@ describe('Model: flashState', function () {
 				expect(results).to.deep.equal(expectedResults);
 				flashState.setFlashingFlag();
 				expect(flashState.getFlashResults()).to.deep.equal({});
+			});
+		});
+
+		describe('screensaver prevention', function () {
+			let ipcSendStub: SinonStub;
+			let getSyncStub: SinonStub;
+
+			beforeEach(function () {
+				ipcSendStub = stub(electron.ipcRenderer, 'send');
+				getSyncStub = stub(settings, 'getSync');
+			});
+
+			afterEach(function () {
+				ipcSendStub.restore();
+				getSyncStub.restore();
+			});
+
+			it('should disable the screensaver when flashing if preventSleep is enabled', function () {
+				getSyncStub.withArgs('preventSleep').returns(true);
+				flashState.setFlashingFlag();
+				assert.calledWith(ipcSendStub, 'disable-screensaver');
+			});
+
+			it('should re-enable the screensaver after flashing if preventSleep is enabled', function () {
+				getSyncStub.withArgs('preventSleep').returns(true);
+				flashState.unsetFlashingFlag({
+					cancelled: false,
+					sourceChecksum: '1234',
+				});
+				assert.calledWith(ipcSendStub, 'enable-screensaver');
+			});
+
+			it('should not disable the screensaver when flashing if preventSleep is disabled', function () {
+				getSyncStub.withArgs('preventSleep').returns(false);
+				flashState.setFlashingFlag();
+				assert.notCalled(ipcSendStub);
+			});
+
+			it('should re-enable the screensaver after flashing even if preventSleep is disabled', function () {
+				getSyncStub.withArgs('preventSleep').returns(false);
+				flashState.unsetFlashingFlag({
+					cancelled: false,
+					sourceChecksum: '1234',
+				});
+				assert.calledWith(ipcSendStub, 'enable-screensaver');
+			});
+
+			it('should re-enable the screensaver when preventSleep is enabled during setFlashingFlag and disabled during unsetFlashingFlag', function () {
+				getSyncStub.withArgs('preventSleep').returns(true);
+				flashState.setFlashingFlag();
+				assert.calledWith(ipcSendStub, 'disable-screensaver');
+
+				getSyncStub.withArgs('preventSleep').returns(false);
+				flashState.unsetFlashingFlag({
+					cancelled: false,
+					sourceChecksum: '1234',
+				});
+				assert.calledWith(ipcSendStub, 'enable-screensaver');
 			});
 		});
 

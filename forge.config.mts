@@ -1,5 +1,4 @@
 import type { ForgeConfig } from '@electron-forge/shared-types';
-import { MakerSquirrel } from '@electron-forge/maker-squirrel';
 import { MakerZIP } from '@electron-forge/maker-zip';
 import { MakerDeb } from '@electron-forge/maker-deb';
 import { MakerRpm } from '@electron-forge/maker-rpm';
@@ -9,20 +8,18 @@ import { AutoUnpackNativesPlugin } from '@electron-forge/plugin-auto-unpack-nati
 import { WebpackPlugin } from '@electron-forge/plugin-webpack';
 import { exec } from 'child_process';
 
-import { mainConfig, rendererConfig } from './webpack.config';
-import * as sidecar from './forge.sidecar';
+import { mainConfig, rendererConfig } from './webpack.config.ts';
+import * as sidecar from './forge.sidecar.ts';
 
 import { hostDependencies, productDescription } from './package.json';
 
+if (process.platform === 'win32' && !process.env.GYP_MSVS_VERSION) {
+	process.env.GYP_MSVS_VERSION = '2026';
+}
+
 const osxSigningEnabled =
 	process.env.NODE_ENV === 'production' && !!process.env.XCODE_APP_LOADER_EMAIL;
-const winSigningEnabled =
-	process.env.NODE_ENV === 'production' &&
-	!!process.env.SM_CLIENT_CERT_FILE &&
-	!!process.env.SM_CODE_SIGNING_CERT_SHA1_HASH;
-
 const osxSigningConfig: any = {};
-let winSigningConfig: any = {};
 
 if (osxSigningEnabled) {
 	osxSigningConfig.osxNotarize = {
@@ -33,15 +30,10 @@ if (osxSigningEnabled) {
 	};
 }
 
-if (winSigningEnabled) {
-	winSigningConfig = {
-		signWithParams: `-sha1 ${process.env.SM_CODE_SIGNING_CERT_SHA1_HASH} -tr ${process.env.TIMESTAMP_SERVER} -td sha256 -fd sha256 -d etcher-privacy`,
-	};
-}
-
 const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
+		arch: process.platform === 'darwin' ? ['x64', 'arm64'] : undefined,
 		icon: './assets/icon',
 		executableName:
 			process.platform === 'linux' ? 'etcher-privacy' : 'Etcher Privacy',
@@ -70,11 +62,6 @@ const config: ForgeConfig = {
 	},
 	makers: [
 		new MakerZIP(),
-		new MakerSquirrel({
-			setupIcon: 'assets/icon.ico',
-			loadingGif: 'assets/install-spinner.gif',
-			...winSigningConfig,
-		}),
 		new MakerDMG({
 			background: './assets/dmg/background.tiff',
 			icon: './assets/icon.icns',
@@ -118,11 +105,10 @@ const config: ForgeConfig = {
 				categories: ['Utility'],
 				section: 'utils',
 				priority: 'optional',
-				productDescription,
+				depends: hostDependencies['debian'],
 				scripts: {
 					postinst: './after-install.tpl',
 				},
-				depends: hostDependencies['debian'],
 			},
 		}),
 	],

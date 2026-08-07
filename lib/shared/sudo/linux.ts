@@ -40,8 +40,8 @@ function checkLinuxBinary() {
 	});
 }
 
-function escapeDoubleQuotes(escapeString: string) {
-	return escapeString.replace(/"/g, '\\"');
+function shellQuote(arg: string) {
+	return `'${arg.replace(/'/g, `'\\''`)}'`;
 }
 
 export async function sudo(
@@ -61,7 +61,7 @@ export async function sudo(
 
 	// Build the shell command string
 	const shellCmd = `echo ${SUCCESSFUL_AUTH_MARKER} && ${command
-		.map((a) => escapeDoubleQuotes(a))
+		.map((a) => shellQuote(a))
 		.join(' ')}`;
 
 	parameters.push('/bin/bash');

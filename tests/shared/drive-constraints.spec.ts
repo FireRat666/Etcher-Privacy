@@ -102,16 +102,6 @@ describe('Shared: DriveConstraints', function () {
 				partitions: [],
 				SourceType: 'File',
 			};
-			beforeEach(function () {
-				this.separator = path.sep;
-				// @ts-ignore
-				path.sep = '\\';
-			});
-
-			afterEach(function () {
-				// @ts-ignore
-				path.sep = this.separator;
-			});
 
 			it('should return true if the image lives directly inside a mount point of the drive', function () {
 				const result = constraints.isSourceDrive(
@@ -154,6 +144,44 @@ describe('Shared: DriveConstraints', function () {
 				);
 
 				expect(result).to.be.true;
+			});
+
+			it('should return true for case-mismatched Windows paths with ..cache directory', function () {
+				const result = constraints.isSourceDrive(
+					{
+						mountpoints: [
+							{
+								label: 'label',
+								path: 'E:\\MNT',
+							},
+						],
+					} as constraints.DrivelistDrive,
+					{
+						...windowsImage,
+						path: 'e:\\mnt\\..cache\\image.img',
+					},
+				);
+
+				expect(result).to.be.true;
+			});
+
+			it('should return false for a Windows path whose .. traversal resolves outside the mount point', function () {
+				const result = constraints.isSourceDrive(
+					{
+						mountpoints: [
+							{
+								label: 'label',
+								path: 'E:\\MNT',
+							},
+						],
+					} as constraints.DrivelistDrive,
+					{
+						...windowsImage,
+						path: 'e:\\mnt\\child\\..\\..\\outside\\image.img',
+					},
+				);
+
+				expect(result).to.be.false;
 			});
 
 			it('should return false if the image does not live inside a mount point of the drive', function () {
@@ -208,16 +236,6 @@ describe('Shared: DriveConstraints', function () {
 				partitions: [],
 				SourceType: 'File',
 			};
-			beforeEach(function () {
-				this.separator = path.sep;
-				// @ts-ignore
-				path.sep = '/';
-			});
-
-			afterEach(function () {
-				// @ts-ignore
-				path.sep = this.separator;
-			});
 
 			it('should return true if the mount point is / and the image lives directly inside it', function () {
 				const result = constraints.isSourceDrive(

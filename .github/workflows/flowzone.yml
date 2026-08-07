@@ -6,6 +6,7 @@ on:
   push:
     branches: [main, master]
     tags: ['v*']
+
 jobs:
   flowzone:
     name: Flowzone
@@ -16,19 +17,17 @@ jobs:
       custom_test_matrix: >
         {
           "os": [
-            ["ubuntu-22.04"],
-            ["windows-2022"],
-            ["macos-14"],
-            ["macos-latest"]
+            ["ubuntu-24.04"],
+            ["windows-2025"],
+            ["macos-15"]
           ]
         }
       custom_publish_matrix: >
         {
           "os": [
-            ["ubuntu-22.04"],
-            ["windows-2022"],
-            ["macos-14"],
-            ["macos-latest"]
+            ["ubuntu-24.04"],
+            ["windows-2025"],
+            ["macos-15"]
           ]
         }
       github_prerelease: true

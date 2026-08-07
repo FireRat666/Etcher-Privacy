@@ -17,6 +17,8 @@
 		"noFallthroughCasesInSwitch": true,
 		"moduleResolution": "nodenext",
 		"allowSyntheticDefaultImports": true,
-		"resolveJsonModule": true
+		"allowImportingTsExtensions": true,
+		"resolveJsonModule": true,
+		"noEmit": true
 	}
 }

@@ -19,6 +19,7 @@ import * as electron from 'electron';
 
 import { open as openInternal } from './app/os/open-internal/services/open-internal';
 import { open as openExternal } from './app/os/open-external/services/open-external';
+import { emitCustomAppEvent } from './custom-app-events';
 
 import * as i18next from 'i18next';
 
@@ -37,7 +38,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 	const isLinux = process.platform === 'linux';
 	const isWin = process.platform === 'win32';
 	const isMac = process.platform === 'darwin';
-	let currentOS;
+	let currentOS: string;
 	if (isLinux) {
 		currentOS = 'Linux';
 	} else if (isWin) {
@@ -121,7 +122,7 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 					label: i18next.t('menu.config'),
 					click() {
 						console.info('Editing Config File');
-						electron.app.emit('edit-config-file');
+						emitCustomAppEvent('edit-config-file');
 					},
 				},
 				{
@@ -206,8 +207,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
-					click(item, focusedWindow) {
-						if (focusedWindow) {
+					click(_item, focusedWindow) {
+						if (focusedWindow instanceof electron.BrowserWindow) {
 							focusedWindow.webContents.goBack();
 						}
 						console.info('Navigated back');
@@ -216,8 +217,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
-					click(item, focusedWindow) {
-						if (focusedWindow) {
+					click(_item, focusedWindow) {
+						if (focusedWindow instanceof electron.BrowserWindow) {
 							focusedWindow.webContents.goForward();
 						}
 						console.info('Navigated forward');
@@ -237,8 +238,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goback'),
 					accelerator: 'Alt+Left',
-					click(item, focusedWindow) {
-						if (focusedWindow) {
+					click(_item, focusedWindow) {
+						if (focusedWindow instanceof electron.BrowserWindow) {
 							focusedWindow.webContents.goBack();
 						}
 						console.info('Navigated back');
@@ -247,8 +248,8 @@ export function buildWindowMenu(window: electron.BrowserWindow) {
 				{
 					label: i18next.t('menu.goforward'),
 					accelerator: 'Alt+Right',
-					click(item, focusedWindow) {
-						if (focusedWindow) {
+					click(_item, focusedWindow) {
+						if (focusedWindow instanceof electron.BrowserWindow) {
 							focusedWindow.webContents.goForward();
 						}
 						console.info('Navigated forward');
