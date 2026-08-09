@@ -18,7 +18,7 @@ import * as Immutable from 'immutable';
 import * as _ from 'lodash';
 import { basename } from 'path';
 import * as redux from 'redux';
-import { v4 as uuidV4 } from 'uuid';
+const uuidV4 = () => crypto.randomUUID();
 
 import * as constraints from '../../../shared/drive-constraints';
 import * as errors from '../../../shared/errors';

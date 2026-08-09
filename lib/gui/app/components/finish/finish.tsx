@@ -16,7 +16,7 @@
 
 import * as React from 'react';
 import { Flex } from 'rendition';
-import { v4 as uuidV4 } from 'uuid';
+const uuidV4 = () => crypto.randomUUID();
 
 import * as flashState from '../../models/flash-state';
 import * as selectionState from '../../models/selection-state';
