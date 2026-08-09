@@ -33,7 +33,7 @@
         "semver": "7.6.3",
         "styled-components": "5.3.11",
         "sys-class-rgb-led": "3.0.1",
-        "uuid": "11.1.1",
+        "uuid": "14.0.0",
         "winusb-driver-generator": "github:FireRat666/winusb-driver-generator#v2.1.10-5",
         "ws": "8.21.1"
       },
@@ -25620,16 +25620,16 @@
       }
     },
     "node_modules/uuid": {
-      "version": "11.1.1",
-      "resolved": "https://registry.npmjs.org/uuid/-/uuid-11.1.1.tgz",
-      "integrity": "sha512-vIYxrBCC/N/K+Js3qSN88go7kIfNPssr/hHCesKCQNAjmgvYS2oqr69kIufEG+O4+PfezOH4EbIeHCfFov8ZgQ==",
+      "version": "14.0.0",
+      "resolved": "https://registry.npmjs.org/uuid/-/uuid-14.0.0.tgz",
+      "integrity": "sha512-Qo+uWgilfSmAhXCMav1uYFynlQO7fMFiMVZsQqZRMIXp0O7rR7qjkj+cPvBHLgBqi960QCoo/PH2/6ZtVqKvrg==",
       "funding": [
         "https://github.com/sponsors/broofa",
         "https://github.com/sponsors/ctavan"
       ],
       "license": "MIT",
       "bin": {
-        "uuid": "dist/esm/bin/uuid"
+        "uuid": "dist-node/bin/uuid"
       }
     },
     "node_modules/uvu": {
@@ -27041,7 +27041,7 @@
     },
     "node_modules/winusb-driver-generator": {
       "version": "2.1.10-5",
-      "resolved": "git+https://github.com/FireRat666/winusb-driver-generator.git#9b87440003ea34924eaf77f3fad62fb50d04110d",
+      "resolved": "git+ssh://git@github.com/FireRat666/winusb-driver-generator.git#9b87440003ea34924eaf77f3fad62fb50d04110d",
       "hasInstallScript": true,
       "license": "Apache-2.0",
       "dependencies": {
