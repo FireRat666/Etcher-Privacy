@@ -15,7 +15,7 @@
 import { createHash } from 'crypto';
 import _debug from 'debug';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
-import { spawn, exec } from 'child_process';
+import { spawn, exec, type ChildProcess } from 'child_process';
 import * as fs from 'fs';
 import * as os from 'os';
 import * as path from 'path';
@@ -39,7 +39,7 @@ async function spawnChild(
 	etcherServerId: string,
 	etcherServerAddress: string,
 	etcherServerPort: string,
-) {
+): Promise<{ cancelled: boolean; spawned?: ChildProcess; tmpDir?: string }> {
 	let argv = await writerArgv();
 	const env: any = {
 		ETCHER_SERVER_ADDRESS: etcherServerAddress,
@@ -89,11 +89,17 @@ async function spawnChild(
 				applicationName: packageJSON.displayName,
 				env,
 			});
-			return result;
-		} finally {
+			// Defer removing the staging directory to the caller, which cleans it
+			// up once the sidecar connection attempt has settled. Deleting it here
+			// would race the elevated shell opening the binary on fd 3.
+			return { ...result, tmpDir };
+		} catch (error) {
+			// elevateCommand threw before the sidecar could take ownership of the
+			// staged binary; clean up now since the caller won't see tmpDir.
 			if (tmpDir) {
 				fs.rmSync(tmpDir, { recursive: true, force: true });
 			}
+			throw error;
 		}
 	} else {
 		if (process.platform === 'win32') {
@@ -236,51 +242,68 @@ async function spawnChildAndConnect({
 		} etcher-util sidecar on port ${etcherServerPort}`,
 	);
 
-	// spawn the child process, which will act as the ws server
-	// ETCHER_NO_SPAWN_UTIL can be set to launch a GUI only version of etcher, in that case you'll probably want to set other ENV to match your setup
-	if (!process.env.ETCHER_NO_SPAWN_UTIL) {
-		try {
-			const result = await spawnChild(
-				withPrivileges,
-				etcherServerId,
-				etcherServerAddress,
-				etcherServerPort,
-			);
-			if (result.cancelled) {
-				throw new Error('Spawning the child process was cancelled');
-			}
-		} catch (error) {
-			console.error('Error starting flasher sidecar process', error);
-			throw new Error('Error starting flasher sidecar process');
-		}
-	}
-
-	// try to connect to the ws server, retrying if necessary, until the connection is established
+	// The privileged sidecar binary is staged in tmpDir until the elevated shell
+	// has exec'd it (the shell removes the staging files itself right after
+	// opening the binary on fd 3). Deleting tmpDir before then would make the
+	// privileged sidecar fail to start, so clean it up only once the connection
+	// attempt has settled, either when the sidecar is running (files already
+	// gone) or when the attempt failed and leftovers need removing.
+	let tmpDir: string | undefined;
 	try {
-		let retry = 0;
-		while (retry < connectionRetryAttempts) {
-			const result = await connectToChildProcess(
-				etcherServerAddress,
-				etcherServerPort,
-				etcherServerId,
-			);
-			if (result.failed) {
-				retry++;
-				console.log(
-					`Connection to sidecar flasher process attempt ${retry} / ${connectionRetryAttempts} failed; retrying in ${connectionRetryDelay}ms...`,
+		// spawn the child process, which will act as the ws server
+		// ETCHER_NO_SPAWN_UTIL can be set to launch a GUI only version of etcher, in that case you'll probably want to set other ENV to match your setup
+		if (!process.env.ETCHER_NO_SPAWN_UTIL) {
+			try {
+				const result = await spawnChild(
+					withPrivileges,
+					etcherServerId,
+					etcherServerAddress,
+					etcherServerPort,
 				);
-				await new Promise((resolve) =>
-					setTimeout(resolve, connectionRetryDelay),
-				);
-				continue;
+				tmpDir = result.tmpDir;
+				if (result.cancelled) {
+					throw new Error('Spawning the child process was cancelled');
+				}
+			} catch (error) {
+				console.error('Error starting flasher sidecar process', error);
+				throw new Error('Error starting flasher sidecar process');
 			}
-			return result;
 		}
-		// TODO: raised an error to the user if we reach this point
-		throw new Error('Connection to sidecar flasher process timed out');
-	} catch (error) {
-		console.error('Error connecting to sidecar flasher process process', error);
-		throw new Error('Connection to sidecar flasher process failed');
+
+		// try to connect to the ws server, retrying if necessary, until the connection is established
+		try {
+			let retry = 0;
+			while (retry < connectionRetryAttempts) {
+				const result = await connectToChildProcess(
+					etcherServerAddress,
+					etcherServerPort,
+					etcherServerId,
+				);
+				if (result.failed) {
+					retry++;
+					console.log(
+						`Connection to sidecar flasher process attempt ${retry} / ${connectionRetryAttempts} failed; retrying in ${connectionRetryDelay}ms...`,
+					);
+					await new Promise((resolve) =>
+						setTimeout(resolve, connectionRetryDelay),
+					);
+					continue;
+				}
+				return result;
+			}
+			// TODO: raised an error to the user if we reach this point
+			throw new Error('Connection to sidecar flasher process timed out');
+		} catch (error) {
+			console.error(
+				'Error connecting to sidecar flasher process process',
+				error,
+			);
+			throw new Error('Connection to sidecar flasher process failed');
+		}
+	} finally {
+		if (tmpDir) {
+			fs.rmSync(tmpDir, { recursive: true, force: true });
+		}
 	}
 }
 
