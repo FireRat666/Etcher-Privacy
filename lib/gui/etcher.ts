@@ -244,9 +244,15 @@ async function createMainWindow() {
 	const page = mainWindow.webContents;
 	remoteMain.enable(page);
 
-	// Stop preventing the system from sleeping if the renderer crashes
-	// or the window is closed while flashing
-	mainWindow.webContents.on('render-process-gone', stopSleepBlocker);
+	// Don't stop the sleep blocker when the renderer crashes: the sidecar
+	// flasher may still be writing to a drive. If a flash was in progress,
+	// the blocker is active and we keep it active; it is released by the
+	// 'closed' and 'before-quit' handlers below.
+	mainWindow.webContents.on('render-process-gone', () => {
+		console.warn(
+			'Renderer process gone; leaving the sleep blocker active in case the sidecar is still flashing',
+		);
+	});
 	mainWindow.on('closed', () => {
 		if (showWindowTimeout !== undefined) {
 			clearTimeout(showWindowTimeout);

@@ -89,15 +89,11 @@ async function spawnChild(
 				applicationName: packageJSON.displayName,
 				env,
 			});
-			if (result.cancelled && tmpDir) {
-				fs.rmSync(tmpDir, { recursive: true, force: true });
-			}
 			return result;
-		} catch (error) {
+		} finally {
 			if (tmpDir) {
 				fs.rmSync(tmpDir, { recursive: true, force: true });
 			}
-			throw error;
 		}
 	} else {
 		if (process.platform === 'win32') {
