@@ -1,0 +1,119 @@
+name: macOS x64 (Intel)
+
+on:
+  pull_request:
+    branches: [main, master]
+  push:
+    branches: [main, master]
+    tags: ['v*']
+  workflow_dispatch:
+    inputs:
+      publish_release:
+        description: Upload verified macOS x64 distributables to the release
+        required: false
+        default: true
+        type: boolean
+      release_tag:
+        description: Tag name for the release (e.g. untagged-xyz or v2.1.7)
+        required: true
+        default: ''
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event_name }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+  make:
+    name: Make macOS x64
+    runs-on: macos-15
+    permissions:
+      contents: read
+    timeout-minutes: 60
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: npm
+
+      - name: Cache build downloads
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cache/electron
+            ~/.cache/electron-gyp
+            ~/.pkg-cache
+          key: macos-x64-downloads-${{ hashFiles('npm-shrinkwrap.json') }}
+          restore-keys: |
+            macos-x64-downloads-
+
+      - name: Install dependencies & rebuild host DMG tools
+        shell: bash
+        run: |
+          npm ci --ignore-scripts --prefer-offline --no-audit --no-fund
+          # npm ci skips the root postinstall (fix-node-gyp-bin.js, patch-lzma-native.js);
+          # run it explicitly so lzma-native is patched before the rebuild compiles it.
+          node scripts/patch-lzma-native.js
+          npm rebuild
+
+      - name: Package & Make macOS x64
+        shell: bash
+        run: |
+          npx electron-forge make --platform=darwin --arch=x64
+
+      - name: Verify macOS x64 binary architecture
+        shell: bash
+        run: |
+          echo "Verifying etcher-util architecture..."
+          lipo -archs out/sidecar/bin/x64/etcher-util | grep -q "x86_64" || {
+            echo "ERROR: etcher-util is not x86_64!"
+            lipo -archs out/sidecar/bin/x64/etcher-util
+            exit 1
+          }
+          echo "Verified etcher-util is x86_64."
+
+      - name: Upload macOS x64 artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: gh-release-macos-x64
+          if-no-files-found: error
+          path: |
+            out/make/**/*.dmg
+            out/make/**/*.zip
+
+  release:
+    name: Release macOS x64 (Manual Dispatch)
+    needs: make
+    if: inputs.publish_release == true && inputs.release_tag != ''
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Download macOS x64 artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: gh-release-macos-x64
+          path: artifacts
+
+      - name: Publish to GitHub Release
+        # softprops/action-gh-release v3
+        uses: softprops/action-gh-release@3d0d9888cb7fd7b750713d6e236d1fcb99157228
+        with:
+          files: artifacts/**
+          tag_name: ${{ inputs.release_tag }}
+          target_commitish: ${{ github.sha }}
+          draft: true
+          prerelease: true
+          fail_on_unmatched_files: false

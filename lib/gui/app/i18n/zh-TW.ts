@@ -132,6 +132,8 @@ const translation = {
 			settings: '軟體設定',
 			trimExtPartitions: '修改原始映像檔上未分配的空間（在 ext 類型分割區中）',
 			decompressFirst: '在刷新之前解壓縮壓縮影像（即 .tar.xz）',
+			preventSleep: '刷機時防止系統進入睡眠狀態',
+			preventSleepDesc: '寫入時保持螢幕亮起和系統喚醒，防止刷機過程被中斷',
 		},
 		menu: {
 			edit: '編輯',

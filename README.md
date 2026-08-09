@@ -42,7 +42,7 @@ installers for all supported operating systems.
 
 ## Building from source
 
-Requires Node.js 20 and Python 3:
+Requires Node.js 24 and Python 3:
 
 ```sh
 npm install

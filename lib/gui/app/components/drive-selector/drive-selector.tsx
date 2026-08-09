@@ -222,6 +222,7 @@ export class DriveSelector extends React.Component<
 					if (isDrivelistDrive(drive) && drive.size !== null) {
 						return prettyBytes(drive.size);
 					}
+					return null;
 				},
 			},
 			{
@@ -258,6 +259,7 @@ export class DriveSelector extends React.Component<
 					} else if (isDrivelistDrive(drive)) {
 						return this.renderStatuses(drive);
 					}
+					return null;
 				},
 			},
 		];

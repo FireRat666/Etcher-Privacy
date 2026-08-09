@@ -154,6 +154,8 @@ const translation = {
 			settings: '软件设置',
 			trimExtPartitions: '修剪原始图像上未分配的空间（在 ext 类型分区中）',
 			decompressFirst: '在刷新之前解压缩压缩图像（即 .tar.xz）',
+			preventSleep: '刷机时防止系统进入睡眠状态',
+			preventSleepDesc: '写入时保持屏幕亮起和系统唤醒，防止刷机过程被中断',
 		},
 	},
 };

@@ -34,6 +34,7 @@ function tryParseSVGContents(contents?: string): string | undefined {
 	if (!parserError && svg) {
 		return `data:image/svg+xml,${encodeURIComponent(svg.outerHTML)}`;
 	}
+	return undefined;
 }
 
 interface SVGIconProps {

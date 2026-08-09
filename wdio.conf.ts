@@ -88,7 +88,7 @@ export const config: WebdriverIO.Config = {
 			// see https://webdriver.io/docs/desktop-testing/electron/configuration/#service-options
 			'wdio:electronServiceOptions': {
 				appBinaryPath: getAppBinaryPath(),
-				appArgs: process.platform === 'linux' ? ['headless'] : [],
+				appArgs: process.platform === 'linux' ? ['headless', '--no-sandbox'] : [],
 			},
 		},
 	],

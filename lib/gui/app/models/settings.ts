@@ -74,9 +74,10 @@ export async function writeConfigFile(
 
 const DEFAULT_SETTINGS: _.Dictionary<any> = {
 	desktopNotifications: true,
-	verify: false,
+	verify: true,
 	autoBlockmapping: true,
 	decompressFirst: true,
+	preventSleep: true,
 };
 
 const settings = _.cloneDeep(DEFAULT_SETTINGS);

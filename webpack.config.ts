@@ -59,6 +59,13 @@ const rules: Required<ModuleOptions>['rules'] = [
 		test: /\.svg$/,
 		use: '@svgr/webpack',
 	},
+	{
+		test: /\.png$/,
+		loader: 'file-loader',
+		options: {
+			name: 'media/[name].[ext]',
+		},
+	},
 ];
 
 export const rendererConfig: Configuration = {
@@ -84,6 +91,10 @@ export const rendererConfig: Configuration = {
 				{
 					from: 'lib/gui/assets/icon48.png',
 					to: 'main_window/media/icon48.png',
+				},
+				{
+					from: 'assets/icon.png',
+					to: 'main_window/media/icon.png',
 				},
 			],
 		}),

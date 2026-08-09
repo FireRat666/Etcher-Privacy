@@ -1,0 +1,51 @@
+# Dependency directories
+node_modules/
+
+# Build artifacts
+out/
+dist/
+dist-builder/
+.webpack/
+build/
+coverage/
+*.tgz
+*.tsbuildinfo
+
+# Logs
+logs
+logs-*.txt
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# CI and automation
+.github/
+.versionbot/
+
+# Local / one-off tooling
+build.sh
+build_linux.sh
+build_mac.sh
+build-*.mjs
+build-clean-commits.ps1
+requirements.txt
+implementation_plan.md
+TODO.md
+newBaseEtcher.ts
+
+# Environment, secrets, and certificates
+.env
+.env.test
+*.spc
+*.pvk
+*.p12
+*.cer
+*.crt
+*.pem
+secrets/
+
+# Misc
+.DS_Store
+.eslintcache
+.yarn-integrity
