@@ -78,7 +78,7 @@ async function spawnChild(
 				argv = [
 					'/bin/bash',
 					'-c',
-					'exec 3< "$1" && rm -f "$1" && rmdir "$2" && test "$(sha256sum /proc/self/fd/3 | cut -d" " -f1)" = "$3" && exec /proc/self/fd/3 "${@:4}"',
+					'exec 3< "$1" && rm -f "$1" && rmdir "$2" && echo "$3  /proc/self/fd/3" | sha256sum -c --status && exec /proc/self/fd/3 "${@:4}"',
 					'etcher-util',
 					tmpBin,
 					tmpDir,
