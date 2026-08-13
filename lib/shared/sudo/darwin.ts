@@ -46,53 +46,55 @@ export async function sudo(
 		.map((a) => a.replace(/\\/g, '\\\\').replace(/"/g, '\\"'))
 		.join(' ')}`;
 
-	let elevated = 'pending';
-
-	try {
-		const elevateProcess = spawn(
-			'sudo',
-			['-E', '--askpass', 'sh', '-c', shellCmd],
-			{
-				env: {
-					...env,
-					PATH: env.PATH,
-					SUDO_ASKPASS: getAskPassScriptPath(lang),
-				},
+	const elevateProcess = spawn(
+		'sudo',
+		['-E', '--askpass', 'sh', '-c', shellCmd],
+		{
+			env: {
+				...env,
+				PATH: env.PATH,
+				SUDO_ASKPASS: getAskPassScriptPath(lang),
 			},
-		);
+		},
+	);
+
+	return new Promise((resolve, reject) => {
+		let isSettled = false;
+		let timeoutId: NodeJS.Timeout;
+
+		const settle = (result: { cancelled: boolean }) => {
+			if (!isSettled) {
+				isSettled = true;
+				clearTimeout(timeoutId);
+				resolve(result);
+			}
+		};
 
 		elevateProcess.stdout.on('data', (data) => {
-			// console.log(`stdout: ${data}`);
 			if (data.toString().includes(SUCCESSFUL_AUTH_MARKER)) {
-				elevated = 'granted';
-			} else {
-				elevated = 'rejected';
+				settle({ cancelled: false });
 			}
 		});
 
-		// elevateProcess.stderr.on('data', (data) => {
-		// 	console.log(`stderr: ${data}`);
-		// });
-	} catch (error: any) {
-		console.error('Error starting sudo process', error);
-		throw new Error('Error starting sudo process');
-	}
-
-	return new Promise((resolve, reject) => {
-		const checkElevation = setInterval(() => {
-			console.log('elevated', elevated);
-			if (elevated === 'granted') {
-				clearInterval(checkElevation);
-				resolve({ cancelled: false });
-			} else if (elevated === 'rejected') {
-				clearInterval(checkElevation);
-				resolve({ cancelled: true });
+		elevateProcess.on('close', () => {
+			if (!isSettled) {
+				settle({ cancelled: true });
 			}
-		}, 300);
+		});
 
-		setTimeout(() => {
-			clearInterval(checkElevation);
-			reject(new Error('Elevation timeout'));
+		elevateProcess.on('error', (err) => {
+			if (!isSettled) {
+				isSettled = true;
+				clearTimeout(timeoutId);
+				reject(err);
+			}
+		});
+
+		timeoutId = setTimeout(() => {
+			if (!isSettled) {
+				isSettled = true;
+				reject(new Error('Elevation timeout'));
+			}
 		}, 30000);
 	});
 }
