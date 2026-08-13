@@ -60,7 +60,13 @@ export async function sudo(
 
 	return new Promise((resolve, reject) => {
 		let isSettled = false;
-		let timeoutId: NodeJS.Timeout;
+
+		const timeoutId = setTimeout(() => {
+			if (!isSettled) {
+				isSettled = true;
+				reject(new Error('Elevation timeout'));
+			}
+		}, 30000);
 
 		const settle = (result: { cancelled: boolean }) => {
 			if (!isSettled) {
@@ -89,12 +95,5 @@ export async function sudo(
 				reject(err);
 			}
 		});
-
-		timeoutId = setTimeout(() => {
-			if (!isSettled) {
-				isSettled = true;
-				reject(new Error('Elevation timeout'));
-			}
-		}, 30000);
 	});
 }

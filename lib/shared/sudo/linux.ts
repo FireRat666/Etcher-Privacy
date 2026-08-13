@@ -72,7 +72,13 @@ export async function sudo(
 
 	return new Promise((resolve, reject) => {
 		let isSettled = false;
-		let timeoutId: NodeJS.Timeout;
+
+		const timeoutId = setTimeout(() => {
+			if (!isSettled) {
+				isSettled = true;
+				reject(new Error('Elevation timeout'));
+			}
+		}, 30000);
 
 		const settle = (result: { cancelled: boolean }) => {
 			if (!isSettled) {
@@ -101,13 +107,5 @@ export async function sudo(
 				reject(err);
 			}
 		});
-
-		// if the elevation didn't occur in 30 seconds we reject the promise
-		timeoutId = setTimeout(() => {
-			if (!isSettled) {
-				isSettled = true;
-				reject(new Error('Elevation timeout'));
-			}
-		}, 30000);
 	});
 }
