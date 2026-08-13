@@ -12,7 +12,6 @@
  *  - centralise the api for both the writer and the scanner instead of having two instances running
  */
 
-import { createHash } from 'crypto';
 import _debug from 'debug';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec, type ChildProcess } from 'child_process';
@@ -72,18 +71,7 @@ async function spawnChild(
 				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 				const binBuffer = fs.readFileSync(argv[0]);
 				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o755 });
-				const digest = createHash('sha256').update(binBuffer).digest('hex');
-				// Elevate a shell that opens the copy on a fixed fd, immediately removes
-				// the temp binary and directory, verifies its digest on fd 3, and execs fd 3.
-				argv = [
-					'/bin/bash',
-					'-c',
-					'exec 3< "$1" && rm -f "$1" && rmdir "$2" && echo "$3  /proc/self/fd/3" | sha256sum -c --status && exec /proc/self/fd/3 "${@:4}"',
-					'etcher-util',
-					tmpBin,
-					tmpDir,
-					digest,
-				];
+				argv = [tmpBin];
 			}
 			const result = await permissions.elevateCommand(argv, {
 				applicationName: packageJSON.displayName,
