@@ -12,6 +12,7 @@
  *  - centralise the api for both the writer and the scanner instead of having two instances running
  */
 
+import { createHash } from 'crypto';
 import _debug from 'debug';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec, type ChildProcess } from 'child_process';
@@ -71,13 +72,17 @@ async function spawnChild(
 				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 				const binBuffer = fs.readFileSync(argv[0]);
 				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o555 });
-				const stat = fs.statSync(tmpBin);
-				if (stat.size !== binBuffer.length) {
-					throw new Error('Staged sidecar binary integrity check failed');
-				}
-				// Make staging directory non-writable to prevent TOCTOU tampering before elevation
+				const digest = createHash('sha256').update(binBuffer).digest('hex');
+				// Make staging directory non-writable to prevent tampering
 				fs.chmodSync(tmpDir, 0o555);
-				argv = [tmpBin];
+				argv = [
+					'/bin/bash',
+					'-c',
+					'echo "$2  $1" | sha256sum -c --status && exec "$1" "${@:3}"',
+					'etcher-util',
+					tmpBin,
+					digest,
+				];
 			}
 			const result = await permissions.elevateCommand(argv, {
 				applicationName: packageJSON.displayName,
@@ -96,7 +101,11 @@ async function spawnChild(
 				} catch {
 					// ignore
 				}
-				fs.rmSync(tmpDir, { recursive: true, force: true });
+				try {
+					fs.rmSync(tmpDir, { recursive: true, force: true });
+				} catch {
+					// ignore
+				}
 			}
 			throw error;
 		}
@@ -306,7 +315,11 @@ async function spawnChildAndConnect({
 			} catch {
 				// ignore
 			}
-			fs.rmSync(tmpDir, { recursive: true, force: true });
+			try {
+				fs.rmSync(tmpDir, { recursive: true, force: true });
+			} catch {
+				// ignore
+			}
 		}
 	}
 }
