@@ -78,7 +78,7 @@ export async function sudo(
 				isSettled = true;
 				reject(new Error('Elevation timeout'));
 			}
-		}, 30000);
+		}, 300000);
 
 		const settle = (result: { cancelled: boolean }) => {
 			if (!isSettled) {
