@@ -1,4 +1,30 @@
 - commits:
+    - subject: "fix(linux,darwin): resolve elevation race conditions, AppImage
+        staging, and forge builds"
+      hash: 5b1d71557e4483650a6049c908c95cb106d01ad1
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: "feat(utils): Use native crypto API for UUID Generation Replaces the
+        external 'uuid' package with the browser's native `crypto.randomUUID()`
+        function in core files (`app`, `finish`, `store`). This updates
+        dependency usage to utilize built-in APIs, improving bundle size and
+        removing a dependency."
+      hash: ae88b4fb744d010b37bb6a463a780650cc7b9245
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: "chore(deps): Update dependencies and upgrade uuid Upgrades multiple
+        packages, notably bringing 'uuid' to version 14.0.0. Fixes minor
+        versions for modules like js-yaml and nanoid."
+      hash: 6b5ddf407b80e4568ceaf4391b43f5e322ff294e
+      body: ""
+      footer: {}
+      author: FireRat
+  version: 2.1.6-2-p
+  title: ""
+  date: 2026-08-14T06:38:12.735Z
+- commits:
     - subject: "fix: avoid deleting the AppImage sidecar staging dir before it starts"
       hash: f776bdd82318b759fc7ead24e8bcaecd8e6b6a2c
       body: >-

@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# v2.1.6-2-p
+## (2026-08-14)
+
+* fix(linux,darwin): resolve elevation race conditions, AppImage staging, and forge builds [FireRat]
+* feat(utils): Use native crypto API for UUID Generation Replaces the external 'uuid' package with the browser's native `crypto.randomUUID()` function in core files (`app`, `finish`, `store`). This updates dependency usage to utilize built-in APIs, improving bundle size and removing a dependency. [FireRat]
+* chore(deps): Update dependencies and upgrade uuid Upgrades multiple packages, notably bringing 'uuid' to version 14.0.0. Fixes minor versions for modules like js-yaml and nanoid. [FireRat]
+
 # v2.1.6-1-p
 ## (2026-08-09)
 
