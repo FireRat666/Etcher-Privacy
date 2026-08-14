@@ -23,7 +23,7 @@ import { debounce, capitalize, values } from 'lodash';
 import outdent from 'outdent';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import { v4 as uuidV4 } from 'uuid';
+const uuidV4 = () => crypto.randomUUID();
 
 import * as packageJSON from '../../../package.json';
 import type { DrivelistDrive } from '../../shared/drive-constraints';

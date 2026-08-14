@@ -42,12 +42,58 @@ installers for all supported operating systems.
 
 ## Building from source
 
-Requires Node.js 24 and Python 3:
+Requires **Node.js >= 24** and Python 3:
 
 ```sh
 npm install
+```
+
+> [!NOTE]
+> If your npm version restricts Git dependencies (`EALLOWGIT`), run with `npm install --allow-git=all` or add `allow-git=all` to `.npmrc`.
+
+### Run in Development
+
+```sh
+npm start
+```
+
+### Package Unpacked Binary
+
+Builds the packaged application in `./out/`:
+
+```sh
 npm run package
 ```
+
+### Make Distributables & Installers
+
+Build all configured targets for your platform (AppImage, deb, rpm, zip on Linux):
+
+```sh
+npm run make
+```
+
+To build a specific target:
+
+- **AppImage**:
+  ```sh
+  npx electron-forge make --targets @reforged/maker-appimage
+  ```
+- **Debian (`.deb`)**:
+  ```sh
+  npx electron-forge make --targets @electron-forge/maker-deb
+  ```
+- **RPM (`.rpm`)**:
+  ```sh
+  npx electron-forge make --targets @electron-forge/maker-rpm
+  ```
+
+> [!TIP]
+> If you already ran `npm run package`, you can speed up rebuilding installers by passing `--skip-package`, e.g.:
+> ```sh
+> npx electron-forge make --skip-package --targets @reforged/maker-appimage
+> ```
+> Built installers are located in `./out/make/`.
 
 ## Support
 

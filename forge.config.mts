@@ -33,7 +33,6 @@ if (osxSigningEnabled) {
 const config: ForgeConfig = {
 	packagerConfig: {
 		asar: true,
-		arch: process.platform === 'darwin' ? ['x64', 'arm64'] : undefined,
 		icon: './assets/icon',
 		executableName:
 			process.platform === 'linux' ? 'etcher-privacy' : 'Etcher Privacy',

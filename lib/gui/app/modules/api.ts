@@ -71,17 +71,16 @@ async function spawnChild(
 				);
 				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 				const binBuffer = fs.readFileSync(argv[0]);
-				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o755 });
+				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o555 });
 				const digest = createHash('sha256').update(binBuffer).digest('hex');
-				// Elevate a shell that opens the copy on a fixed fd, immediately removes
-				// the temp binary and directory, verifies its digest on fd 3, and execs fd 3.
+				// Make staging directory non-writable to prevent tampering
+				fs.chmodSync(tmpDir, 0o555);
 				argv = [
 					'/bin/bash',
 					'-c',
-					'exec 3< "$1" && rm -f "$1" && rmdir "$2" && test "$(sha256sum /proc/self/fd/3 | cut -d" " -f1)" = "$3" && exec /proc/self/fd/3 "${@:4}"',
+					'echo "$2  $1" | PATH="/usr/bin:/bin" sha256sum -c --status && exec "$1" "${@:3}"',
 					'etcher-util',
 					tmpBin,
-					tmpDir,
 					digest,
 				];
 			}
@@ -97,7 +96,16 @@ async function spawnChild(
 			// elevateCommand threw before the sidecar could take ownership of the
 			// staged binary; clean up now since the caller won't see tmpDir.
 			if (tmpDir) {
-				fs.rmSync(tmpDir, { recursive: true, force: true });
+				try {
+					fs.chmodSync(tmpDir, 0o700);
+				} catch {
+					// ignore
+				}
+				try {
+					fs.rmSync(tmpDir, { recursive: true, force: true });
+				} catch {
+					// ignore
+				}
 			}
 			throw error;
 		}
@@ -302,7 +310,16 @@ async function spawnChildAndConnect({
 		}
 	} finally {
 		if (tmpDir) {
-			fs.rmSync(tmpDir, { recursive: true, force: true });
+			try {
+				fs.chmodSync(tmpDir, 0o700);
+			} catch {
+				// ignore
+			}
+			try {
+				fs.rmSync(tmpDir, { recursive: true, force: true });
+			} catch {
+				// ignore
+			}
 		}
 	}
 }
