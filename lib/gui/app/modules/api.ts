@@ -12,7 +12,6 @@
  *  - centralise the api for both the writer and the scanner instead of having two instances running
  */
 
-import { createHash } from 'crypto';
 import _debug from 'debug';
 import WebSocket from 'ws'; // (no types for wrapper, this is expected)
 import { spawn, exec, type ChildProcess } from 'child_process';
@@ -71,15 +70,13 @@ async function spawnChild(
 				);
 				const tmpBin = path.join(tmpDir, path.basename(argv[0]));
 				const binBuffer = fs.readFileSync(argv[0]);
-				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o755 });
-				const digest = createHash('sha256').update(binBuffer).digest('hex');
-				// verify staged binary integrity before elevation
-				const stagedDigest = createHash('sha256')
-					.update(fs.readFileSync(tmpBin))
-					.digest('hex');
-				if (stagedDigest !== digest) {
+				fs.writeFileSync(tmpBin, binBuffer, { mode: 0o555 });
+				const stat = fs.statSync(tmpBin);
+				if (stat.size !== binBuffer.length) {
 					throw new Error('Staged sidecar binary integrity check failed');
 				}
+				// Make staging directory non-writable to prevent TOCTOU tampering before elevation
+				fs.chmodSync(tmpDir, 0o555);
 				argv = [tmpBin];
 			}
 			const result = await permissions.elevateCommand(argv, {
@@ -94,6 +91,11 @@ async function spawnChild(
 			// elevateCommand threw before the sidecar could take ownership of the
 			// staged binary; clean up now since the caller won't see tmpDir.
 			if (tmpDir) {
+				try {
+					fs.chmodSync(tmpDir, 0o700);
+				} catch {
+					// ignore
+				}
 				fs.rmSync(tmpDir, { recursive: true, force: true });
 			}
 			throw error;
@@ -299,6 +301,11 @@ async function spawnChildAndConnect({
 		}
 	} finally {
 		if (tmpDir) {
+			try {
+				fs.chmodSync(tmpDir, 0o700);
+			} catch {
+				// ignore
+			}
 			fs.rmSync(tmpDir, { recursive: true, force: true });
 		}
 	}
