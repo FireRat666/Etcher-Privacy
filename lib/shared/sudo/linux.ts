@@ -70,35 +70,42 @@ export async function sudo(
 
 	const elevateProcess = spawn(linuxBinary, parameters);
 
-	let elevated = '';
-
-	elevateProcess.stdout.on('data', (data) => {
-		// console.log(`stdout: ${data.toString()}`);
-		if (data.toString().includes(SUCCESSFUL_AUTH_MARKER)) {
-			// if the first data comming out of the sudo command is the expected marker we resolve the promise
-			elevated = 'granted';
-		} else {
-			// if the first data comming out of the sudo command is not the expected marker we reject the promise
-			elevated = 'refused';
-		}
-	});
-
-	// we don't spawn or read stdout in the promise otherwise resolving stop the process
 	return new Promise((resolve, reject) => {
-		const checkElevation = setInterval(() => {
-			if (elevated === 'granted') {
-				clearInterval(checkElevation);
-				resolve({ cancelled: false });
-			} else if (elevated === 'refused') {
-				clearInterval(checkElevation);
-				resolve({ cancelled: true });
-			}
-		}, 300);
+		let isSettled = false;
 
-		// if the elevation didn't occured in 30 seconds we reject the promise
-		setTimeout(() => {
-			clearInterval(checkElevation);
-			reject(new Error('Elevation timeout'));
-		}, 30000);
+		const timeoutId = setTimeout(() => {
+			if (!isSettled) {
+				isSettled = true;
+				reject(new Error('Elevation timeout'));
+			}
+		}, 300000);
+
+		const settle = (result: { cancelled: boolean }) => {
+			if (!isSettled) {
+				isSettled = true;
+				clearTimeout(timeoutId);
+				resolve(result);
+			}
+		};
+
+		elevateProcess.stdout.on('data', (data) => {
+			if (data.toString().includes(SUCCESSFUL_AUTH_MARKER)) {
+				settle({ cancelled: false });
+			}
+		});
+
+		elevateProcess.on('close', () => {
+			if (!isSettled) {
+				settle({ cancelled: true });
+			}
+		});
+
+		elevateProcess.on('error', (err) => {
+			if (!isSettled) {
+				isSettled = true;
+				clearTimeout(timeoutId);
+				reject(err);
+			}
+		});
 	});
 }

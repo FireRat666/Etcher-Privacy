@@ -81,11 +81,11 @@ export async function sudo(
 				}
 			}, 300);
 
-			// if the elevation didn't occured in 30 seconds we reject the promise
+			// if the elevation didn't occur in 300 seconds we reject the promise
 			setTimeout(() => {
 				clearInterval(checkElevation);
 				reject(new Error('Elevation timeout'));
-			}, 30000);
+			}, 300000);
 		});
 	} catch (error) {
 		throw new Error(`Can't elevate process ${error}`);
