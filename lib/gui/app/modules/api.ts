@@ -78,7 +78,7 @@ async function spawnChild(
 				argv = [
 					'/bin/bash',
 					'-c',
-					'echo "$2  $1" | sha256sum -c --status && exec "$1" "${@:3}"',
+					'PATH="/usr/bin:/bin" && echo "$2  $1" | sha256sum -c --status && exec "$1" "${@:3}"',
 					'etcher-util',
 					tmpBin,
 					digest,
