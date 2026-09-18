@@ -1,6 +1,6 @@
-// Versionist configuration for the 2.1.6-N-p prerelease scheme.
-// Every release keeps the 2.1.6 base and increments the counter, so a merged
-// PR bumps 2.1.6-2-p -> 2.1.6-3-p instead of rolling to 2.1.7 / 2.1.8.
+// Versionist configuration for the 2.1.7-N-p prerelease scheme.
+// Every release keeps the 2.1.7 base and increments the counter, so a merged
+// PR bumps 2.1.7-1-p -> 2.1.7-2-p instead of rolling to 2.1.8 / 2.1.9.
 //
 // Only versions matching the X.Y.Z-N-p pattern are ever considered.
 
