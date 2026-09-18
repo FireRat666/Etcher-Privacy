@@ -1,4 +1,38 @@
 - commits:
+    - subject: "fix(deps): deduplicate qs 6.15.3 and remove nested express/qs to fix
+        npm sbom"
+      hash: f4b6b8fa17695384d4ccf06b12022e627aade85c
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: "fix(deps): pin body-parser 1.20.6 and express 4.22.2 to prevent qs
+        regression"
+      hash: 3c9b65d1b3ae1c904290f8700e6f14a1029c1646
+      body: ""
+      footer: {}
+      author: FireRat
+    - subject: "chore: sync upstream v2.1.7, apply macOS hardening, and bump to 2.1.7-p"
+      hash: 69aea8d982192dc235e77ce4b2d51a6666b0f5d6
+      body: >-
+        - Apply upstream macOS hardening entitlements to
+        assets/entitlements.mac.plist
+
+        - Add assets/entitlements.mac.util.plist for the privileged etcher-util
+        helper
+
+        - Configure forge.config.mts osxSign optionsForFile to isolate helper
+        entitlements
+
+        - Bump base version to 2.1.7-p across package manifests and
+        documentation
+
+        - Update npm-shrinkwrap.json dependency resolutions
+      footer: {}
+      author: FireRat
+  version: 2.1.7-1-p
+  title: ""
+  date: 2026-09-18T23:40:32.698Z
+- commits:
     - subject: "fix(linux,darwin): resolve elevation race conditions, AppImage
         staging, and forge builds"
       hash: 5b1d71557e4483650a6049c908c95cb106d01ad1

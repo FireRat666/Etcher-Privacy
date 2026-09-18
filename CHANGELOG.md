@@ -3,6 +3,13 @@
 All notable changes to this project will be documented in this file.
 This project adheres to [Semantic Versioning](http://semver.org/).
 
+# v2.1.7-1-p
+## (2026-09-18)
+
+* fix(deps): deduplicate qs 6.15.3 and remove nested express/qs to fix npm sbom [FireRat]
+* fix(deps): pin body-parser 1.20.6 and express 4.22.2 to prevent qs regression [FireRat]
+* chore: sync upstream v2.1.7, apply macOS hardening, and bump to 2.1.7-p [FireRat]
+
 # v2.1.6-2-p
 ## (2026-08-14)
 
