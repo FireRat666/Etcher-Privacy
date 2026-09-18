@@ -48,8 +48,14 @@ const config: ForgeConfig = {
 		],
 		osxSign: osxSigningEnabled
 			? {
-					optionsForFile: () => ({
-						entitlements: './assets/entitlements.mac.plist',
+					// `etcher-util` is the privileged helper invoked under sudo to write
+					// raw disk images: it gets its own, maximally restrictive entitlements
+					// rather than inheriting the JIT/debugging exceptions the main app
+					// needs, so hardened runtime protections stay fully intact on it.
+					optionsForFile: (filePath: string) => ({
+						entitlements: filePath.endsWith('/etcher-util')
+							? './assets/entitlements.mac.util.plist'
+							: './assets/entitlements.mac.plist',
 						hardenedRuntime: true,
 					}),
 				}

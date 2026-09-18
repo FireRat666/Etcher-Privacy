@@ -4,7 +4,7 @@
 
 Etcher Privacy is a privacy-focused fork of [balena Etcher](https://github.com/balena-io/etcher),
 based on [Alex313031's etcher-ng](https://github.com/Alex313031/etcher-ng) UI customizations
-and synced with upstream **v2.1.6**.
+and synced with upstream **v2.1.7**.
 
 It is a powerful OS image flasher built with web technologies to ensure
 flashing an SDCard or USB drive is a pleasant and safe experience. It protects

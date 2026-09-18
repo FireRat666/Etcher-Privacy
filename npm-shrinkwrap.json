@@ -1,12 +1,12 @@
 {
   "name": "etcher-privacy",
-  "version": "2.1.6-2-p",
+  "version": "2.1.7-p",
   "lockfileVersion": 3,
   "requires": true,
   "packages": {
     "": {
       "name": "etcher-privacy",
-      "version": "2.1.6-2-p",
+      "version": "2.1.7-p",
       "hasInstallScript": true,
       "license": "Apache-2.0",
       "dependencies": {
@@ -4512,14 +4512,6 @@
         "node": ">=16.3.0"
       }
     },
-    "node_modules/@puppeteer/browsers/node_modules/y18n": {
-      "version": "5.0.8",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=10"
-      }
-    },
     "node_modules/@puppeteer/browsers/node_modules/yargs": {
       "version": "17.7.2",
       "dev": true,
@@ -5903,6 +5895,65 @@
         "node": "^16.13 || >=18"
       }
     },
+    "node_modules/@wdio/cli/node_modules/@puppeteer/browsers": {
+      "version": "1.4.6",
+      "resolved": "https://registry.npmjs.org/@puppeteer/browsers/-/browsers-1.4.6.tgz",
+      "integrity": "sha512-x4BEjr2SjOPowNeiguzjozQbsc6h437ovD/wu+JpaenxVLm3jkgzHY2xOslMTp50HoTvQreMjiexiGQw1sqZlQ==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "debug": "4.3.4",
+        "extract-zip": "2.0.1",
+        "progress": "2.0.3",
+        "proxy-agent": "6.3.0",
+        "tar-fs": "3.0.4",
+        "unbzip2-stream": "1.4.3",
+        "yargs": "17.7.1"
+      },
+      "bin": {
+        "browsers": "lib/cjs/main-cli.js"
+      },
+      "engines": {
+        "node": ">=16.3.0"
+      },
+      "peerDependencies": {
+        "typescript": ">= 4.7.4"
+      },
+      "peerDependenciesMeta": {
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@wdio/cli/node_modules/@puppeteer/browsers/node_modules/yargs": {
+      "version": "17.7.1",
+      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.1.tgz",
+      "integrity": "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "cliui": "^8.0.1",
+        "escalade": "^3.1.1",
+        "get-caller-file": "^2.0.5",
+        "require-directory": "^2.1.1",
+        "string-width": "^4.2.3",
+        "y18n": "^5.0.5",
+        "yargs-parser": "^21.1.1"
+      },
+      "engines": {
+        "node": ">=12"
+      }
+    },
+    "node_modules/@wdio/cli/node_modules/agent-base": {
+      "version": "7.1.4",
+      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-7.1.4.tgz",
+      "integrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==",
+      "dev": true,
+      "license": "MIT",
+      "engines": {
+        "node": ">= 14"
+      }
+    },
     "node_modules/@wdio/cli/node_modules/archiver": {
       "version": "7.0.1",
       "dev": true,
@@ -6027,6 +6078,20 @@
         "node": ">= 14"
       }
     },
+    "node_modules/@wdio/cli/node_modules/https-proxy-agent": {
+      "version": "7.0.6",
+      "resolved": "https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz",
+      "integrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "agent-base": "^7.1.2",
+        "debug": "4"
+      },
+      "engines": {
+        "node": ">= 14"
+      }
+    },
     "node_modules/@wdio/cli/node_modules/is-plain-obj": {
       "version": "4.1.0",
       "dev": true,
@@ -6049,6 +6114,16 @@
         "url": "https://github.com/sponsors/sindresorhus"
       }
     },
+    "node_modules/@wdio/cli/node_modules/lru-cache": {
+      "version": "7.18.3",
+      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-7.18.3.tgz",
+      "integrity": "sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==",
+      "dev": true,
+      "license": "ISC",
+      "engines": {
+        "node": ">=12"
+      }
+    },
     "node_modules/@wdio/cli/node_modules/minimatch": {
       "version": "9.0.9",
       "dev": true,
@@ -6062,6 +6137,86 @@
       "funding": {
         "url": "https://github.com/sponsors/isaacs"
       }
+    },
+    "node_modules/@wdio/cli/node_modules/mitt": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.0.tgz",
+      "integrity": "sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==",
+      "dev": true,
+      "license": "MIT"
+    },
+    "node_modules/@wdio/cli/node_modules/proxy-agent": {
+      "version": "6.3.0",
+      "resolved": "https://registry.npmjs.org/proxy-agent/-/proxy-agent-6.3.0.tgz",
+      "integrity": "sha512-0LdR757eTj/JfuU7TL2YCuAZnxWXu3tkJbg4Oq3geW/qFNT/32T0sp2HnZ9O0lMR4q3vwAt0+xCA8SR0WAD0og==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "agent-base": "^7.0.2",
+        "debug": "^4.3.4",
+        "http-proxy-agent": "^7.0.0",
+        "https-proxy-agent": "^7.0.0",
+        "lru-cache": "^7.14.1",
+        "pac-proxy-agent": "^7.0.0",
+        "proxy-from-env": "^1.1.0",
+        "socks-proxy-agent": "^8.0.1"
+      },
+      "engines": {
+        "node": ">= 14"
+      }
+    },
+    "node_modules/@wdio/cli/node_modules/proxy-from-env": {
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz",
+      "integrity": "sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==",
+      "dev": true,
+      "license": "MIT"
+    },
+    "node_modules/@wdio/cli/node_modules/puppeteer-core": {
+      "version": "20.9.0",
+      "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-20.9.0.tgz",
+      "integrity": "sha512-H9fYZQzMTRrkboEfPmf7m3CLDN6JvbxXA3qTtS+dFt27tR+CsFHzPsT6pzp6lYL6bJbAPaR0HaPO6uSi+F94Pg==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "@puppeteer/browsers": "1.4.6",
+        "chromium-bidi": "0.4.16",
+        "cross-fetch": "4.0.0",
+        "debug": "4.3.4",
+        "devtools-protocol": "0.0.1147663",
+        "ws": "8.13.0"
+      },
+      "engines": {
+        "node": ">=16.3.0"
+      },
+      "peerDependencies": {
+        "typescript": ">= 4.7.4"
+      },
+      "peerDependenciesMeta": {
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@wdio/cli/node_modules/puppeteer-core/node_modules/chromium-bidi": {
+      "version": "0.4.16",
+      "resolved": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-0.4.16.tgz",
+      "integrity": "sha512-7ZbXdWERxRxSwo3txsBjjmc/NLxqb1Bk30mRb0BMS4YIaiV6zvKZqL/UAH+DdqcDYayDWk2n/y8klkBDODrPvA==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "mitt": "3.0.0"
+      },
+      "peerDependencies": {
+        "devtools-protocol": "*"
+      }
+    },
+    "node_modules/@wdio/cli/node_modules/puppeteer-core/node_modules/devtools-protocol": {
+      "version": "0.0.1147663",
+      "resolved": "https://registry.npmjs.org/devtools-protocol/-/devtools-protocol-0.0.1147663.tgz",
+      "integrity": "sha512-hyWmRrexdhbZ1tcJUGpO95ivbRhWXz++F4Ko+n21AY5PNln2ovoJw+8ZMNDTtip+CNFQfrtLVh/w4009dXO/eQ==",
+      "dev": true,
+      "license": "BSD-3-Clause"
     },
     "node_modules/@wdio/cli/node_modules/readable-stream": {
       "version": "4.7.0",
@@ -6188,6 +6343,48 @@
         "webdriverio": "8.39.1"
       }
     },
+    "node_modules/@wdio/globals/node_modules/@puppeteer/browsers": {
+      "version": "1.4.6",
+      "resolved": "https://registry.npmjs.org/@puppeteer/browsers/-/browsers-1.4.6.tgz",
+      "integrity": "sha512-x4BEjr2SjOPowNeiguzjozQbsc6h437ovD/wu+JpaenxVLm3jkgzHY2xOslMTp50HoTvQreMjiexiGQw1sqZlQ==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "optional": true,
+      "dependencies": {
+        "debug": "4.3.4",
+        "extract-zip": "2.0.1",
+        "progress": "2.0.3",
+        "proxy-agent": "6.3.0",
+        "tar-fs": "3.0.4",
+        "unbzip2-stream": "1.4.3",
+        "yargs": "17.7.1"
+      },
+      "bin": {
+        "browsers": "lib/cjs/main-cli.js"
+      },
+      "engines": {
+        "node": ">=16.3.0"
+      },
+      "peerDependencies": {
+        "typescript": ">= 4.7.4"
+      },
+      "peerDependenciesMeta": {
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@wdio/globals/node_modules/agent-base": {
+      "version": "7.1.4",
+      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-7.1.4.tgz",
+      "integrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==",
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "engines": {
+        "node": ">= 14"
+      }
+    },
     "node_modules/@wdio/globals/node_modules/archiver": {
       "version": "7.0.1",
       "dev": true,
@@ -6309,6 +6506,21 @@
         "node": ">= 14"
       }
     },
+    "node_modules/@wdio/globals/node_modules/https-proxy-agent": {
+      "version": "7.0.6",
+      "resolved": "https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz",
+      "integrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==",
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "dependencies": {
+        "agent-base": "^7.1.2",
+        "debug": "4"
+      },
+      "engines": {
+        "node": ">= 14"
+      }
+    },
     "node_modules/@wdio/globals/node_modules/is-plain-obj": {
       "version": "4.1.0",
       "dev": true,
@@ -6333,6 +6545,17 @@
         "url": "https://github.com/sponsors/sindresorhus"
       }
     },
+    "node_modules/@wdio/globals/node_modules/lru-cache": {
+      "version": "7.18.3",
+      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-7.18.3.tgz",
+      "integrity": "sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==",
+      "dev": true,
+      "license": "ISC",
+      "optional": true,
+      "engines": {
+        "node": ">=12"
+      }
+    },
     "node_modules/@wdio/globals/node_modules/minimatch": {
       "version": "9.0.9",
       "dev": true,
@@ -6347,6 +6570,92 @@
       "funding": {
         "url": "https://github.com/sponsors/isaacs"
       }
+    },
+    "node_modules/@wdio/globals/node_modules/mitt": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.0.tgz",
+      "integrity": "sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==",
+      "dev": true,
+      "license": "MIT",
+      "optional": true
+    },
+    "node_modules/@wdio/globals/node_modules/proxy-agent": {
+      "version": "6.3.0",
+      "resolved": "https://registry.npmjs.org/proxy-agent/-/proxy-agent-6.3.0.tgz",
+      "integrity": "sha512-0LdR757eTj/JfuU7TL2YCuAZnxWXu3tkJbg4Oq3geW/qFNT/32T0sp2HnZ9O0lMR4q3vwAt0+xCA8SR0WAD0og==",
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "dependencies": {
+        "agent-base": "^7.0.2",
+        "debug": "^4.3.4",
+        "http-proxy-agent": "^7.0.0",
+        "https-proxy-agent": "^7.0.0",
+        "lru-cache": "^7.14.1",
+        "pac-proxy-agent": "^7.0.0",
+        "proxy-from-env": "^1.1.0",
+        "socks-proxy-agent": "^8.0.1"
+      },
+      "engines": {
+        "node": ">= 14"
+      }
+    },
+    "node_modules/@wdio/globals/node_modules/proxy-from-env": {
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz",
+      "integrity": "sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==",
+      "dev": true,
+      "license": "MIT",
+      "optional": true
+    },
+    "node_modules/@wdio/globals/node_modules/puppeteer-core": {
+      "version": "20.9.0",
+      "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-20.9.0.tgz",
+      "integrity": "sha512-H9fYZQzMTRrkboEfPmf7m3CLDN6JvbxXA3qTtS+dFt27tR+CsFHzPsT6pzp6lYL6bJbAPaR0HaPO6uSi+F94Pg==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "optional": true,
+      "dependencies": {
+        "@puppeteer/browsers": "1.4.6",
+        "chromium-bidi": "0.4.16",
+        "cross-fetch": "4.0.0",
+        "debug": "4.3.4",
+        "devtools-protocol": "0.0.1147663",
+        "ws": "8.13.0"
+      },
+      "engines": {
+        "node": ">=16.3.0"
+      },
+      "peerDependencies": {
+        "typescript": ">= 4.7.4"
+      },
+      "peerDependenciesMeta": {
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@wdio/globals/node_modules/puppeteer-core/node_modules/chromium-bidi": {
+      "version": "0.4.16",
+      "resolved": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-0.4.16.tgz",
+      "integrity": "sha512-7ZbXdWERxRxSwo3txsBjjmc/NLxqb1Bk30mRb0BMS4YIaiV6zvKZqL/UAH+DdqcDYayDWk2n/y8klkBDODrPvA==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "optional": true,
+      "dependencies": {
+        "mitt": "3.0.0"
+      },
+      "peerDependencies": {
+        "devtools-protocol": "*"
+      }
+    },
+    "node_modules/@wdio/globals/node_modules/puppeteer-core/node_modules/devtools-protocol": {
+      "version": "0.0.1147663",
+      "resolved": "https://registry.npmjs.org/devtools-protocol/-/devtools-protocol-0.0.1147663.tgz",
+      "integrity": "sha512-hyWmRrexdhbZ1tcJUGpO95ivbRhWXz++F4Ko+n21AY5PNln2ovoJw+8ZMNDTtip+CNFQfrtLVh/w4009dXO/eQ==",
+      "dev": true,
+      "license": "BSD-3-Clause",
+      "optional": true
     },
     "node_modules/@wdio/globals/node_modules/readable-stream": {
       "version": "4.7.0",
@@ -6433,6 +6742,26 @@
         "devtools": {
           "optional": true
         }
+      }
+    },
+    "node_modules/@wdio/globals/node_modules/yargs": {
+      "version": "17.7.1",
+      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.1.tgz",
+      "integrity": "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
+      "dev": true,
+      "license": "MIT",
+      "optional": true,
+      "dependencies": {
+        "cliui": "^8.0.1",
+        "escalade": "^3.1.1",
+        "get-caller-file": "^2.0.5",
+        "require-directory": "^2.1.1",
+        "string-width": "^4.2.3",
+        "y18n": "^5.0.5",
+        "yargs-parser": "^21.1.1"
+      },
+      "engines": {
+        "node": ">=12"
       }
     },
     "node_modules/@wdio/globals/node_modules/zip-stream": {
@@ -6560,6 +6889,46 @@
         "node": "^16.13 || >=18"
       }
     },
+    "node_modules/@wdio/runner/node_modules/@puppeteer/browsers": {
+      "version": "1.4.6",
+      "resolved": "https://registry.npmjs.org/@puppeteer/browsers/-/browsers-1.4.6.tgz",
+      "integrity": "sha512-x4BEjr2SjOPowNeiguzjozQbsc6h437ovD/wu+JpaenxVLm3jkgzHY2xOslMTp50HoTvQreMjiexiGQw1sqZlQ==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "debug": "4.3.4",
+        "extract-zip": "2.0.1",
+        "progress": "2.0.3",
+        "proxy-agent": "6.3.0",
+        "tar-fs": "3.0.4",
+        "unbzip2-stream": "1.4.3",
+        "yargs": "17.7.1"
+      },
+      "bin": {
+        "browsers": "lib/cjs/main-cli.js"
+      },
+      "engines": {
+        "node": ">=16.3.0"
+      },
+      "peerDependencies": {
+        "typescript": ">= 4.7.4"
+      },
+      "peerDependenciesMeta": {
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@wdio/runner/node_modules/agent-base": {
+      "version": "7.1.4",
+      "resolved": "https://registry.npmjs.org/agent-base/-/agent-base-7.1.4.tgz",
+      "integrity": "sha512-MnA+YT8fwfJPgBx3m60MNqakm30XOkyIoH1y6huTQvC0PwZG7ki8NacLBcrPbNoo8vEZy7Jpuk7+jMO+CUovTQ==",
+      "dev": true,
+      "license": "MIT",
+      "engines": {
+        "node": ">= 14"
+      }
+    },
     "node_modules/@wdio/runner/node_modules/archiver": {
       "version": "7.0.1",
       "dev": true,
@@ -6673,6 +7042,20 @@
         "node": ">= 14"
       }
     },
+    "node_modules/@wdio/runner/node_modules/https-proxy-agent": {
+      "version": "7.0.6",
+      "resolved": "https://registry.npmjs.org/https-proxy-agent/-/https-proxy-agent-7.0.6.tgz",
+      "integrity": "sha512-vK9P5/iUfdl95AI+JVyUuIcVtd4ofvtrOr3HNtM2yxC9bnMbEdp3x01OhQNnjb8IJYi38VlTE3mBXwcfvywuSw==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "agent-base": "^7.1.2",
+        "debug": "4"
+      },
+      "engines": {
+        "node": ">= 14"
+      }
+    },
     "node_modules/@wdio/runner/node_modules/is-plain-obj": {
       "version": "4.1.0",
       "dev": true,
@@ -6695,6 +7078,16 @@
         "url": "https://github.com/sponsors/sindresorhus"
       }
     },
+    "node_modules/@wdio/runner/node_modules/lru-cache": {
+      "version": "7.18.3",
+      "resolved": "https://registry.npmjs.org/lru-cache/-/lru-cache-7.18.3.tgz",
+      "integrity": "sha512-jumlc0BIUrS3qJGgIkWZsyfAM7NCWiBcCDhnd+3NNM5KbBmLTgHVfWBcg6W+rLUsIpzpERPsvwUP7CckAQSOoA==",
+      "dev": true,
+      "license": "ISC",
+      "engines": {
+        "node": ">=12"
+      }
+    },
     "node_modules/@wdio/runner/node_modules/minimatch": {
       "version": "9.0.9",
       "dev": true,
@@ -6708,6 +7101,86 @@
       "funding": {
         "url": "https://github.com/sponsors/isaacs"
       }
+    },
+    "node_modules/@wdio/runner/node_modules/mitt": {
+      "version": "3.0.0",
+      "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.0.tgz",
+      "integrity": "sha512-7dX2/10ITVyqh4aOSVI9gdape+t9l2/8QxHrFmUXu4EEUpdlxl6RudZUPZoc+zuY2hk1j7XxVroIVIan/pD/SQ==",
+      "dev": true,
+      "license": "MIT"
+    },
+    "node_modules/@wdio/runner/node_modules/proxy-agent": {
+      "version": "6.3.0",
+      "resolved": "https://registry.npmjs.org/proxy-agent/-/proxy-agent-6.3.0.tgz",
+      "integrity": "sha512-0LdR757eTj/JfuU7TL2YCuAZnxWXu3tkJbg4Oq3geW/qFNT/32T0sp2HnZ9O0lMR4q3vwAt0+xCA8SR0WAD0og==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "agent-base": "^7.0.2",
+        "debug": "^4.3.4",
+        "http-proxy-agent": "^7.0.0",
+        "https-proxy-agent": "^7.0.0",
+        "lru-cache": "^7.14.1",
+        "pac-proxy-agent": "^7.0.0",
+        "proxy-from-env": "^1.1.0",
+        "socks-proxy-agent": "^8.0.1"
+      },
+      "engines": {
+        "node": ">= 14"
+      }
+    },
+    "node_modules/@wdio/runner/node_modules/proxy-from-env": {
+      "version": "1.1.0",
+      "resolved": "https://registry.npmjs.org/proxy-from-env/-/proxy-from-env-1.1.0.tgz",
+      "integrity": "sha512-D+zkORCbA9f1tdWRK0RaCR3GPv50cMxcrz4X8k5LTSUD1Dkw47mKJEZQNunItRTkWwgtaUSo1RVFRIG9ZXiFYg==",
+      "dev": true,
+      "license": "MIT"
+    },
+    "node_modules/@wdio/runner/node_modules/puppeteer-core": {
+      "version": "20.9.0",
+      "resolved": "https://registry.npmjs.org/puppeteer-core/-/puppeteer-core-20.9.0.tgz",
+      "integrity": "sha512-H9fYZQzMTRrkboEfPmf7m3CLDN6JvbxXA3qTtS+dFt27tR+CsFHzPsT6pzp6lYL6bJbAPaR0HaPO6uSi+F94Pg==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "@puppeteer/browsers": "1.4.6",
+        "chromium-bidi": "0.4.16",
+        "cross-fetch": "4.0.0",
+        "debug": "4.3.4",
+        "devtools-protocol": "0.0.1147663",
+        "ws": "8.13.0"
+      },
+      "engines": {
+        "node": ">=16.3.0"
+      },
+      "peerDependencies": {
+        "typescript": ">= 4.7.4"
+      },
+      "peerDependenciesMeta": {
+        "typescript": {
+          "optional": true
+        }
+      }
+    },
+    "node_modules/@wdio/runner/node_modules/puppeteer-core/node_modules/chromium-bidi": {
+      "version": "0.4.16",
+      "resolved": "https://registry.npmjs.org/chromium-bidi/-/chromium-bidi-0.4.16.tgz",
+      "integrity": "sha512-7ZbXdWERxRxSwo3txsBjjmc/NLxqb1Bk30mRb0BMS4YIaiV6zvKZqL/UAH+DdqcDYayDWk2n/y8klkBDODrPvA==",
+      "dev": true,
+      "license": "Apache-2.0",
+      "dependencies": {
+        "mitt": "3.0.0"
+      },
+      "peerDependencies": {
+        "devtools-protocol": "*"
+      }
+    },
+    "node_modules/@wdio/runner/node_modules/puppeteer-core/node_modules/devtools-protocol": {
+      "version": "0.0.1147663",
+      "resolved": "https://registry.npmjs.org/devtools-protocol/-/devtools-protocol-0.0.1147663.tgz",
+      "integrity": "sha512-hyWmRrexdhbZ1tcJUGpO95ivbRhWXz++F4Ko+n21AY5PNln2ovoJw+8ZMNDTtip+CNFQfrtLVh/w4009dXO/eQ==",
+      "dev": true,
+      "license": "BSD-3-Clause"
     },
     "node_modules/@wdio/runner/node_modules/readable-stream": {
       "version": "4.7.0",
@@ -6790,6 +7263,25 @@
         "devtools": {
           "optional": true
         }
+      }
+    },
+    "node_modules/@wdio/runner/node_modules/yargs": {
+      "version": "17.7.1",
+      "resolved": "https://registry.npmjs.org/yargs/-/yargs-17.7.1.tgz",
+      "integrity": "sha512-cwiTb08Xuv5fqF4AovYacTFNxk62th7LKJ6BL9IGUpTJrWoU7/7WdQGTP2SjKf1dUNBGzDd28p/Yfs/GI6JrLw==",
+      "dev": true,
+      "license": "MIT",
+      "dependencies": {
+        "cliui": "^8.0.1",
+        "escalade": "^3.1.1",
+        "get-caller-file": "^2.0.5",
+        "require-directory": "^2.1.1",
+        "string-width": "^4.2.3",
+        "y18n": "^5.0.5",
+        "yargs-parser": "^21.1.1"
+      },
+      "engines": {
+        "node": ">=12"
       }
     },
     "node_modules/@wdio/runner/node_modules/zip-stream": {
@@ -6997,7 +7489,9 @@
       }
     },
     "node_modules/@xmldom/xmldom": {
-      "version": "0.9.10",
+      "version": "0.9.12",
+      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.9.12.tgz",
+      "integrity": "sha512-5AXjrcMClTryPe9LgZrygpB1lj7s0S9E0+W+AHaVKAVyHanafK86iPSvG5xHVSp/jC+VH1UXu0TAEmY279xH7A==",
       "dev": true,
       "license": "MIT",
       "engines": {
@@ -7097,14 +7591,6 @@
       },
       "funding": {
         "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
-      }
-    },
-    "node_modules/@yao-pkg/pkg-fetch/node_modules/y18n": {
-      "version": "5.0.8",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=10"
       }
     },
     "node_modules/@yao-pkg/pkg-fetch/node_modules/yargs": {
@@ -7471,9 +7957,9 @@
       }
     },
     "node_modules/app-builder-lib/node_modules/@xmldom/xmldom": {
-      "version": "0.8.13",
-      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.13.tgz",
-      "integrity": "sha512-KRYzxepc14G/CEpEGc3Yn+JKaAeT63smlDr+vjB8jRfgTBBI9wRj/nkQEO+ucV8p8I9bfKLWp37uHgFrbntPvw==",
+      "version": "0.8.15",
+      "resolved": "https://registry.npmjs.org/@xmldom/xmldom/-/xmldom-0.8.15.tgz",
+      "integrity": "sha512-/5NV/vDALVFDXgLmfsy9TRCBlKwO2LNBFzpzvb9iIj+jR+eSc6DLYYvVOdivT/jm7MtU6TebYuRmzEOI7w40UA==",
       "dev": true,
       "license": "MIT",
       "engines": {
@@ -8450,7 +8936,9 @@
       "license": "MIT"
     },
     "node_modules/body-parser": {
-      "version": "1.20.6",
+      "version": "1.20.4",
+      "resolved": "https://registry.npmjs.org/body-parser/-/body-parser-1.20.4.tgz",
+      "integrity": "sha512-ZTgYYLMOXY9qKU/57FAo8F+HA2dGX7bqGc71txDRC1rS4frdFI5R7NhluHxH6M0YItAP0sHB4uqAOcYKxO6uGA==",
       "dev": true,
       "license": "MIT",
       "dependencies": {
@@ -8462,7 +8950,7 @@
         "http-errors": "~2.0.1",
         "iconv-lite": "~0.4.24",
         "on-finished": "~2.4.1",
-        "qs": "~6.15.1",
+        "qs": "~6.14.0",
         "raw-body": "~2.5.3",
         "type-is": "~1.6.18",
         "unpipe": "~1.0.0"
@@ -8495,6 +8983,22 @@
       "version": "2.0.0",
       "dev": true,
       "license": "MIT"
+    },
+    "node_modules/body-parser/node_modules/qs": {
+      "version": "6.14.2",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-6.14.2.tgz",
+      "integrity": "sha512-V/yCWTTF7VJ9hIh18Ugr2zhJMP01MY7c5kh4J870L7imm6/DIzBsNLTXzMwUA3yZ5b/KBqLx8Kp3uRvd7xSe3Q==",
+      "dev": true,
+      "license": "BSD-3-Clause",
+      "dependencies": {
+        "side-channel": "^1.1.0"
+      },
+      "engines": {
+        "node": ">=0.6"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/ljharb"
+      }
     },
     "node_modules/bonjour-service": {
       "version": "1.4.4",
@@ -9244,17 +9748,6 @@
       "license": "MIT",
       "engines": {
         "node": ">=6.0"
-      }
-    },
-    "node_modules/chromium-bidi": {
-      "version": "0.4.16",
-      "dev": true,
-      "license": "Apache-2.0",
-      "dependencies": {
-        "mitt": "3.0.0"
-      },
-      "peerDependencies": {
-        "devtools-protocol": "*"
       }
     },
     "node_modules/chromium-pickle-js": {
@@ -10922,14 +11415,6 @@
         "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
       }
     },
-    "node_modules/depcheck/node_modules/y18n": {
-      "version": "5.0.8",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=10"
-      }
-    },
     "node_modules/depcheck/node_modules/yaml": {
       "version": "1.10.3",
       "dev": true,
@@ -11796,17 +12281,6 @@
         "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
       }
     },
-    "node_modules/electron-installer-debian/node_modules/y18n": {
-      "version": "5.0.8",
-      "resolved": "https://registry.npmjs.org/y18n/-/y18n-5.0.8.tgz",
-      "integrity": "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==",
-      "dev": true,
-      "license": "ISC",
-      "optional": true,
-      "engines": {
-        "node": ">=10"
-      }
-    },
     "node_modules/electron-installer-debian/node_modules/yargs": {
       "version": "16.2.2",
       "resolved": "https://registry.npmjs.org/yargs/-/yargs-16.2.2.tgz",
@@ -11970,17 +12444,6 @@
       },
       "funding": {
         "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
-      }
-    },
-    "node_modules/electron-installer-redhat/node_modules/y18n": {
-      "version": "5.0.8",
-      "resolved": "https://registry.npmjs.org/y18n/-/y18n-5.0.8.tgz",
-      "integrity": "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==",
-      "dev": true,
-      "license": "ISC",
-      "optional": true,
-      "engines": {
-        "node": ">=10"
       }
     },
     "node_modules/electron-installer-redhat/node_modules/yargs": {
@@ -13573,12 +14036,6 @@
         "url": "https://github.com/sponsors/isaacs"
       }
     },
-    "node_modules/expect-webdriverio/node_modules/mitt": {
-      "version": "3.0.1",
-      "dev": true,
-      "license": "MIT",
-      "optional": true
-    },
     "node_modules/expect-webdriverio/node_modules/node-fetch": {
       "version": "3.3.2",
       "dev": true,
@@ -13805,13 +14262,15 @@
       "license": "Apache-2.0"
     },
     "node_modules/express": {
-      "version": "4.22.2",
+      "version": "4.22.1",
+      "resolved": "https://registry.npmjs.org/express/-/express-4.22.1.tgz",
+      "integrity": "sha512-F2X8g9P1X7uCPZMA3MVf9wcTqlyNp7IhH5qPCI0izhaOIYXaW9L535tGA3qmjRzpH+bZczqq7hVKxTR4NWnu+g==",
       "dev": true,
       "license": "MIT",
       "dependencies": {
         "accepts": "~1.3.8",
         "array-flatten": "1.1.1",
-        "body-parser": "~1.20.5",
+        "body-parser": "~1.20.3",
         "content-disposition": "~0.5.4",
         "content-type": "~1.0.4",
         "cookie": "~0.7.1",
@@ -13830,7 +14289,7 @@
         "parseurl": "~1.3.3",
         "path-to-regexp": "~0.1.12",
         "proxy-addr": "~2.0.7",
-        "qs": "~6.15.1",
+        "qs": "~6.14.0",
         "range-parser": "~1.2.1",
         "safe-buffer": "5.2.1",
         "send": "~0.19.0",
@@ -13875,6 +14334,22 @@
       "version": "2.0.0",
       "dev": true,
       "license": "MIT"
+    },
+    "node_modules/express/node_modules/qs": {
+      "version": "6.14.2",
+      "resolved": "https://registry.npmjs.org/qs/-/qs-6.14.2.tgz",
+      "integrity": "sha512-V/yCWTTF7VJ9hIh18Ugr2zhJMP01MY7c5kh4J870L7imm6/DIzBsNLTXzMwUA3yZ5b/KBqLx8Kp3uRvd7xSe3Q==",
+      "dev": true,
+      "license": "BSD-3-Clause",
+      "dependencies": {
+        "side-channel": "^1.1.0"
+      },
+      "engines": {
+        "node": ">=0.6"
+      },
+      "funding": {
+        "url": "https://github.com/sponsors/ljharb"
+      }
     },
     "node_modules/ext": {
       "version": "1.7.0",
@@ -14015,9 +14490,9 @@
       "license": "MIT"
     },
     "node_modules/fast-uri": {
-      "version": "3.1.5",
-      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.5.tgz",
-      "integrity": "sha512-gHwA1O9LDIcKunMKhObS/HimwtehO1nPUECKAu5TpKgaO19fcWEl4bliWe1jWxVFvIXztJjjQ4L8XQ1EU9f7Jw==",
+      "version": "3.1.7",
+      "resolved": "https://registry.npmjs.org/fast-uri/-/fast-uri-3.1.7.tgz",
+      "integrity": "sha512-dOvZVzjdZdz7phd9v6jCbwxrBW3fK6n8Rc0CtdmM4bumzMnxywBYhuph6J819RRw/ku+rLbelwfMunktuzVVHg==",
       "funding": [
         {
           "type": "github",
@@ -19093,7 +19568,9 @@
       }
     },
     "node_modules/mitt": {
-      "version": "3.0.0",
+      "version": "3.0.1",
+      "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
+      "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==",
       "dev": true,
       "license": "MIT"
     },
@@ -19242,14 +19719,6 @@
       },
       "funding": {
         "url": "https://github.com/chalk/wrap-ansi?sponsor=1"
-      }
-    },
-    "node_modules/mocha/node_modules/y18n": {
-      "version": "5.0.8",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=10"
       }
     },
     "node_modules/mocha/node_modules/yargs": {
@@ -21220,139 +21689,6 @@
       },
       "engines": {
         "node": ">=8"
-      }
-    },
-    "node_modules/puppeteer-core": {
-      "version": "20.9.0",
-      "dev": true,
-      "license": "Apache-2.0",
-      "dependencies": {
-        "@puppeteer/browsers": "1.4.6",
-        "chromium-bidi": "0.4.16",
-        "cross-fetch": "4.0.0",
-        "debug": "4.3.4",
-        "devtools-protocol": "0.0.1147663",
-        "ws": "8.13.0"
-      },
-      "engines": {
-        "node": ">=16.3.0"
-      },
-      "peerDependencies": {
-        "typescript": ">= 4.7.4"
-      },
-      "peerDependenciesMeta": {
-        "typescript": {
-          "optional": true
-        }
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/@puppeteer/browsers": {
-      "version": "1.4.6",
-      "dev": true,
-      "license": "Apache-2.0",
-      "dependencies": {
-        "debug": "4.3.4",
-        "extract-zip": "2.0.1",
-        "progress": "2.0.3",
-        "proxy-agent": "6.3.0",
-        "tar-fs": "3.0.4",
-        "unbzip2-stream": "1.4.3",
-        "yargs": "17.7.1"
-      },
-      "bin": {
-        "browsers": "lib/cjs/main-cli.js"
-      },
-      "engines": {
-        "node": ">=16.3.0"
-      },
-      "peerDependencies": {
-        "typescript": ">= 4.7.4"
-      },
-      "peerDependenciesMeta": {
-        "typescript": {
-          "optional": true
-        }
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/agent-base": {
-      "version": "7.1.4",
-      "dev": true,
-      "license": "MIT",
-      "engines": {
-        "node": ">= 14"
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/devtools-protocol": {
-      "version": "0.0.1147663",
-      "dev": true,
-      "license": "BSD-3-Clause"
-    },
-    "node_modules/puppeteer-core/node_modules/https-proxy-agent": {
-      "version": "7.0.6",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "agent-base": "^7.1.2",
-        "debug": "4"
-      },
-      "engines": {
-        "node": ">= 14"
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/lru-cache": {
-      "version": "7.18.3",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=12"
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/proxy-agent": {
-      "version": "6.3.0",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "agent-base": "^7.0.2",
-        "debug": "^4.3.4",
-        "http-proxy-agent": "^7.0.0",
-        "https-proxy-agent": "^7.0.0",
-        "lru-cache": "^7.14.1",
-        "pac-proxy-agent": "^7.0.0",
-        "proxy-from-env": "^1.1.0",
-        "socks-proxy-agent": "^8.0.1"
-      },
-      "engines": {
-        "node": ">= 14"
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/proxy-from-env": {
-      "version": "1.1.0",
-      "dev": true,
-      "license": "MIT"
-    },
-    "node_modules/puppeteer-core/node_modules/y18n": {
-      "version": "5.0.8",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=10"
-      }
-    },
-    "node_modules/puppeteer-core/node_modules/yargs": {
-      "version": "17.7.1",
-      "dev": true,
-      "license": "MIT",
-      "dependencies": {
-        "cliui": "^8.0.1",
-        "escalade": "^3.1.1",
-        "get-caller-file": "^2.0.5",
-        "require-directory": "^2.1.1",
-        "string-width": "^4.2.3",
-        "y18n": "^5.0.5",
-        "yargs-parser": "^21.1.1"
-      },
-      "engines": {
-        "node": ">=12"
       }
     },
     "node_modules/pvtsutils": {
@@ -26058,21 +26394,21 @@
       }
     },
     "node_modules/webdriverio": {
-      "version": "9.30.1",
-      "resolved": "https://registry.npmjs.org/webdriverio/-/webdriverio-9.30.1.tgz",
-      "integrity": "sha512-HvoMHVPj1Ky04h0kEELKilWuzAi0Ctpmfw5V7LStQmOzbXkzfxxMutSB3SezJAYCWCnZ6zsEw7TdDWubWGY7qA==",
+      "version": "9.31.5",
+      "resolved": "https://registry.npmjs.org/webdriverio/-/webdriverio-9.31.5.tgz",
+      "integrity": "sha512-XfbzuhqNcpdZeX70bEEmYCvpQ9fgfXVVOkQWF+rCZBkmqW4W61Ol4bqUnKLIhXI4vysSATi2S19vxPK+WTAeWA==",
       "dev": true,
       "license": "MIT",
       "peer": true,
       "dependencies": {
         "@types/node": "^20.11.30",
         "@types/sinonjs__fake-timers": "^8.1.5",
-        "@wdio/config": "9.30.1",
+        "@wdio/config": "9.31.5",
         "@wdio/logger": "9.29.1",
-        "@wdio/protocols": "9.30.1",
+        "@wdio/protocols": "9.31.5",
         "@wdio/repl": "9.16.2",
-        "@wdio/types": "9.30.1",
-        "@wdio/utils": "9.30.1",
+        "@wdio/types": "9.31.2",
+        "@wdio/utils": "9.31.5",
         "archiver": "^7.0.1",
         "aria-query": "^5.3.0",
         "cheerio": "^1.0.0-rc.12",
@@ -26089,13 +26425,13 @@
         "rgb2hex": "0.2.5",
         "serialize-error": "^12.0.0",
         "urlpattern-polyfill": "^10.0.0",
-        "webdriver": "9.30.1"
+        "webdriver": "9.31.5"
       },
       "engines": {
         "node": ">=18.20.0"
       },
       "peerDependencies": {
-        "puppeteer-core": ">=22.x || <=24.x"
+        "puppeteer-core": ">=22.x <=24.x"
       },
       "peerDependenciesMeta": {
         "puppeteer-core": {
@@ -26133,16 +26469,16 @@
       "peer": true
     },
     "node_modules/webdriverio/node_modules/@wdio/config": {
-      "version": "9.30.1",
-      "resolved": "https://registry.npmjs.org/@wdio/config/-/config-9.30.1.tgz",
-      "integrity": "sha512-55D7g1RBCyHTwMkb4b6sQU0ET5lf5UUM3SgTHDGOo2KHfiydtCqOvfGwzxaf9nv200+QGY6BqI6yD0Ad1VGV0g==",
+      "version": "9.31.5",
+      "resolved": "https://registry.npmjs.org/@wdio/config/-/config-9.31.5.tgz",
+      "integrity": "sha512-Xdjo6+Qxg31kMflG2uBp7oCOlr0/BGxjsNJXdz9gT6J3pkNwiQf2O5wSUuJYqOYnuYLAimAklC47/0L//+3H4w==",
       "dev": true,
       "license": "MIT",
       "peer": true,
       "dependencies": {
         "@wdio/logger": "9.29.1",
-        "@wdio/types": "9.30.1",
-        "@wdio/utils": "9.30.1",
+        "@wdio/types": "9.31.2",
+        "@wdio/utils": "9.31.5",
         "deepmerge-ts": "^7.0.3",
         "glob": "^10.2.2",
         "import-meta-resolve": "^4.0.0",
@@ -26171,9 +26507,9 @@
       }
     },
     "node_modules/webdriverio/node_modules/@wdio/protocols": {
-      "version": "9.30.1",
-      "resolved": "https://registry.npmjs.org/@wdio/protocols/-/protocols-9.30.1.tgz",
-      "integrity": "sha512-kV0eHy6scYoXqZuAWvtYS5ebkyIF2/JdApSEu6kIdS2EppnROuvUzsNjTUzNkT6gk+0Ib9C/CbOqiuyZuhBUcA==",
+      "version": "9.31.5",
+      "resolved": "https://registry.npmjs.org/@wdio/protocols/-/protocols-9.31.5.tgz",
+      "integrity": "sha512-e4H5exl5xCcITF0y/3zd6pf9kX4TmV8/0nnWDGt4X0KbgDi/+tGqlquZ+YS4YBEPbv95yTqVhnazEsaBiH85Tw==",
       "dev": true,
       "license": "MIT",
       "peer": true
@@ -26191,9 +26527,9 @@
       }
     },
     "node_modules/webdriverio/node_modules/@wdio/types": {
-      "version": "9.30.1",
-      "resolved": "https://registry.npmjs.org/@wdio/types/-/types-9.30.1.tgz",
-      "integrity": "sha512-umKQDbSmu3/ucUsIA5UUTK5gCWnClyVpWz3fC39044rCXQ3zCd1a3GoJibbAITKiwnPFf2yU3LvTa+C78sh9Lg==",
+      "version": "9.31.2",
+      "resolved": "https://registry.npmjs.org/@wdio/types/-/types-9.31.2.tgz",
+      "integrity": "sha512-lQKaiQDCJJ6VC1K/cKzaAxCpwB9pL1U0VbmX2uGksMxO4EDbNuLvIxWryuUDJ7OaSYTjxILTKYFErdbT/xEikg==",
       "dev": true,
       "license": "MIT",
       "peer": true,
@@ -26205,16 +26541,16 @@
       }
     },
     "node_modules/webdriverio/node_modules/@wdio/utils": {
-      "version": "9.30.1",
-      "resolved": "https://registry.npmjs.org/@wdio/utils/-/utils-9.30.1.tgz",
-      "integrity": "sha512-V+JE4G6ZO9ubdjDfHDHgp/2EWs5WCXk4IT2c2ZMoWy2qALqq4wqaeZ0ce05c3z0+N+8+xMS/Q9donDiIY1yk5A==",
+      "version": "9.31.5",
+      "resolved": "https://registry.npmjs.org/@wdio/utils/-/utils-9.31.5.tgz",
+      "integrity": "sha512-wufYrRdz0Dr8Oa9OiaFsitQJsD8HWG5J4FQi/r3nZv/W3S+1h1lpBCAmDisH1Q6wN7Ed9v20E56ZU0UOaP5v3g==",
       "dev": true,
       "license": "MIT",
       "peer": true,
       "dependencies": {
         "@puppeteer/browsers": "^2.2.0",
         "@wdio/logger": "9.29.1",
-        "@wdio/types": "9.30.1",
+        "@wdio/types": "9.31.2",
         "decamelize": "^6.0.0",
         "deepmerge-ts": "^7.0.3",
         "edgedriver": "^6.1.2",
@@ -26517,14 +26853,6 @@
         "node": ">=12"
       }
     },
-    "node_modules/webdriverio/node_modules/mitt": {
-      "version": "3.0.1",
-      "resolved": "https://registry.npmjs.org/mitt/-/mitt-3.0.1.tgz",
-      "integrity": "sha512-vKivATfr97l2/QBCYAkXYDbrIWPM2IIKEl7YPhjCvKlG3kE2gm+uBo6nEXK3M5/Ffh/FLpKExzOQ3JJoJGFKBw==",
-      "dev": true,
-      "license": "MIT",
-      "peer": true
-    },
     "node_modules/webdriverio/node_modules/ms": {
       "version": "2.1.3",
       "resolved": "https://registry.npmjs.org/ms/-/ms-2.1.3.tgz",
@@ -26654,20 +26982,20 @@
       }
     },
     "node_modules/webdriverio/node_modules/webdriver": {
-      "version": "9.30.1",
-      "resolved": "https://registry.npmjs.org/webdriver/-/webdriver-9.30.1.tgz",
-      "integrity": "sha512-qvtOsFiS0v3rrDPp+saWI8WQdOotT7nsPIFaML0T/uRUwr4QPjaFNbY+ZQwfzv07BQdpVGwiUEeLws5piVlEgA==",
+      "version": "9.31.5",
+      "resolved": "https://registry.npmjs.org/webdriver/-/webdriver-9.31.5.tgz",
+      "integrity": "sha512-ppQ3sKydQ59CVDsODri/pIdVfVp5nSP78qfwbK9LrrICbLkXktCd0pK/Nbc3EclbJ2hOfhfHpU8vuodJ73e4uA==",
       "dev": true,
       "license": "MIT",
       "peer": true,
       "dependencies": {
         "@types/node": "^20.1.0",
         "@types/ws": "^8.5.3",
-        "@wdio/config": "9.30.1",
+        "@wdio/config": "9.31.5",
         "@wdio/logger": "9.29.1",
-        "@wdio/protocols": "9.30.1",
-        "@wdio/types": "9.30.1",
-        "@wdio/utils": "9.30.1",
+        "@wdio/protocols": "9.31.5",
+        "@wdio/types": "9.31.2",
+        "@wdio/utils": "9.31.5",
         "deepmerge-ts": "^7.0.3",
         "https-proxy-agent": "^7.0.6",
         "undici": "^6.27.0",
@@ -27309,6 +27637,16 @@
         "node": ">=8.6.0 <9.0.0 || >=10.0.0"
       }
     },
+    "node_modules/y18n": {
+      "version": "5.0.8",
+      "resolved": "https://registry.npmjs.org/y18n/-/y18n-5.0.8.tgz",
+      "integrity": "sha512-0pfFzegeDWJHJIAmTLRP2DwHjdF5s7jo9tuztdQxAhINCdvS+3nGINqPd00AphqJR/0LhANUS6/+7SCb98YOfA==",
+      "dev": true,
+      "license": "ISC",
+      "engines": {
+        "node": ">=10"
+      }
+    },
     "node_modules/yallist": {
       "version": "3.1.1",
       "license": "ISC"
@@ -27369,14 +27707,6 @@
       "license": "MIT",
       "engines": {
         "node": ">=8"
-      }
-    },
-    "node_modules/yargs/node_modules/y18n": {
-      "version": "5.0.8",
-      "dev": true,
-      "license": "ISC",
-      "engines": {
-        "node": ">=10"
       }
     },
     "node_modules/yauzl": {
